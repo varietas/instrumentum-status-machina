@@ -18,35 +18,35 @@ package io.varietas.instrumentum.status.machina.error;
 import java.util.Objects;
 
 /**
- * <h2>InvalidTransitionError</h2>
+ * <h2>InvalidTransitionException</h2>
  *
  * @author Michael Rhöse
  * @version 1.0.0, 10/8/2017
  */
-public class InvalidTransitionError extends Error {
+public class InvalidTransitionException extends RuntimeException {
 
     private final Enum transition;
 
-    public InvalidTransitionError(Enum transition) {
+    public InvalidTransitionException(Enum transition) {
         this.transition = transition;
     }
 
-    public InvalidTransitionError(Enum transition, String message) {
+    public InvalidTransitionException(Enum transition, String message) {
         super(message);
         this.transition = transition;
     }
 
-    public InvalidTransitionError(Enum transition, String message, Throwable cause) {
+    public InvalidTransitionException(Enum transition, String message, Throwable cause) {
         super(message, cause);
         this.transition = transition;
     }
 
-    public InvalidTransitionError(Enum transition, Throwable cause) {
+    public InvalidTransitionException(Enum transition, Throwable cause) {
         super(cause);
         this.transition = transition;
     }
 
-    public InvalidTransitionError(Enum transition, String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public InvalidTransitionException(Enum transition, String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
         this.transition = transition;
     }
@@ -54,6 +54,6 @@ public class InvalidTransitionError extends Error {
     @Override
     public String getLocalizedMessage() {
         return "Transition '" + transition.name() + "' isn't possible. "
-            + ((Objects.isNull(this.getMessage())) ? "" : this.getMessage());
+                + ((Objects.isNull(this.getMessage())) ? "" : this.getMessage());
     }
 }

@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 /**
  * <h2>TransitionChains</h2>
- *
+ * <p>
  * The transition chains allow the automated run of the state machine from on state to another by call of all state transitions between start and end.
  *
  * @author Michael Rhöse

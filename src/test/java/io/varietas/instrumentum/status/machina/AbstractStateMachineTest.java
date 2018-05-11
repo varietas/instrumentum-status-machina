@@ -15,9 +15,8 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import io.varietas.instrumentum.status.machina.StateMachine;
 import io.varietas.instrumentum.status.machina.builder.impl.StateMachineBuilderImpl;
-import io.varietas.instrumentum.status.machina.error.InvalidTransitionError;
+import io.varietas.instrumentum.status.machina.error.InvalidTransitionException;
 import io.varietas.instrumentum.status.machina.error.MachineCreationException;
 import io.varietas.instrumentum.status.machina.machines.transition.FailingStateMachine;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithTransitionAfterListener;
@@ -70,7 +69,7 @@ public class AbstractStateMachineTest {
 
         TestEntity entity = new TestEntity(State.AVAILABLE, 0);
 
-        Assertions.assertThatThrownBy(() -> stateMachine.fire(Event.ACTIVATE, entity)).isInstanceOf(InvalidTransitionError.class);
+        Assertions.assertThatThrownBy(() -> stateMachine.fire(Event.ACTIVATE, entity)).isInstanceOf(InvalidTransitionException.class);
     }
 
     @Test

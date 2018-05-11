@@ -65,6 +65,7 @@ public class StateMachineBuilderImpl implements StateMachineBuilder {
      * is a big process and can take a while.
      *
      * @param machineType State machine type where the configuration is present.
+     *
      * @return The instance of the builder for a fluent like API.
      */
     @Override
@@ -79,18 +80,18 @@ public class StateMachineBuilderImpl implements StateMachineBuilder {
         this.transitions.addAll(this.collectTransitions());
 
         this.configuration = new FSMConfigurationImpl(
-            this.transitions,
-            this.stateType,
-            this.eventType);
+                this.transitions,
+                this.stateType,
+                this.eventType);
 
         LOGGER.debug("Configuration for '{}' created:\n"
-            + "-> {} transitions collected\n"
-            + "-> {} used for state type\n"
-            + "-> {} used for event type.",
-            this.machineType.getSimpleName(),
-            this.transitions.size(),
-            this.stateType.getSimpleName(),
-            this.eventType.getSimpleName()
+                + "-> {} transitions collected\n"
+                + "-> {} used for state type\n"
+                + "-> {} used for event type.",
+                this.machineType.getSimpleName(),
+                this.transitions.size(),
+                this.stateType.getSimpleName(),
+                this.eventType.getSimpleName()
         );
 
         return this;
@@ -100,6 +101,7 @@ public class StateMachineBuilderImpl implements StateMachineBuilder {
      * Builds an instance of the {@link StateMachine}. The instance is initialised with the configuration of the type.
      *
      * @return Instance of the state machine.
+     *
      * @throws MachineCreationException Thrown if an error occurred. Possible errors are typically reflection exceptions e.g. InstantiationException, IllegalAccessException and soon.
      */
     @Override
@@ -119,11 +121,11 @@ public class StateMachineBuilderImpl implements StateMachineBuilder {
      */
     protected List<TransitionContainer> collectTransitions() {
         return Stream.of(this.machineType.getMethods())
-            .filter(method -> method.isAnnotationPresent(Transitions.class) || method.isAnnotationPresent(Transition.class))
-            .map(this::createTransitionContainers)
-            .flatMap(List::stream)
-            .distinct()
-            .collect(Collectors.toList());
+                .filter(method -> method.isAnnotationPresent(Transitions.class) || method.isAnnotationPresent(Transition.class))
+                .map(this::createTransitionContainers)
+                .flatMap(List::stream)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     /**
@@ -131,6 +133,7 @@ public class StateMachineBuilderImpl implements StateMachineBuilder {
      * {@link Transition} annotations can be available on a single method.
      *
      * @param method Method where the transitions are configured.
+     *
      * @return List of all available transitions as transition containers.
      */
     private List<TransitionContainer> createTransitionContainers(final Method method) {
@@ -138,8 +141,8 @@ public class StateMachineBuilderImpl implements StateMachineBuilder {
         final List<ListenerContainer> listeners = this.extractTransitionListener(method);
 
         return Arrays.asList(method.getAnnotationsByType(Transition.class)).stream()
-            .map((Transition transition) -> this.createTransitionContainer(transition, method, listeners))
-            .collect(Collectors.toList());
+                .map((Transition transition) -> this.createTransitionContainer(transition, method, listeners))
+                .collect(Collectors.toList());
     }
 
     private TransitionContainer createTransitionContainer(final Transition transition, final Method method, final List<ListenerContainer> listeners) {
@@ -149,11 +152,11 @@ public class StateMachineBuilderImpl implements StateMachineBuilder {
         LOGGER.debug("Transition from '{}' to '{}' on '{}' will be created.", from.name(), to.name(), on.name());
         LOGGER.debug("{} listeners for transition {} added.", (Objects.nonNull(listeners) ? listeners.size() : 0), on.name());
         return new TransitionContainer<>(
-            from,
-            to,
-            on,
-            method,
-            listeners
+                from,
+                to,
+                on,
+                method,
+                listeners
         );
     }
 
@@ -163,11 +166,11 @@ public class StateMachineBuilderImpl implements StateMachineBuilder {
         }
 
         return Stream.of(method.getAnnotationsByType(TransitionListener.class))
-            .map(annot -> {
-                Class<?> listener = annot.value();
-                return new ListenerContainer(listener, this.existsMethod(listener, "before"), this.existsMethod(listener, "after"));
-            })
-            .collect(Collectors.toList());
+                .map(annot -> {
+                    Class<?> listener = annot.value();
+                    return new ListenerContainer(listener, this.existsMethod(listener, "before"), this.existsMethod(listener, "after"));
+                })
+                .collect(Collectors.toList());
     }
 
     protected final boolean existsMethod(final Class<?> type, final String methodName) {

@@ -45,6 +45,6 @@ public class MachineCreationException extends Exception {
     @Override
     public String getLocalizedMessage() {
         return "Couldn't create state machine '" + this.machineType.getName() + "'. "
-            + ((Objects.isNull(this.getMessage())) ? "" : this.getMessage());
+                + ((Objects.isNull(this.getMessage())) ? "" : this.getMessage());
     }
 }

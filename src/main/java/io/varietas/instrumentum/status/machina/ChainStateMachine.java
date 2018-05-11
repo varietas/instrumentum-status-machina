@@ -15,7 +15,7 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import io.varietas.instrumentum.status.machina.error.InvalidTransitionError;
+import io.varietas.instrumentum.status.machina.error.InvalidTransitionException;
 import io.varietas.instrumentum.status.machina.error.TransitionInvocationException;
 
 /**
@@ -26,5 +26,5 @@ import io.varietas.instrumentum.status.machina.error.TransitionInvocationExcepti
  */
 public interface ChainStateMachine extends StateMachine {
 
-    void fireChain(final Enum transitionChain, final StatedObject target) throws TransitionInvocationException, InvalidTransitionError;
+    void fireChain(final Enum transitionChain, final StatedObject target) throws TransitionInvocationException, InvalidTransitionException;
 }

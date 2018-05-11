@@ -60,6 +60,6 @@ public class TransitionInvocationException extends RuntimeException {
     @Override
     public String getLocalizedMessage() {
         return "Couldn't invoke method '" + methodName + "' for transition '" + transition.name() + "'. "
-            + ((Objects.isNull(this.getMessage())) ? "" : this.getMessage());
+                + ((Objects.isNull(this.getMessage())) ? "" : this.getMessage());
     }
 }

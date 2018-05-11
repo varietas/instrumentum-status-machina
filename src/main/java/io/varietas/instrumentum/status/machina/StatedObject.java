@@ -17,6 +17,8 @@ package io.varietas.instrumentum.status.machina;
 
 /**
  * <h2>StatedObject</h2>
+ * <p>
+ * This interface must be implemented by each type that wants to be handled by a FSM.
  *
  * @author Michael Rhöse
  * @version 1.0.0, 10/8/2017
@@ -32,7 +34,7 @@ public interface StatedObject<STATE_TYPE extends Enum> {
     STATE_TYPE state();
 
     /**
-     * Sets the new state for the current object. This method should only used by FSM!
+     * Sets the new state for the current object. This method should only be used by FSM!
      *
      * @param state New state of current object.
      */

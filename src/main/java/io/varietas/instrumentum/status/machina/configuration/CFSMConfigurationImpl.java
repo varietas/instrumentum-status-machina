@@ -38,11 +38,11 @@ public class CFSMConfigurationImpl extends FSMConfigurationImpl implements CFSMC
     private final Class<? extends Enum> chainType;
 
     public CFSMConfigurationImpl(
-        final List<TransitionContainer> transitions,
-        final List<ChainContainer> chains,
-        final Class<? extends Enum> stateType,
-        final Class<? extends Enum> eventType,
-        final Class<? extends Enum> chainType) {
+            final List<TransitionContainer> transitions,
+            final List<ChainContainer> chains,
+            final Class<? extends Enum> stateType,
+            final Class<? extends Enum> eventType,
+            final Class<? extends Enum> chainType) {
         super(transitions, stateType, eventType);
         this.chains = chains;
         this.chainType = chainType;

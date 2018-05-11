@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 /**
  * <h2>Transition</h2>
- *
+ * <p>
  * A transit contains all relevant information about a state change. This way of configuration is inspired by squirrel-framework fsm.
  *
  * @author Michael Rhöse

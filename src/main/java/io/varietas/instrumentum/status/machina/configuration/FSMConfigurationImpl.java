@@ -24,7 +24,7 @@ import lombok.ToString;
 
 /**
  * <h2>FSMConfigurationImpl</h2>
- *
+ * <p>
  * This class represents a container to use FSM in a dependency injection framework like agrestis imputare. It allows the separate storing of configuration as singleton.
  *
  * @author Michael Rhöse

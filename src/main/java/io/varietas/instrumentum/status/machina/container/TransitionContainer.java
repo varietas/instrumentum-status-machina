@@ -25,7 +25,7 @@ import lombok.ToString;
 
 /**
  * <h2>TransitionContainer</h2>
- *
+ * <p>
  * The transition container holds relevant information collected from {@link Transition} annotation on runtime. This includes the
  * <ul>
  * <li>required start state,</li>
@@ -36,7 +36,7 @@ import lombok.ToString;
  *
  * @author Michael Rhöse
  * @version 1.0.0, 10/7/2017
- * @param <STATE_TYPE> Generic type of enumeration which is used to represent the states.
+ * @param <STATE_TYPE>      Generic type of enumeration which is used to represent the states.
  * @param <TRANSITION_TYPE> Generic type of enumeration which is used to represent the occurred event (Event identifier).
  */
 @ToString(exclude = {"calledMethod"})

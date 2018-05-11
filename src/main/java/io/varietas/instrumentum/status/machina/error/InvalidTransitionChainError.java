@@ -54,6 +54,6 @@ public class InvalidTransitionChainError extends Error {
     @Override
     public String getLocalizedMessage() {
         return "Chain '" + chain.name() + "' isn't possible. "
-            + ((Objects.isNull(this.getMessage())) ? "" : this.getMessage());
+                + ((Objects.isNull(this.getMessage())) ? "" : this.getMessage());
     }
 }

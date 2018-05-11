@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 /**
  * <h2>StateMachineConfiguration</h2>
- *
+ * <p>
  * This annotation holds the general configuration of a state machine. This way of configuration is inspired by squirrel-framework FSM.
  *
  * @author Michael Rhöse

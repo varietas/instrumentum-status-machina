@@ -23,7 +23,7 @@ import lombok.ToString;
 
 /**
  * <h2>TransitionChainMessage</h2>
- *
+ * <p>
  * This class is a container to send an object (transition target) and its chain event over the event bus.
  *
  * @author Michael Rhöse

@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 /**
- * <h2>io.varietas.common.fsm</h2>
- *
- * This finite state machine implementation based on the <a href="https://www.innoq.com/de/blog/statemachine/">post</a> of Florian Miess for a the simplest as possible state machine in Java. The fsm
- * is used to manage the life cycle of plugins in varietas.io. There are different specialised implementations which supports the event bus and allows the execution of transition chains.
+ * <h2>io.varietas.instrumentum.status.machina</h2>
+ * <p>
+ * This finite state machine implementation is based on the
+ * <a href="https://www.innoq.com/de/blog/statemachine/">post</a> of Florian Miess for a the simplest as possible state machine in Java. The FSM stores the current state within the object. An
+ * additional object storing state information isn't required. This implementation also provides transition chaining and CbA (configuration by annotation).</br>
+ * Each transition logic is placed in a testable method and allows the testing while build time.
  *
  * @author Michael Rhöse
  * @version 1.0.0, 10/7/2017

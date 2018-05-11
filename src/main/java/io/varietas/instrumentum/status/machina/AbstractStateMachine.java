@@ -18,7 +18,7 @@ package io.varietas.instrumentum.status.machina;
 import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.container.ListenerContainer;
 import io.varietas.instrumentum.status.machina.container.TransitionContainer;
-import io.varietas.instrumentum.status.machina.error.InvalidTransitionError;
+import io.varietas.instrumentum.status.machina.error.InvalidTransitionException;
 import io.varietas.instrumentum.status.machina.error.TransitionInvocationException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * <h2>AbstractStateMachine</h2>
- *
+ * <p>
  * This class represents an abstract implementation of the {@link StateMachine} interface. The default implementation contains the firing of single transitions.
  *
  * @author Michael Rhöse
@@ -46,21 +46,23 @@ public abstract class AbstractStateMachine implements StateMachine {
     /**
      * This method searches the container which contains all information required to performing the transition operation.
      *
-     * @param event Next transition kind.
+     * @param event        Next transition kind.
      * @param currentState Current state of target for identification if multiple transitions are available.
+     *
      * @return Expected container for the transition, otherwise an empty Optional.
      */
     protected Optional<TransitionContainer> findTransitionContainer(final Enum event, final Enum currentState) {
         return this.configuration.getTransitions().stream()
-            .filter(transit -> transit.getOn().equals(event) && (transit.getFrom().equals(currentState) || transit.getTo().equals(currentState)))
-            .findFirst();
+                .filter(transit -> transit.getOn().equals(event) && (transit.getFrom().equals(currentState) || transit.getTo().equals(currentState)))
+                .findFirst();
     }
 
     /**
      * Validates the current state of a transition target. If the current state of the target isn't equals the expected FROM state of the transition, the transition isn't possible.
      *
-     * @param currentState Current state of the transition target.
+     * @param currentState       Current state of the transition target.
      * @param expectedTransition Transition information which contains the expected start state.
+     *
      * @return True if the states matches and the transition is possible, otherwise false.
      */
     protected boolean isTransitionPossible(final Enum currentState, final TransitionContainer expectedTransition) {
@@ -68,12 +70,12 @@ public abstract class AbstractStateMachine implements StateMachine {
     }
 
     @Override
-    public void fire(final Enum transition, final StatedObject target) throws TransitionInvocationException, InvalidTransitionError {
+    public void fire(final Enum transition, final StatedObject target) throws TransitionInvocationException, InvalidTransitionException {
 
         final Optional<TransitionContainer> transitionContainer = this.findTransitionContainer(transition, target.state());
 
         if (!transitionContainer.isPresent()) {
-            throw new InvalidTransitionError(transition, "Couldn't find transition.");
+            throw new InvalidTransitionException(transition, "Couldn't find transition.");
         }
 
         this.fire(transitionContainer.get(), target);
@@ -83,11 +85,11 @@ public abstract class AbstractStateMachine implements StateMachine {
      * Performs the execution of a single transition.
      *
      * @param transition Container of transition which has to be performed.
-     * @param target Transition target.
+     * @param target     Transition target.
      */
-    protected void fire(final TransitionContainer transition, final StatedObject target) {
+    protected void fire(final TransitionContainer transition, final StatedObject target) throws InvalidTransitionException {
         if (!this.isTransitionPossible(target.state(), transition)) {
-            throw new InvalidTransitionError(transition.getOn(), "Current state " + target.state().name() + " doesn't match required state " + transition.getFrom().name() + ".");
+            throw new InvalidTransitionException(transition.getOn(), "Current state " + target.state().name() + " doesn't match required state " + transition.getFrom().name() + ".");
         }
 
         try {

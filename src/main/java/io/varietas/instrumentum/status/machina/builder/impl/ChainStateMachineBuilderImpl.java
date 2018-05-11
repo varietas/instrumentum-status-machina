@@ -57,6 +57,7 @@ public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
      * is a big process and can take a while.
      *
      * @param machineType State machine type where the configuration is present.
+     *
      * @return The instance of the builder for a fluent like API.
      */
     @Override
@@ -73,24 +74,24 @@ public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
         this.chains.addAll(this.createChains());
 
         this.configuration = new CFSMConfigurationImpl(
-            this.transitions,
-            this.chains,
-            this.stateType,
-            this.eventType,
-            this.chainType);
+                this.transitions,
+                this.chains,
+                this.stateType,
+                this.eventType,
+                this.chainType);
 
         LOGGER.debug("Configuration for '{}' created:\n"
-            + "-> {} transitions collected\n"
-            + "-> {} chains collected\n"
-            + "-> {} used for state type\n"
-            + "-> {} used for event type\n"
-            + "-> {} used for chain type.",
-            this.machineType.getSimpleName(),
-            this.transitions.size(),
-            this.chains.size(),
-            this.stateType.getSimpleName(),
-            this.eventType.getSimpleName(),
-            this.chainType.getSimpleName()
+                + "-> {} transitions collected\n"
+                + "-> {} chains collected\n"
+                + "-> {} used for state type\n"
+                + "-> {} used for event type\n"
+                + "-> {} used for chain type.",
+                this.machineType.getSimpleName(),
+                this.transitions.size(),
+                this.chains.size(),
+                this.stateType.getSimpleName(),
+                this.eventType.getSimpleName(),
+                this.chainType.getSimpleName()
         );
 
         return this;
@@ -111,23 +112,24 @@ public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
         }
 
         return Stream.of(this.machineType.getAnnotationsByType(TransitionChain.class))
-            .map(chain -> {
-                List<ListenerContainer> requiredListeners = listeners.stream()
-                    .filter(listener -> listener.targetChains.contains("ALL") || listener.targetChains.contains(chain.on()))
-                    .map(listener -> listener.listener)
-                    .collect(Collectors.toList());
-                return this.createChain(chain, requiredListeners);
-            })
-            .distinct()
-            .collect(Collectors.toList());
+                .map(chain -> {
+                    List<ListenerContainer> requiredListeners = listeners.stream()
+                            .filter(listener -> listener.targetChains.contains("ALL") || listener.targetChains.contains(chain.on()))
+                            .map(listener -> listener.listener)
+                            .collect(Collectors.toList());
+                    return this.createChain(chain, requiredListeners);
+                })
+                .distinct()
+                .collect(Collectors.toList());
 
     }
 
     /**
      * Creates a chain container with all required information.
      *
-     * @param chain Target chain of the container.
+     * @param chain     Target chain of the container.
      * @param listeners Available listeners which have to be fired for this chain.
+     *
      * @return Chain container with all relevant information.
      */
     private ChainContainer createChain(final TransitionChain chain, final List<ListenerContainer> listeners) {
@@ -141,11 +143,11 @@ public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
         }
 
         ChainContainer res = new ChainContainer<>(
-            from,
-            to,
-            on,
-            chainParts.get(),
-            listeners
+                from,
+                to,
+                on,
+                chainParts.get(),
+                listeners
         );
 
         LOGGER.debug("Chain {}: {} -> {}", res.getOn(), res.getFrom(), res.getTo());
@@ -162,6 +164,7 @@ public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
      * Extracts all chain listeners from a given {@link ChainStateMachine}.
      *
      * @param type Chain state machine type.
+     *
      * @return Collected chain listeners as list.
      */
     private List<Pair> extractChainListener(final Class<?> type) {
@@ -170,48 +173,50 @@ public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
         }
 
         return Stream.of(type.getAnnotationsByType(ChainListener.class))
-            .map(annot -> {
-                Class<?> listener = annot.value();
-                ListenerContainer listenerContainer = new ListenerContainer(listener, this.existsMethod(listener, "before"), this.existsMethod(listener, "after"));
-                return new Pair(listenerContainer, Arrays.asList(annot.forChains()));
-            })
-            .collect(Collectors.toList());
+                .map(annot -> {
+                    Class<?> listener = annot.value();
+                    ListenerContainer listenerContainer = new ListenerContainer(listener, this.existsMethod(listener, "before"), this.existsMethod(listener, "after"));
+                    return new Pair(listenerContainer, Arrays.asList(annot.forChains()));
+                })
+                .collect(Collectors.toList());
     }
 
     /**
      * Collects all transitions required by transition chain from the already collected transitions.
      *
      * @param from Start state of the transition chain.
-     * @param to End state of the transition chain.
+     * @param to   End state of the transition chain.
+     *
      * @return List of all required transitions as containers.
      */
     private Optional<List<TransitionContainer>> recursive(final Enum from, final Enum to) {
 
         List<TransitionContainer> possibleParts = this.transitions.stream()
-            .filter(transition -> transition.getFrom().equals(from))
-            .collect(Collectors.toList());
+                .filter(transition -> transition.getFrom().equals(from))
+                .collect(Collectors.toList());
 
         return possibleParts.stream()
-            .map((possiblePart) -> {
-                List<TransitionContainer> temp = new ArrayList<>();
-                temp.add(possiblePart);
-                if (!this.recursive(to, possiblePart, temp, 1)) {
-                    return null;
-                }
-                return temp;
-            })
-            .filter(Objects::nonNull)
-            .min(Comparator.comparingInt(List::size));
+                .map((possiblePart) -> {
+                    List<TransitionContainer> temp = new ArrayList<>();
+                    temp.add(possiblePart);
+                    if (!this.recursive(to, possiblePart, temp, 1)) {
+                        return null;
+                    }
+                    return temp;
+                })
+                .filter(Objects::nonNull)
+                .min(Comparator.comparingInt(List::size));
     }
 
     /**
      * Collects all transitions required by transition chain from the already collected transitions in a recursively way. This method searches a way from the start state to the end state.
      *
-     * @param abourt End state of the chain.
+     * @param abourt       End state of the chain.
      * @param possiblePart Currently used start transition.
-     * @param chainParts List of all collected transitions.
-     * @param fallback Abort criteria. This is simply a counter which is increased each recursive step. If the counter greater than the current number of available transitions, the algorithm detects
-     * no possible way from the start to the end.
+     * @param chainParts   List of all collected transitions.
+     * @param fallback     Abort criteria. This is simply a counter which is increased each recursive step. If the counter greater than the current number of available transitions, the algorithm
+     *                     detects no possible way from the start to the end.
+     *
      * @return True if the end state is located, otherwise false.
      */
     private boolean recursive(final Enum abourt, final TransitionContainer possiblePart, final List<TransitionContainer> chainParts, final int fallBack) {
@@ -225,8 +230,8 @@ public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
         }
 
         List<TransitionContainer> nextPossibles = this.transitions.stream()
-            .filter(transition -> transition.getFrom().equals(possiblePart.getTo()))
-            .collect(Collectors.toList());
+                .filter(transition -> transition.getFrom().equals(possiblePart.getTo()))
+                .collect(Collectors.toList());
 
         if (nextPossibles.isEmpty()) {
             LOGGER.trace("There is no transition available from '{}' to '{}'.", possiblePart.getFrom().name(), abourt.name());
@@ -248,16 +253,16 @@ public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
         }
 
         final List<List<TransitionContainer>> buffer = nextPossibles.stream()
-            .map((nextPossible) -> {
-                List<TransitionContainer> temp = new ArrayList<>();
-                temp.add(nextPossible);
-                if (!this.recursive(abourt, nextPossible, temp, fallBack + 1)) {
-                    return null;
-                }
-                return temp;
-            })
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
+                .map((nextPossible) -> {
+                    List<TransitionContainer> temp = new ArrayList<>();
+                    temp.add(nextPossible);
+                    if (!this.recursive(abourt, nextPossible, temp, fallBack + 1)) {
+                        return null;
+                    }
+                    return temp;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
         if (!buffer.isEmpty()) {
             ///< No parts found

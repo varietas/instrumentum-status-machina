@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 
 /**
  * <h2>Transitions</h2>
- *
+ * <p>
  * The transitions annotation is a container for multiple usage of the same annotation on one annotation target.
  *
  * @author Michael Rhöse

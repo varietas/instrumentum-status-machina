@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 /**
  * <h2>ChainListener</h2>
- *
+ * <p>
  * Transition chain listeners allow the execution of methods before and/or after a transition. Attention: There is no interface available. The methods have to be written as shown below:
  * <pre>
  * <code>

@@ -26,7 +26,7 @@ import lombok.ToString;
 
 /**
  * <h2>ChainContainer</h2>
- *
+ * <p>
  * The chain container holds relevant information collected from {@link TransitionChain} annotation on runtime. This includes the
  * <ul>
  * <li>required start state,</li>
@@ -34,15 +34,15 @@ import lombok.ToString;
  * <li>name of the chain and</li>
  * <li>the list of transitions, which are passed.</li>
  * </ul>
- *
+ * <p>
  * The transitions are collected while the configuration is created automatically by the {@link StateMachineBuilderImpl}. Its recommended that a configuration is created once per {@link StateMachine}
  * and shared between the instances.
  *
  * @author Michael Rhöse
  * @version 1.0.0, 10/7/2017
- * @param <STATE_TYPE> Generic type of enumeration which is used to represent the states.
+ * @param <STATE_TYPE>      Generic type of enumeration which is used to represent the states.
  * @param <TRANSITION_TYPE> Generic type of enumeration which is used to represent the occurred event (Event identifier).
- * @param <CHAIN_TYPE> Generic type of enumeration which is used to represent a chain event (Chain identifier).
+ * @param <CHAIN_TYPE>      Generic type of enumeration which is used to represent a chain event (Chain identifier).
  */
 @ToString(exclude = {"from", "to", "chainParts"})
 @EqualsAndHashCode(exclude = "chainParts")

@@ -72,7 +72,7 @@ public class TransitionChainCreationException extends RuntimeException {
     @Override
     public String getLocalizedMessage() {
         return "Couldn't create chain '" + this.chain + "'. "
-            + "There is now transition available from " + ((this.direction) ? this.from + " to " + this.to : this.to + " to " + this.from) + ". "
-            + ((Objects.isNull(this.getMessage())) ? "" : this.getMessage());
+                + "There is now transition available from " + ((this.direction) ? this.from + " to " + this.to : this.to + " to " + this.from) + ". "
+                + ((Objects.isNull(this.getMessage())) ? "" : this.getMessage());
     }
 }

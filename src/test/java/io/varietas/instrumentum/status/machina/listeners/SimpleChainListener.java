@@ -13,22 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.varietas.instrumentum.status.machina.configuration;
+package io.varietas.instrumentum.status.machina.listeners;
 
-import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
-import java.util.List;
+import io.varietas.instrumentum.status.machina.models.Chain;
+import io.varietas.instrumentum.status.machina.models.TestEntity;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * <h2>FSMConfiguration</h2>
+ * <h2>SimpleChainListener</h2>
  *
  * @author Michael Rhöse
  * @version 1.0.0, 10/27/2017
  */
-public interface FSMConfiguration {
+@Slf4j
+public class SimpleChainListener {
 
-    List<TransitionContainer> getTransitions();
+    public void after(final Chain chain, final TestEntity target) {
+        target.setValue(target.getValue() - 100);
+    }
 
-    Class<? extends Enum> getStateType();
-
-    Class<? extends Enum> getEventType();
+    public void before(final Chain chain, final TestEntity target) {
+        target.setValue(target.getValue() + 100);
+    }
 }

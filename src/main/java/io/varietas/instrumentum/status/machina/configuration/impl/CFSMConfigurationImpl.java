@@ -16,8 +16,8 @@
 package io.varietas.instrumentum.status.machina.configuration.impl;
 
 import io.varietas.instrumentum.status.machina.configuration.CFSMConfiguration;
-import io.varietas.instrumentum.status.machina.container.ChainContainer;
-import io.varietas.instrumentum.status.machina.container.TransitionContainer;
+import io.varietas.instrumentum.status.machina.containers.ChainContainer;
+import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

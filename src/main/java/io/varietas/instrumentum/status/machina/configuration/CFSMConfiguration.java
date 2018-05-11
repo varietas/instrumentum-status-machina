@@ -15,7 +15,7 @@
  */
 package io.varietas.instrumentum.status.machina.configuration;
 
-import io.varietas.instrumentum.status.machina.container.ChainContainer;
+import io.varietas.instrumentum.status.machina.containers.ChainContainer;
 import java.util.List;
 
 /**

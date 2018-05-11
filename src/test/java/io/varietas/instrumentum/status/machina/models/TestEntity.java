@@ -13,33 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.varietas.instrumentum.status.machina.configuration.impl;
+package io.varietas.instrumentum.status.machina.models;
 
-import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
-import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
-import java.util.List;
+import io.varietas.instrumentum.status.machina.StatedObject;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
- * <h2>FSMConfigurationImpl</h2>
- * <p>
- * This class represents a container to use FSM in a dependency injection framework like agrestis imputare. It allows the separate storing of configuration as singleton.
+ * <h2>TestEntity</h2>
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/10/2017
+ * @version 1.0.0, 10/31/2017
  */
 @ToString
 @EqualsAndHashCode
-@Getter
 @AllArgsConstructor
-public class FSMConfigurationImpl implements FSMConfiguration {
+public class TestEntity implements StatedObject<State> {
 
-    private final List<TransitionContainer> transitions;
+    private State state;
+    @Getter
+    @Setter
+    private int value;
 
-    private final Class<? extends Enum> stateType;
+    @Override
+    public State state() {
+        return this.state;
+    }
 
-    private final Class<? extends Enum> eventType;
+    @Override
+    public void state(State state) {
+        this.state = state;
+    }
 }

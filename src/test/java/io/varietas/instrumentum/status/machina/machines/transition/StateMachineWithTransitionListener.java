@@ -16,15 +16,15 @@
 package io.varietas.instrumentum.status.machina.machines.transition;
 
 import io.varietas.instrumentum.status.machina.AbstractStateMachine;
-import io.varietas.instrumentum.status.machina.annotation.StateMachineConfiguration;
-import io.varietas.instrumentum.status.machina.annotation.Transition;
-import io.varietas.instrumentum.status.machina.annotation.TransitionListener;
+import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
+import io.varietas.instrumentum.status.machina.annotations.Transition;
+import io.varietas.instrumentum.status.machina.annotations.TransitionListener;
 import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
-import io.varietas.instrumentum.status.machina.model.Chain;
-import io.varietas.instrumentum.status.machina.model.Event;
-import io.varietas.instrumentum.status.machina.model.State;
-import io.varietas.instrumentum.status.machina.model.TestEntity;
-import io.varietas.instrumentum.status.machina.listener.SimpleTransitionListener;
+import io.varietas.instrumentum.status.machina.models.Chain;
+import io.varietas.instrumentum.status.machina.models.Event;
+import io.varietas.instrumentum.status.machina.models.State;
+import io.varietas.instrumentum.status.machina.models.TestEntity;
+import io.varietas.instrumentum.status.machina.listeners.SimpleTransitionListener;
 import lombok.extern.slf4j.Slf4j;
 
 /**

@@ -13,22 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.varietas.instrumentum.status.machina.configuration;
+package io.varietas.instrumentum.status.machina.annotations;
 
-import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * <h2>FSMConfiguration</h2>
+ * <h2>Transitions</h2>
+ * <p>
+ * The transitions annotation is a container for multiple usage of the same annotation on one annotation target.
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/27/2017
+ * @version 1.0.0, 10/7/2017
  */
-public interface FSMConfiguration {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD})
+public @interface Transitions {
 
-    List<TransitionContainer> getTransitions();
-
-    Class<? extends Enum> getStateType();
-
-    Class<? extends Enum> getEventType();
+    /**
+     * Available {@link Transition} annotations.
+     *
+     * @return Transitions.
+     */
+    Transition[] value();
 }

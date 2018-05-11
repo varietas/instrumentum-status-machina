@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.varietas.instrumentum.status.machina.configuration;
-
-import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
-import java.util.List;
+package io.varietas.instrumentum.status.machina.models;
 
 /**
- * <h2>FSMConfiguration</h2>
+ * <h2>State</h2>
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/27/2017
+ * @version 1.0.0, 10/31/2017
  */
-public interface FSMConfiguration {
+public enum State {
 
-    List<TransitionContainer> getTransitions();
-
-    Class<? extends Enum> getStateType();
-
-    Class<? extends Enum> getEventType();
+    AVAILABLE,
+    REGISTERED,
+    ACTIVATED,
+    DEACTIVATED,
+    PARKED,
+    UNREGISTERED,
+    DELETED,
 }

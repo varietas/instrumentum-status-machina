@@ -15,16 +15,16 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import io.varietas.instrumentum.status.machina.builder.impl.StateMachineBuilderImpl;
+import io.varietas.instrumentum.status.machina.builders.impl.StateMachineBuilderImpl;
 import io.varietas.instrumentum.status.machina.error.InvalidTransitionException;
 import io.varietas.instrumentum.status.machina.error.MachineCreationException;
 import io.varietas.instrumentum.status.machina.machines.transition.FailingStateMachine;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithTransitionAfterListener;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithTransitionBeforeListener;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithoutListener;
-import io.varietas.instrumentum.status.machina.model.Event;
-import io.varietas.instrumentum.status.machina.model.State;
-import io.varietas.instrumentum.status.machina.model.TestEntity;
+import io.varietas.instrumentum.status.machina.models.Event;
+import io.varietas.instrumentum.status.machina.models.State;
+import io.varietas.instrumentum.status.machina.models.TestEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.BeforeClass;

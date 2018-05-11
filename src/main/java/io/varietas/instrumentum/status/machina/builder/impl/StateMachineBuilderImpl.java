@@ -16,7 +16,7 @@
 package io.varietas.instrumentum.status.machina.builder.impl;
 
 import io.varietas.instrumentum.status.machina.StateMachine;
-import io.varietas.instrumentum.status.machina.configuration.FSMConfigurationImpl;
+import io.varietas.instrumentum.status.machina.configuration.impl.FSMConfigurationImpl;
 import io.varietas.instrumentum.status.machina.annotation.StateMachineConfiguration;
 import io.varietas.instrumentum.status.machina.annotation.Transition;
 import io.varietas.instrumentum.status.machina.annotation.TransitionListener;
@@ -42,6 +42,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * <h2>StateMachineBuilderImpl</h2>
+ * <p>
+ * Implementation of the {@link StateMachineBuilder} interface. This builder is for simple state machines.
  *
  * @author Michael Rhöse
  * @version 1.0.0, 10/9/2017

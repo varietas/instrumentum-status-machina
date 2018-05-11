@@ -15,7 +15,7 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import io.varietas.instrumentum.status.machina.configuration.CFSMConfigurationImpl;
+import io.varietas.instrumentum.status.machina.configuration.impl.CFSMConfigurationImpl;
 import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.container.ChainContainer;
 import io.varietas.instrumentum.status.machina.container.ListenerContainer;
@@ -28,6 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * <h2>AbstractChainStateMachine</h2>
+ * <p>
+ * This class represents an abstract implementation of the {@link ChainStateMachine} interface. The default implementation contains the firing of single transitions and transition chains.
  *
  * @author Michael Rhöse
  * @version 1.0.0, 10/27/2017

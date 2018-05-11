@@ -26,7 +26,17 @@ import java.util.List;
  */
 public interface CFSMConfiguration extends FSMConfiguration {
 
+    /**
+     * Returns the collected chains of the FSM type.
+     *
+     * @return Collected chains.
+     */
     List<ChainContainer> getChains();
 
+    /**
+     * Returns the chain type of the current FSM type.
+     *
+     * @return Chain type.
+     */
     Class<? extends Enum> getChainType();
 }

@@ -26,7 +26,7 @@ import io.varietas.instrumentum.status.machina.machines.transition.StateMachineW
 import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineWithoutListener;
 import io.varietas.instrumentum.status.machina.builder.impl.ChainStateMachineBuilderImpl;
 import io.varietas.instrumentum.status.machina.StateMachine;
-import io.varietas.instrumentum.status.machina.configuration.CFSMConfigurationImpl;
+import io.varietas.instrumentum.status.machina.configuration.impl.CFSMConfigurationImpl;
 import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.container.ChainContainer;
 import io.varietas.instrumentum.status.machina.container.ListenerContainer;

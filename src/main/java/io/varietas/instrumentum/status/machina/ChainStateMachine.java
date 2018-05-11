@@ -20,11 +20,25 @@ import io.varietas.instrumentum.status.machina.error.TransitionInvocationExcepti
 
 /**
  * <h2>ChainStateMachine</h2>
+ * <p>
+ * This interface has to be implemented by each finite state machine that provides the chaining of transition. It represents the minimal API of a FSM and makes the usage within DI frameworks e.g.
+ * Spring or agrestis imputare possible.
  *
  * @author Michael Rhöse
  * @version 1.0.0, 10/27/2017
  */
 public interface ChainStateMachine extends StateMachine {
 
+    /**
+     * Executes the actual logic for a upcoming event on the given object. The first step is the comparison of the current state of the object with the required state of the transition. If an object
+     * isn't in the right state, an {@link InvalidTransitionException} is thrown. The state machine invokes every transition that are specified for the chain event. Important: The transitions running
+     * one after another.
+     *
+     * @param transitionChain Upcoming transition chain event that triggers the FSM.
+     * @param target          Transition operation target.
+     *
+     * @throws TransitionInvocationException Thrown if the upcoming transition and/or chain event isn't configured for the current FSM.
+     * @throws InvalidTransitionException Thrown if the current state of a target isn't equals to the expected transition start state.
+     */
     void fireChain(final Enum transitionChain, final StatedObject target) throws TransitionInvocationException, InvalidTransitionException;
 }

@@ -22,7 +22,7 @@ import io.varietas.instrumentum.status.machina.annotation.ChainListeners;
 import io.varietas.instrumentum.status.machina.annotation.StateMachineConfiguration;
 import io.varietas.instrumentum.status.machina.annotation.TransitionChain;
 import io.varietas.instrumentum.status.machina.annotation.TransitionChains;
-import io.varietas.instrumentum.status.machina.configuration.CFSMConfigurationImpl;
+import io.varietas.instrumentum.status.machina.configuration.impl.CFSMConfigurationImpl;
 import io.varietas.instrumentum.status.machina.container.ChainContainer;
 import io.varietas.instrumentum.status.machina.container.ListenerContainer;
 import io.varietas.instrumentum.status.machina.container.TransitionContainer;
@@ -41,6 +41,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * <h2>ChainStateMachineBuilderImpl</h2>
+ * <p>
+ * Implementation of the {@link StateMachineBuilder} interface. This builder is for state machines that provide transition chains.
  *
  * @author Michael Rhöse
  * @version 1.0.0, 10/27/2017

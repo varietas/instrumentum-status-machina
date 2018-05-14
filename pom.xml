@@ -15,11 +15,14 @@
     <name>|VCI| status machina - The finite state machine</name>
     <description>The finite state machine library contains all necessary functionality for usage of a finite state machine.</description>
     <url>https://varietas.io</url>
-    
+    <inceptionYear>2017</inceptionYear>
+
     <developers>
         <developer>
             <name>Michael Rhöse</name>
             <email>michael.rhoese@varietas.io</email>
+            <organization>varietas.io</organization>
+            <organizationUrl>https://varietas.io</organizationUrl>
             <roles>
                 <role>Project owner</role>
                 <role>Developer</role>
@@ -35,12 +38,18 @@
         </license>
     </licenses>
     
+    <scm>
+        <connection>scm:git@github.com:varietas/varietas-bom.git</connection>
+        <developerConnection>scm:git:git@github.com:varietas/varietas-bom.git</developerConnection>
+        <url>https://github.com/varietas/varietas-bom/tree/master</url>
+    </scm>
+    
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>io.varietas</groupId>
                 <artifactId>varietas-bom</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -52,6 +61,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <scope>compile</scope>
         </dependency>
         <!-- Dependency for logging with logback. -->
         <dependency>
@@ -62,7 +72,6 @@
         <dependency>                                    
             <groupId>org.slf4j</groupId>                
             <artifactId>jcl-over-slf4j</artifactId>
-            <optional>true</optional>
         </dependency>
         
         <!-- Test dependencies -->

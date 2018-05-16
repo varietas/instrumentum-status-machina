@@ -39,9 +39,9 @@
     </licenses>
     
     <scm>
-        <connection>scm:git@github.com:varietas/varietas-bom.git</connection>
-        <developerConnection>scm:git:git@github.com:varietas/varietas-bom.git</developerConnection>
-        <url>https://github.com/varietas/varietas-bom/tree/master</url>
+        <connection>git@github.com:varietas/instrumentum-status-machina.git</connection>
+        <developerConnection>git@github.com:varietas/instrumentum-status-machina.git</developerConnection>
+        <url>https://github.com/varietas/instrumentum-status-machina/tree/master</url>
     </scm>
     
     <dependencyManagement>
@@ -49,7 +49,7 @@
             <dependency>
                 <groupId>io.varietas</groupId>
                 <artifactId>varietas-bom</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

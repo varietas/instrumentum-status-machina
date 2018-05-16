@@ -48,5 +48,10 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 public @interface TransitionListener {
 
+    /**
+     * Type of the FSM transition listener.
+     *
+     * @return The listener type.
+     */
     Class<?> value();
 }

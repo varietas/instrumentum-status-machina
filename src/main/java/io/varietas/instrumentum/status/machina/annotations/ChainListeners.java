@@ -23,6 +23,10 @@ import java.lang.annotation.Target;
 /**
  * <h2>ChainListeners</h2>
  *
+ * The chain listeners allow the automated run of additional logic for a chain.
+ *
+ * @see io.varietas.instrumentum.status.machina.annotations.ChainListener
+ *
  * @author Michael Rhöse
  * @version 1.0.0, 10/27/2017
  */

@@ -46,7 +46,17 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface ChainListener {
 
+    /**
+     * Type of the FSM chain listener.
+     *
+     * @return The listener type.
+     */
     Class<?> value();
 
+    /**
+     * Specifies the firing target. The listener can be configured for all available chains in the FSM or only for one (or more) listener(s).
+     *
+     * @return Firing target.
+     */
     String[] forChains() default "ALL";
 }

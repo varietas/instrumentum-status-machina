@@ -20,8 +20,36 @@ import io.varietas.instrumentum.status.machina.error.TransitionInvocationExcepti
 
 /**
  * <h2>StateMachine</h2>
- * <p>
  * This interface has to be implemented by each finite state machine. It represents the minimal API of a FSM and makes the usage within DI frameworks e.g. Spring or agrestis imputare possible.
+ *
+ * <h3>Getting instance</h3>
+ * Status machina (SM) extracts the configuration from a machine class and invokes the transition methods on the machine instance. For creating an instance, the
+ * {@link io.varietas.instrumentum.status.machina.builders.StateMachineBuilder} is the best way. There are different implementations of the builder available. The taken builder depends on the state
+ * machine type.
+ *
+ * <pre>
+ * <code>
+ *  CustomStateMachine machine = new StateMachineBuilderImpl()
+ *      .extractConfiguration(CustomStateMachine.class)
+ *      .build();
+ * </code>
+ * </pre>
+ *
+ * The {@link io.varietas.instrumentum.status.machina.configuration.FSMConfiguration} can be stored separately for instancing multiple machines.
+ *
+ * <pre>
+ * <code>
+ *  FSMConfiguration configuration = new StateMachineBuilderImpl()
+ *      .extractConfiguration(CustomStateMachine.class)
+ *      .configuration();
+ *
+ *  CustomStateMachine machine = new StateMachineBuilderImpl().configuration(configuration).build()
+ * </code>
+ * </pre>
+ *
+ * An example for a basic state machine can be found in the test package (machines/transition/StateMachineWithoutListener.java).
+ *
+ * @see io.varietas.instrumentum.status.machina.builders.StateMachineBuilder
  *
  * @author Michael Rhöse
  * @version 1.0.0, 10/9/2017

@@ -24,6 +24,11 @@ import java.lang.annotation.Target;
 /**
  * <h2>TransitionListeners</h2>
  *
+ * The transition listeners allow the automated run of additional logic for a transition.
+ *
+ * @see io.varietas.instrumentum.status.machina.annotations.TransitionListener
+ *
+ *
  * @author Michael Rhöse
  * @version 1.0.0, 10/27/2017
  */

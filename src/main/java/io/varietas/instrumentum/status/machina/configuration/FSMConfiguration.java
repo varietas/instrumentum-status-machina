@@ -21,14 +21,34 @@ import java.util.List;
 /**
  * <h2>FSMConfiguration</h2>
  *
+ * This interface must be implemented by a container that stores the configuration for a {@link io.varietas.instrumentum.status.machina.StateMachine}. It contains the basic information that are
+ * necessary for a state machine.
+ *
+ * @see io.varietas.instrumentum.status.machina.StateMachine
+ *
  * @author Michael Rhöse
  * @version 1.0.0, 10/27/2017
  */
 public interface FSMConfiguration {
 
+    /**
+     * Returns the collected transitions of the FSM type.
+     *
+     * @return Collected transitions.
+     */
     List<TransitionContainer> getTransitions();
 
+    /**
+     * Returns the state type of the current FSM type.
+     *
+     * @return State type.
+     */
     Class<? extends Enum> getStateType();
 
+    /**
+     * Returns the event type of the current FSM type.
+     *
+     * @return event type.
+     */
     Class<? extends Enum> getEventType();
 }

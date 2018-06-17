@@ -38,9 +38,9 @@ import org.junit.runners.JUnit4;
  */
 @Slf4j
 @RunWith(JUnit4.class)
-public class AbstractStateMachineTest {
+public class AbstractStateMachineTests {
 
-    public AbstractStateMachineTest() {
+    public AbstractStateMachineTests() {
     }
 
     @BeforeClass
@@ -75,7 +75,7 @@ public class AbstractStateMachineTest {
     @Test
     public void testFailMachineBuilding() {
         Assertions.assertThatThrownBy(() -> new StateMachineBuilderImpl().extractConfiguration(FailingStateMachine.class).build())
-            .isInstanceOf(MachineCreationException.class);
+                .isInstanceOf(MachineCreationException.class);
     }
 
     /**
@@ -130,5 +130,16 @@ public class AbstractStateMachineTest {
         Assertions.assertThat(entity.getValue()).isEqualTo(expectedValue);
         Assertions.assertThat(entity.state()).isEqualTo(state);
         LOGGER.info("Value after transition {}: {} | {}", event, entity.state(), entity.getValue());
+    }
+
+    @Test
+    public void testForInvalidTransition() throws MachineCreationException {
+
+        StateMachine stateMachine = new StateMachineBuilderImpl().extractConfiguration(StateMachineWithTransitionAfterListener.class).build();
+        TestEntity entity = new TestEntity(State.AVAILABLE, 0);
+        Assertions
+                .assertThatThrownBy(() -> stateMachine.fire(Event.ACTIVATE, entity))
+                .isInstanceOf(InvalidTransitionException.class)
+                .hasMessage("State of target 'AVAILABLE' doesn't match required state for tarnsition 'ACTIVATE'.");
     }
 }

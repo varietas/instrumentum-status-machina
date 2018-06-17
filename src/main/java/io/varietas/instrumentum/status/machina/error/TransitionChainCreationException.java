@@ -16,6 +16,7 @@
 package io.varietas.instrumentum.status.machina.error;
 
 import java.util.Objects;
+import lombok.NonNull;
 
 /**
  * <h2>TransitionChainCreationException</h2>
@@ -29,40 +30,34 @@ public class TransitionChainCreationException extends RuntimeException {
     private final String from;
     private final String to;
     private final String chain;
+    private String message;
 
-    public TransitionChainCreationException(boolean direction, String from, String to, String chain) {
+    public TransitionChainCreationException(final boolean direction, @NonNull final String from, @NonNull final String to, @NonNull final String chain) {
         this.direction = direction;
         this.from = from;
         this.to = to;
         this.chain = chain;
     }
 
-    public TransitionChainCreationException(boolean direction, String from, String to, String chain, String message) {
-        super(message);
+    public TransitionChainCreationException(final boolean direction, @NonNull final String from, @NonNull final String to, @NonNull final String chain, final String message) {
         this.direction = direction;
         this.from = from;
         this.to = to;
         this.chain = chain;
+        this.message = message;
     }
 
-    public TransitionChainCreationException(boolean direction, String from, String to, String chain, String message, Throwable cause) {
-        super(message, cause);
-        this.direction = direction;
-        this.from = from;
-        this.to = to;
-        this.chain = chain;
-    }
-
-    public TransitionChainCreationException(boolean direction, String from, String to, String chain, Throwable cause) {
+    public TransitionChainCreationException(final boolean direction, @NonNull final String from, @NonNull final String to, @NonNull final String chain, final String message, final Throwable cause) {
         super(cause);
         this.direction = direction;
         this.from = from;
         this.to = to;
         this.chain = chain;
+        this.message = message;
     }
 
-    public TransitionChainCreationException(boolean direction, String from, String to, String chain, String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public TransitionChainCreationException(final boolean direction, @NonNull final String from, @NonNull final String to, @NonNull final String chain, final Throwable cause) {
+        super(cause);
         this.direction = direction;
         this.from = from;
         this.to = to;
@@ -71,8 +66,32 @@ public class TransitionChainCreationException extends RuntimeException {
 
     @Override
     public String getLocalizedMessage() {
-        return "Couldn't create chain '" + this.chain + "'. "
-                + "There is now transition available from " + ((this.direction) ? this.from + " to " + this.to : this.to + " to " + this.from) + ". "
-                + ((Objects.isNull(this.getMessage())) ? "" : this.getMessage());
+
+        final StringBuilder builder = new StringBuilder("Couldn't create chain '")
+                .append(this.chain)
+                .append("'. There is now transition available from '");
+
+        if (this.direction) {
+            builder.append(this.from).append("' to '").append(this.to);
+        } else {
+            builder.append(this.to).append("' to '").append(this.from);
+        }
+
+        if (Objects.nonNull(this.message)) {
+            builder.append("': ").append(this.message).append('.');
+        } else {
+            builder.append("'.");
+        }
+
+        if (Objects.nonNull(super.getCause())) {
+            builder
+                    .append(' ')
+                    .append(super.getCause().getClass().getSimpleName())
+                    .append(": ")
+                    .append(super.getCause().getLocalizedMessage())
+                    .append('.');
+        }
+
+        return builder.toString();
     }
 }

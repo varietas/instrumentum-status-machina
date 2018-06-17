@@ -19,32 +19,49 @@ import java.util.Objects;
 import lombok.NonNull;
 
 /**
- * <h2>InvalidTransitionException</h2>
+ * <h2>InvalidTransitionError</h2>
  *
  * @author Michael Rhöse
  * @version 1.0.0, 10/8/2017
  */
-public class InvalidTransitionException extends RuntimeException {
+public class InvalidTransitionChainException extends Exception {
 
-    private final Enum transition;
+    private final Enum chain;
+    private String message;
 
-    public InvalidTransitionException(@NonNull final Enum transition, @NonNull final String message) {
-        super(message);
-        this.transition = transition;
+    public InvalidTransitionChainException(@NonNull final Enum chain) {
+        this.chain = chain;
     }
 
-    public InvalidTransitionException(@NonNull final Enum transition, @NonNull final String message, final Throwable cause) {
-        super(message, cause);
-        this.transition = transition;
+    public InvalidTransitionChainException(@NonNull final Enum chain, final String message) {
+        this.chain = chain;
+        this.message = message;
+    }
+
+    public InvalidTransitionChainException(@NonNull final Enum chain, final String message, final Throwable cause) {
+        super(cause);
+        this.chain = chain;
+        this.message = message;
+    }
+
+    public InvalidTransitionChainException(@NonNull final Enum chain, final Throwable cause) {
+        super(cause);
+        this.chain = chain;
     }
 
     @Override
     public String getLocalizedMessage() {
-        StringBuilder builder = new StringBuilder("Transition '")
-                .append(transition.name())
-                .append("' isn't possible: ")
-                .append(this.getMessage())
-                .append('.');
+
+        final StringBuilder builder = new StringBuilder("Chain '")
+                .append(this.chain.name())
+                .append("' isn't possible");
+
+        if (Objects.nonNull(this.message)) {
+            builder.append("': ").append(this.message).append('.');
+        } else {
+            builder.append("'.");
+        }
+
         if (Objects.nonNull(super.getCause())) {
             builder
                     .append(' ')

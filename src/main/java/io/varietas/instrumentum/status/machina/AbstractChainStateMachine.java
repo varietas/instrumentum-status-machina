@@ -34,7 +34,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author Michael Rhöse
  * @version 1.0.0, 10/27/2017
  */
-@Slf4j
 public abstract class AbstractChainStateMachine extends AbstractStateMachine implements ChainStateMachine {
 
     public AbstractChainStateMachine(FSMConfiguration configuration) {

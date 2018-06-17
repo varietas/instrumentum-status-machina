@@ -104,7 +104,7 @@ public class StateMachineBuilderImpl implements StateMachineBuilder {
      *
      * @return Instance of the state machine.
      *
-     * @throws MachineCreationException Thrown if an error occurred. Possible errors are typically reflection exceptions e.g. InstantiationException, IllegalAccessException and soon.
+     * @throws MachineCreationException Thrown if an error occurred. Possible errors are typically reflection exceptions e.g. InstantiationException, IllegalAccessException and so on.
      */
     @Override
     public StateMachine build() throws MachineCreationException {

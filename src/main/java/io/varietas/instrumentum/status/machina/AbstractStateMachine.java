@@ -75,7 +75,7 @@ public abstract class AbstractStateMachine implements StateMachine {
         final Optional<TransitionContainer> transitionContainer = this.findTransitionContainer(transition, target.state());
 
         if (!transitionContainer.isPresent()) {
-            throw new InvalidTransitionException(transition, "Couldn't find transition.");
+            throw new InvalidTransitionException(transition, "State of target '" + target.state().name() + "' doesn't match required state for tarnsition '" + transition.name() + "'.");
         }
 
         this.fire(transitionContainer.get(), target);

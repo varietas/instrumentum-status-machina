@@ -17,6 +17,7 @@ package io.varietas.instrumentum.status.machina.error;
 
 import io.varietas.instrumentum.status.machina.StateMachine;
 import java.util.Objects;
+import lombok.NonNull;
 
 /**
  * <h2>MachineCreationException</h2>
@@ -26,25 +27,42 @@ import java.util.Objects;
  */
 public class MachineCreationException extends Exception {
 
-    private Class<? extends StateMachine> machineType;
+    private final Class<? extends StateMachine> machineType;
 
-    public MachineCreationException(Class<? extends StateMachine> machineType) {
+    public MachineCreationException(@NonNull final Class<? extends StateMachine> machineType) {
         this.machineType = machineType;
     }
 
-    public MachineCreationException(Class<? extends StateMachine> machineType, String message) {
+    public MachineCreationException(@NonNull final Class<? extends StateMachine> machineType, final String message) {
         super(message);
         this.machineType = machineType;
     }
 
-    public MachineCreationException(Class<? extends StateMachine> machineType, String message, Throwable cause) {
+    public MachineCreationException(@NonNull final Class<? extends StateMachine> machineType, final String message, final Throwable cause) {
         super(message, cause);
         this.machineType = machineType;
     }
 
     @Override
     public String getLocalizedMessage() {
-        return "Couldn't create state machine '" + this.machineType.getName() + "'. "
-                + ((Objects.isNull(this.getMessage())) ? "" : this.getMessage());
+        final StringBuilder builder = new StringBuilder("Couldn't create state machine '")
+                .append(this.machineType.getName());
+
+        if (Objects.nonNull(this.getMessage())) {
+            builder.append("': ").append(this.getMessage()).append('.');
+        } else {
+            builder.append("'.");
+        }
+
+        if (Objects.nonNull(super.getCause())) {
+            builder
+                    .append(' ')
+                    .append(super.getCause().getClass().getSimpleName())
+                    .append(": ")
+                    .append(super.getCause().getLocalizedMessage())
+                    .append('.');
+        }
+
+        return builder.toString();
     }
 }

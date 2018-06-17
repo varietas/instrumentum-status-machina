@@ -16,6 +16,7 @@
 package io.varietas.instrumentum.status.machina.error;
 
 import java.util.Objects;
+import lombok.NonNull;
 
 /**
  * <h2>TransitionInvocationException</h2>
@@ -27,39 +28,55 @@ public class TransitionInvocationException extends RuntimeException {
 
     private final Enum transition;
     private final String methodName;
+    private String message;
 
-    public TransitionInvocationException(Enum transition, String methodName) {
+    public TransitionInvocationException(@NonNull final Enum transition, @NonNull final String methodName) {
         this.transition = transition;
         this.methodName = methodName;
     }
 
-    public TransitionInvocationException(Enum transition, String methodName, String message) {
-        super(message);
+    public TransitionInvocationException(@NonNull final Enum transition, @NonNull final String methodName, final String message) {
         this.transition = transition;
         this.methodName = methodName;
+        this.message = message;
     }
 
-    public TransitionInvocationException(Enum transition, String methodName, String message, Throwable cause) {
-        super(message, cause);
-        this.transition = transition;
-        this.methodName = methodName;
-    }
-
-    public TransitionInvocationException(Enum transition, String methodName, Throwable cause) {
+    public TransitionInvocationException(@NonNull final Enum transition, @NonNull final String methodName, final String message, final Throwable cause) {
         super(cause);
         this.transition = transition;
         this.methodName = methodName;
+        this.message = message;
     }
 
-    public TransitionInvocationException(Enum transition, String methodName, String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public TransitionInvocationException(@NonNull final Enum transition, @NonNull final String methodName, final Throwable cause) {
+        super(cause);
         this.transition = transition;
         this.methodName = methodName;
     }
 
     @Override
     public String getLocalizedMessage() {
-        return "Couldn't invoke method '" + methodName + "' for transition '" + transition.name() + "'. "
-                + ((Objects.isNull(this.getMessage())) ? "" : this.getMessage());
+
+        final StringBuilder builder = new StringBuilder("Couldn't invoke method '")
+                .append(this.methodName)
+                .append("' for transition '")
+                .append(transition.name());
+
+        if (Objects.nonNull(this.message)) {
+            builder.append("': ").append(this.message).append('.');
+        } else {
+            builder.append("'.");
+        }
+
+        if (Objects.nonNull(super.getCause())) {
+            builder
+                    .append(' ')
+                    .append(super.getCause().getClass().getSimpleName())
+                    .append(": ")
+                    .append(super.getCause().getLocalizedMessage())
+                    .append('.');
+        }
+
+        return builder.toString();
     }
 }

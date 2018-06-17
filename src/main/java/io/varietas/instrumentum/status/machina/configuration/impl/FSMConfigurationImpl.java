@@ -15,6 +15,7 @@
  */
 package io.varietas.instrumentum.status.machina.configuration.impl;
 
+import io.varietas.instrumentum.status.machina.StateMachine;
 import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
 import java.util.List;
@@ -36,6 +37,8 @@ import lombok.ToString;
 @Getter
 @AllArgsConstructor
 public class FSMConfigurationImpl implements FSMConfiguration {
+
+    private final Class<? extends StateMachine> machineType;
 
     private final List<TransitionContainer> transitions;
 

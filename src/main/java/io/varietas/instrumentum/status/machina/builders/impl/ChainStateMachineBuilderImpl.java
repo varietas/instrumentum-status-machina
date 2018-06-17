@@ -22,6 +22,8 @@ import io.varietas.instrumentum.status.machina.annotations.ChainListeners;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.TransitionChain;
 import io.varietas.instrumentum.status.machina.annotations.TransitionChains;
+import io.varietas.instrumentum.status.machina.builders.StateMachineBuilder;
+import io.varietas.instrumentum.status.machina.configuration.CFSMConfiguration;
 import io.varietas.instrumentum.status.machina.configuration.impl.CFSMConfigurationImpl;
 import io.varietas.instrumentum.status.machina.containers.ChainContainer;
 import io.varietas.instrumentum.status.machina.containers.ListenerContainer;
@@ -48,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version 1.0.0, 10/27/2017
  */
 @Slf4j
-public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
+public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CFSMConfiguration> {
 
     protected Class<? extends Enum> chainType;
 
@@ -63,19 +65,19 @@ public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
      * @return The instance of the builder for a fluent like API.
      */
     @Override
-    public ChainStateMachineBuilderImpl extractConfiguration(final Class<? extends StateMachine> machineType) {
-        this.machineType = machineType;
+    public StateMachineBuilder<CFSMConfiguration> extractConfiguration(final Class<? extends StateMachine> machineType) {
 
-        StateMachineConfiguration machineConfiguration = this.machineType.getAnnotation(StateMachineConfiguration.class);
+        StateMachineConfiguration machineConfiguration = machineType.getAnnotation(StateMachineConfiguration.class);
 
         this.stateType = machineConfiguration.stateType();
         this.eventType = machineConfiguration.eventType();
         this.chainType = machineConfiguration.chainType();
 
-        this.transitions.addAll(this.collectTransitions());
-        this.chains.addAll(this.createChains());
+        this.transitions.addAll(this.collectTransitions(machineType));
+        this.chains.addAll(this.createChains(machineType));
 
         this.configuration = new CFSMConfigurationImpl(
+                machineType,
                 this.transitions,
                 this.chains,
                 this.stateType,
@@ -88,7 +90,7 @@ public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
                 + "-> {} used for state type\n"
                 + "-> {} used for event type\n"
                 + "-> {} used for chain type.",
-                this.machineType.getSimpleName(),
+                this.configuration.getMachineType().getSimpleName(),
                 this.transitions.size(),
                 this.chains.size(),
                 this.stateType.getSimpleName(),
@@ -103,17 +105,18 @@ public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
      * The varietas.io transition implementation supports transition chains. These chains allow the definition of transition on programming time. That makes execution of chained transitions with a
      * single command possible. This method creates all available transition chains.
      *
+     * @param machineType The machine where the chains are configured.
      * @return List of all available transition chains.
      */
-    private List<ChainContainer> createChains() {
+    private List<ChainContainer> createChains(final Class<? extends StateMachine> machineType) {
 
-        final List<Pair> listeners = this.extractChainListener(this.machineType);
-
-        if (!this.machineType.isAnnotationPresent(TransitionChains.class) && this.machineType.isAnnotationPresent(TransitionChains.class)) {
+        if (!machineType.isAnnotationPresent(TransitionChain.class) && !machineType.isAnnotationPresent(TransitionChains.class)) {
             return Collections.emptyList();
         }
 
-        return Stream.of(this.machineType.getAnnotationsByType(TransitionChain.class))
+        final List<Pair> listeners = this.extractChainListener(machineType);
+
+        return Stream.of(machineType.getAnnotationsByType(TransitionChain.class))
                 .map(chain -> {
                     List<ListenerContainer> requiredListeners = listeners.stream()
                             .filter(listener -> listener.targetChains.contains("ALL") || listener.targetChains.contains(chain.on()))
@@ -129,22 +132,22 @@ public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
     /**
      * Creates a chain container with all required information.
      *
-     * @param chain     Target chain of the container.
+     * @param chain Target chain of the container.
      * @param listeners Available listeners which have to be fired for this chain.
      *
      * @return Chain container with all relevant information.
      */
     private ChainContainer createChain(final TransitionChain chain, final List<ListenerContainer> listeners) {
-        Enum from = Enum.valueOf(this.stateType, chain.from());
-        Enum to = Enum.valueOf(stateType, chain.to());
-        Enum on = Enum.valueOf(this.chainType, chain.on());
+        final Enum from = Enum.valueOf(this.stateType, chain.from());
+        final Enum to = Enum.valueOf(stateType, chain.to());
+        final Enum on = Enum.valueOf(this.chainType, chain.on());
         Optional<List<TransitionContainer>> chainParts = this.recursive(from, to);
 
         if (!chainParts.isPresent()) {
             throw new TransitionChainCreationException(true, from.name(), to.name(), on.name());
         }
 
-        ChainContainer res = new ChainContainer<>(
+        final ChainContainer res = new ChainContainer<>(
                 from,
                 to,
                 on,
@@ -187,7 +190,7 @@ public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
      * Collects all transitions required by transition chain from the already collected transitions.
      *
      * @param from Start state of the transition chain.
-     * @param to   End state of the transition chain.
+     * @param to End state of the transition chain.
      *
      * @return List of all required transitions as containers.
      */
@@ -213,11 +216,11 @@ public class ChainStateMachineBuilderImpl extends StateMachineBuilderImpl {
     /**
      * Collects all transitions required by transition chain from the already collected transitions in a recursively way. This method searches a way from the start state to the end state.
      *
-     * @param abourt       End state of the chain.
+     * @param abourt End state of the chain.
      * @param possiblePart Currently used start transition.
-     * @param chainParts   List of all collected transitions.
-     * @param fallback     Abort criteria. This is simply a counter which is increased each recursive step. If the counter greater than the current number of available transitions, the algorithm
-     *                     detects no possible way from the start to the end.
+     * @param chainParts List of all collected transitions.
+     * @param fallback Abort criteria. This is simply a counter which is increased each recursive step. If the counter greater than the current number of available transitions, the algorithm detects
+     * no possible way from the start to the end.
      *
      * @return True if the end state is located, otherwise false.
      */

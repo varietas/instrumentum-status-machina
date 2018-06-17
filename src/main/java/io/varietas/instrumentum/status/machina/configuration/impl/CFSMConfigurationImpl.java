@@ -15,6 +15,7 @@
  */
 package io.varietas.instrumentum.status.machina.configuration.impl;
 
+import io.varietas.instrumentum.status.machina.StateMachine;
 import io.varietas.instrumentum.status.machina.configuration.CFSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.ChainContainer;
 import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
@@ -39,12 +40,13 @@ public class CFSMConfigurationImpl extends FSMConfigurationImpl implements CFSMC
     private final Class<? extends Enum> chainType;
 
     public CFSMConfigurationImpl(
+            final Class<? extends StateMachine> machineType,
             final List<TransitionContainer> transitions,
             final List<ChainContainer> chains,
             final Class<? extends Enum> stateType,
             final Class<? extends Enum> eventType,
             final Class<? extends Enum> chainType) {
-        super(transitions, stateType, eventType);
+        super(machineType, transitions, stateType, eventType);
         this.chains = chains;
         this.chainType = chainType;
     }

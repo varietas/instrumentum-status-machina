@@ -27,8 +27,9 @@ import io.varietas.instrumentum.status.machina.error.MachineCreationException;
  *
  * @author Michael Rhöse
  * @version 1.0.0, 10/31/2017
+ * @param <CONFIGURATION> Generic type of configuration that is created by the builder.
  */
-public interface StateMachineBuilder {
+public interface StateMachineBuilder<CONFIGURATION extends FSMConfiguration> {
 
     /**
      * Adds the FSM type for extracting of the configuration.
@@ -37,7 +38,7 @@ public interface StateMachineBuilder {
      *
      * @return The instance of the builder for fluent like usage.
      */
-    StateMachineBuilder extractConfiguration(final Class<? extends StateMachine> machineType);
+    StateMachineBuilder<CONFIGURATION> extractConfiguration(final Class<? extends StateMachine> machineType);
 
     /**
      * Instantiates the FSM with the extracted configuration and returns them.
@@ -51,9 +52,7 @@ public interface StateMachineBuilder {
     /**
      * Gets the extracted configuration of the current FSM.
      *
-     * @param <CONFIGURATION> Generic type of FSM configuration that is used by the builder.
-     *
      * @return The FSM configuration.
      */
-    <CONFIGURATION extends FSMConfiguration> CONFIGURATION configuration();
+    CONFIGURATION configuration();
 }

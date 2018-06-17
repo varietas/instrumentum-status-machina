@@ -15,6 +15,7 @@
  */
 package io.varietas.instrumentum.status.machina.configuration;
 
+import io.varietas.instrumentum.status.machina.StateMachine;
 import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
 import java.util.List;
 
@@ -30,6 +31,13 @@ import java.util.List;
  * @version 1.0.0, 10/27/2017
  */
 public interface FSMConfiguration {
+
+    /**
+     * Returns the configured machine type which is used to instantiate the machine.
+     *
+     * @return Configured machine type.
+     */
+    Class<? extends StateMachine> getMachineType();
 
     /**
      * Returns the collected transitions of the FSM type.

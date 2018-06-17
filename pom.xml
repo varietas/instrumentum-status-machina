@@ -5,13 +5,14 @@
     <artifactId>instrumentum-status-machina</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
-    
+
     <name>|VCI| status machina - The finite state machine</name>
     <description>The finite state machine library contains all necessary functionality for usage of a finite state machine.</description>
     <url>https://varietas.io</url>
@@ -37,13 +38,13 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    
+
     <scm>
         <connection>git@github.com:varietas/instrumentum-status-machina.git</connection>
         <developerConnection>git@github.com:varietas/instrumentum-status-machina.git</developerConnection>
         <url>https://github.com/varietas/instrumentum-status-machina/tree/master</url>
     </scm>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -55,12 +56,13 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <dependencies>
         <!-- Framework to reducing boilerplate code. -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.16.18</version>
             <scope>compile</scope>
         </dependency>
         <!-- Dependency for logging with logback. -->
@@ -69,11 +71,11 @@
             <artifactId>logback-classic</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>                                    
-            <groupId>org.slf4j</groupId>                
+        <dependency>
+            <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
         </dependency>
-        
+
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.assertj</groupId>
@@ -86,4 +88,28 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

@@ -40,8 +40,8 @@
     </licenses>
 
     <scm>
-        <connection>git@github.com:varietas/instrumentum-status-machina.git</connection>
-        <developerConnection>git@github.com:varietas/instrumentum-status-machina.git</developerConnection>
+        <connection>scm:git:git@github.com:varietas/instrumentum-status-machina.git</connection>
+        <developerConnection>scm:git:git@github.com:varietas/instrumentum-status-machina.git</developerConnection>
         <url>https://github.com/varietas/instrumentum-status-machina/tree/master</url>
     </scm>
 

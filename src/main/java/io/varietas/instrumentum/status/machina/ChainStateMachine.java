@@ -54,7 +54,7 @@ import io.varietas.instrumentum.status.machina.error.TransitionInvocationExcepti
  * @see io.varietas.instrumentum.status.machina.builders.StateMachineBuilder
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/27/2017
+ * @version 1.0.0.0, 10/27/2017
  */
 public interface ChainStateMachine extends StateMachine {
 

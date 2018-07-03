@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * A transition chain holds all information required for a automated state change from on to another state.
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/7/2017
+ * @version 1.0.0.0, 10/7/2017
  */
 @Documented
 @Repeatable(TransitionChains.class)

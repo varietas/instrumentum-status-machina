@@ -39,7 +39,7 @@ import java.lang.annotation.Target;
  * </pre> Additional to the chain listeners, each transition listener will be executed too.
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/27/2017
+ * @version 1.0.0.0, 10/27/2017
  */
 @Repeatable(ChainListeners.class)
 @Retention(RetentionPolicy.RUNTIME)

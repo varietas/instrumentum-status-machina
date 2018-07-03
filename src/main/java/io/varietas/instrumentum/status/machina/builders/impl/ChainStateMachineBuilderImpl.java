@@ -47,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
  * Implementation of the {@link StateMachineBuilder} interface. This builder is for state machines that provide transition chains.
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/27/2017
+ * @version 1.0.0.0, 10/27/2017
  */
 @Slf4j
 public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CFSMConfiguration> {

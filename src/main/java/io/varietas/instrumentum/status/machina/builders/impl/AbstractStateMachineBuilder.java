@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
  * This class represents the common of all FSM builders. Please see specific implementations for usage.
  *
  * @author Michael Rhöse
- * @version 1.0.0, 06/17/2018
+ * @version 1.0.0.0, 06/17/2018
  * @param <CONFIGURATION> Generic type of configuration that is created by the builder.
  */
 @Slf4j

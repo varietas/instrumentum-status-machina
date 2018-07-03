@@ -23,7 +23,7 @@ import lombok.NonNull;
  * <h2>MachineCreationException</h2>
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/9/2017
+ * @version 1.0.0.0, 10/9/2017
  */
 public class MachineCreationException extends Exception {
 

@@ -19,7 +19,7 @@ package io.varietas.instrumentum.status.machina.models;
  * <h2>Event</h2>
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/31/2017
+ * @version 1.0.0.0, 10/31/2017
  */
 public enum Event {
     REGISTER,

@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  * This class represents an abstract implementation of the {@link StateMachine} interface. The default implementation contains the firing of single transitions.
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/7/2017
+ * @version 1.0.0.0, 10/7/2017
  */
 @Slf4j
 public abstract class AbstractStateMachine implements StateMachine {

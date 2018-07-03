@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * The transitions annotation is a container for multiple usage of the same annotation on one annotation target.
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/7/2017
+ * @version 1.0.0.0, 10/7/2017
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})

@@ -40,7 +40,7 @@ import java.lang.annotation.Target;
  * </pre>
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/27/2017
+ * @version 1.0.0.0, 10/27/2017
  */
 @Documented
 @Repeatable(TransitionListeners.class)

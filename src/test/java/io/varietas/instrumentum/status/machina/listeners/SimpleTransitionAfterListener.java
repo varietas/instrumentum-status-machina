@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  * <h2>SimpleTransitionAfterListener</h2>
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/27/2017
+ * @version 1.0.0.0, 10/27/2017
  */
 @Slf4j
 public class SimpleTransitionAfterListener {

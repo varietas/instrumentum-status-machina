@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  *
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/27/2017
+ * @version 1.0.0.0, 10/27/2017
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

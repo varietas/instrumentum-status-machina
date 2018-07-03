@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  * This class represents an abstract implementation of the {@link ChainStateMachine} interface. The default implementation contains the firing of single transitions and transition chains.
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/27/2017
+ * @version 1.0.0.0, 10/27/2017
  */
 public abstract class AbstractChainStateMachine extends AbstractStateMachine implements ChainStateMachine {
 

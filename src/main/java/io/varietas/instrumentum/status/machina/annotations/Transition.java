@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * A transit contains all relevant information about a state change. This way of configuration is inspired by squirrel-framework fsm.
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/7/2017
+ * @version 1.0.0.0, 10/7/2017
  */
 @Repeatable(Transitions.class)
 @Retention(RetentionPolicy.RUNTIME)

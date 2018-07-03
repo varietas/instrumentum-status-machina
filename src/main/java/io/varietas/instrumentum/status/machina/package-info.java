@@ -22,6 +22,6 @@
  * Each transition logic is placed in a testable method and allows the testing while build time.
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/7/2017
+ * @version 1.0.0.0, 10/7/2017
  */
 package io.varietas.instrumentum.status.machina;

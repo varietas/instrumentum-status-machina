@@ -28,7 +28,7 @@ import java.util.List;
  * @see io.varietas.instrumentum.status.machina.ChainStateMachine
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/27/2017
+ * @version 1.0.0.0, 10/27/2017
  */
 public interface CFSMConfiguration extends FSMConfiguration {
 

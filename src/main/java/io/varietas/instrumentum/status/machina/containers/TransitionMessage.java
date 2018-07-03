@@ -27,7 +27,7 @@ import lombok.ToString;
  * This class is a container to send an object (transition target) and its transition event over the event bus.
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/13/2017
+ * @version 1.0.0.0, 10/13/2017
  */
 @ToString
 @EqualsAndHashCode

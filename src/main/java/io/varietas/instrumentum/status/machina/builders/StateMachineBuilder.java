@@ -26,7 +26,7 @@ import io.varietas.instrumentum.status.machina.error.MachineCreationException;
  * implementations of the configuration builder available. Each implementation allows the overwriting for custom FSM and custom FSM builder.
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/31/2017
+ * @version 1.0.0.0, 10/31/2017
  * @param <CONFIGURATION> Generic type of configuration that is created by the builder.
  */
 public interface StateMachineBuilder<CONFIGURATION extends FSMConfiguration> {

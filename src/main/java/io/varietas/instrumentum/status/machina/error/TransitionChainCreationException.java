@@ -22,7 +22,7 @@ import lombok.NonNull;
  * <h2>TransitionChainCreationException</h2>
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/10/2017
+ * @version 1.0.0.0, 10/10/2017
  */
 public class TransitionChainCreationException extends RuntimeException {
 

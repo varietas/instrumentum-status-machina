@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * @see io.varietas.instrumentum.status.machina.annotations.ChainListener
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/27/2017
+ * @version 1.0.0.0, 10/27/2017
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})

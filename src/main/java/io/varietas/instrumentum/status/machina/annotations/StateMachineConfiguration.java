@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * This annotation holds the general configuration of a state machine. This way of configuration is inspired by squirrel-framework FSM.
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/7/2017
+ * @version 1.0.0.0, 10/7/2017
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

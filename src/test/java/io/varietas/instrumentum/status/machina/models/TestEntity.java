@@ -26,7 +26,7 @@ import lombok.ToString;
  * <h2>TestEntity</h2>
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/31/2017
+ * @version 1.0.0.0, 10/31/2017
  */
 @ToString
 @EqualsAndHashCode

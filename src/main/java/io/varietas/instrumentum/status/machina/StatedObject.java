@@ -21,7 +21,7 @@ package io.varietas.instrumentum.status.machina;
  * This interface must be implemented by each type that wants to be handled by a FSM.
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/8/2017
+ * @version 1.0.0.0, 10/8/2017
  * @param <STATE_TYPE> Generic type of state types.
  */
 public interface StatedObject<STATE_TYPE extends Enum> {

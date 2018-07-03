@@ -28,7 +28,7 @@ import lombok.ToString;
  * <h2>CFSMConfigurationImpl</h2>
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/27/2017
+ * @version 1.0.0.0, 10/27/2017
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)

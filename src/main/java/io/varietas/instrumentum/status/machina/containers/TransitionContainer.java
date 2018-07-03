@@ -35,7 +35,7 @@ import lombok.ToString;
  * </ul>
  *
  * @author Michael Rhöse
- * @version 1.0.0, 10/7/2017
+ * @version 1.0.0.0, 10/7/2017
  * @param <STATE_TYPE>      Generic type of enumeration which is used to represent the states.
  * @param <TRANSITION_TYPE> Generic type of enumeration which is used to represent the occurred event (Event identifier).
  */

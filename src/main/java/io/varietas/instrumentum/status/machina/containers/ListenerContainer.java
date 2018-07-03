@@ -24,7 +24,7 @@ import lombok.ToString;
  * <h2>ListenerContainer</h2>
  *
  * @author Michael Rhöse
- * @version 1.0.0, 11/4/2017
+ * @version 1.0.0.0, 11/4/2017
  */
 @ToString
 @EqualsAndHashCode

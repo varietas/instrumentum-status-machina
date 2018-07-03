@@ -6,6 +6,6 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-# instrumentum-status-machina
+# Finite state machine by varietas.io
 The finite state machine library contains all necessary functionality for usage of a finite state machine. This is a basic implementation and does not support fancy functionality like e.g. Spring FSM.
 

@@ -9,4 +9,4 @@
 # Finite state machine by varietas.io
 The finite state machine library contains all necessary functionality for usage of a finite state machine. This is a basic implementation and does not support fancy functionality like e.g. Spring FSM.
 
-Next
+# Architecture

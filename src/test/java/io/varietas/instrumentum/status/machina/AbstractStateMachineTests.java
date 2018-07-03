@@ -27,7 +27,6 @@ import io.varietas.instrumentum.status.machina.models.State;
 import io.varietas.instrumentum.status.machina.models.TestEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -39,13 +38,6 @@ import org.junit.runners.JUnit4;
 @Slf4j
 @RunWith(JUnit4.class)
 public class AbstractStateMachineTests {
-
-    public AbstractStateMachineTests() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
 
     /**
      * Test of fire method, of class AbstractStateMachine.

@@ -14,7 +14,7 @@
     </properties>
 
     <name>|VCI| status machina - The finite state machine</name>
-    <description>The finite state machine library contains all necessary functionality for usage of a finite state machine.</description>
+    <description>The finite state machine library contains all necessary functionality for usage of a finite state machine. The goal is to use it in system components with unique states.</description>
     <url>https://varietas.io</url>
     <inceptionYear>2017</inceptionYear>
 
@@ -25,7 +25,7 @@
             <organization>varietas.io</organization>
             <organizationUrl>https://varietas.io</organizationUrl>
             <roles>
-                <role>Project owner</role>
+                <role>Project founder</role>
                 <role>Developer</role>
             </roles>
         </developer>

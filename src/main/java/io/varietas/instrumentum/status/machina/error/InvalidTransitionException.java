@@ -20,6 +20,8 @@ import lombok.NonNull;
 
 /**
  * <h2>InvalidTransitionException</h2>
+ * <p>
+ * Signals the triggering of a FSMs by an invalid transition. The reasons can be e.g. not present transition or mismatching start state.
  *
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/8/2017

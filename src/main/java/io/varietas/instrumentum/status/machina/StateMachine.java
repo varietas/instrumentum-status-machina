@@ -65,7 +65,7 @@ public interface StateMachine {
      * @param target     Transition operation target.
      *
      * @throws TransitionInvocationException Thrown if the upcoming transition event isn't configured for the current FSM.
-     * @throws InvalidTransitionException Thrown if the current state of a target isn't equals to the expected transition start state.
+     * @throws InvalidTransitionException    Thrown if the current state of a target isn't equals to the expected transition start state.
      */
     void fire(final Enum transition, final StatedObject target) throws TransitionInvocationException, InvalidTransitionException;
 }

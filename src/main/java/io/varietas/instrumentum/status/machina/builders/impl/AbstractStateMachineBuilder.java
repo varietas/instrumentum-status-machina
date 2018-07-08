@@ -140,7 +140,7 @@ abstract class AbstractStateMachineBuilder<CONFIGURATION extends FSMConfiguratio
     /**
      * Checks for the existing of a method on a given type.
      *
-     * @param type Type which has to be checked for the existing of a method.
+     * @param type       Type which has to be checked for the existing of a method.
      * @param methodName Method that is searched on a type.
      * @return True if the method exists on the type, otherwise false.
      */

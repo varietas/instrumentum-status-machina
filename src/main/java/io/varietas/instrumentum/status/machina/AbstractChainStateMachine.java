@@ -24,7 +24,6 @@ import io.varietas.instrumentum.status.machina.error.InvalidTransitionException;
 import io.varietas.instrumentum.status.machina.error.TransitionInvocationException;
 import java.util.Objects;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * <h2>AbstractChainStateMachine</h2>

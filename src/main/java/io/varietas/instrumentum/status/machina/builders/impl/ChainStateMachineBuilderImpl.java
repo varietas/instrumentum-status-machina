@@ -132,7 +132,7 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
     /**
      * Creates a chain container with all required information.
      *
-     * @param chain Target chain of the container.
+     * @param chain     Target chain of the container.
      * @param listeners Available listeners which have to be fired for this chain.
      *
      * @return Chain container with all relevant information.
@@ -190,7 +190,7 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
      * Collects all transitions required by transition chain from the already collected transitions.
      *
      * @param from Start state of the transition chain.
-     * @param to End state of the transition chain.
+     * @param to   End state of the transition chain.
      *
      * @return List of all required transitions as containers.
      */
@@ -216,11 +216,11 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
     /**
      * Collects all transitions required by transition chain from the already collected transitions in a recursively way. This method searches a way from the start state to the end state.
      *
-     * @param abourt End state of the chain.
+     * @param abourt       End state of the chain.
      * @param possiblePart Currently used start transition.
-     * @param chainParts List of all collected transitions.
-     * @param fallback Abort criteria. This is simply a counter which is increased each recursive step. If the counter greater than the current number of available transitions, the algorithm detects
-     * no possible way from the start to the end.
+     * @param chainParts   List of all collected transitions.
+     * @param fallback     Abort criteria. This is simply a counter which is increased each recursive step. If the counter greater than the current number of available transitions, the algorithm
+     *                     detects no possible way from the start to the end.
      *
      * @return True if the end state is located, otherwise false.
      */

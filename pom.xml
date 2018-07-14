@@ -6,38 +6,9 @@
     <version>1.0.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-
     <name>|VCI| status machina - The finite state machine</name>
     <description>The finite state machine library contains all necessary functionality for usage of a finite state machine. The goal is to use it in system components with unique states.</description>
-    <url>https://varietas.io</url>
     <inceptionYear>2017</inceptionYear>
-
-    <developers>
-        <developer>
-            <name>Michael Rhöse</name>
-            <email>michael.rhoese@varietas.io</email>
-            <organization>varietas.io</organization>
-            <organizationUrl>https://varietas.io</organizationUrl>
-            <roles>
-                <role>Project founder</role>
-                <role>Developer</role>
-            </roles>
-        </developer>
-    </developers>
-
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
 
     <scm>
         <connection>scm:git:git@github.com:varietas/instrumentum-status-machina.git</connection>

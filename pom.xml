@@ -80,6 +80,7 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <!-- JaCoCo plugin will be moved to parent pom in future because it will be used in all Java-based artifacts -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>

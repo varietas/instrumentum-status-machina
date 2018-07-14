@@ -20,7 +20,7 @@
  * <a href="https://www.innoq.com/de/blog/statemachine/">post</a> of Florian Miess for a the simplest as possible state machine in Java. The FSM stores the current state within the object. An
  * additional object storing state information isn't required. This implementation also provides transition chaining and CbA (configuration by annotation). </p>
  * <p>
- * Each transition logic is placed in a testable method and allows the testing while build time.</p> The usage of builder is shown {@link io.varietas.instrumentum.status.machina here}.
+ * Each transition logic is placed in a testable method and allows the testing while build time. The usage of builder is shown {@link io.varietas.instrumentum.status.machina here}.</p>
  *
  * @see io.varietas.instrumentum.status.machina.StateMachine
  * @see io.varietas.instrumentum.status.machina.ChainStateMachine

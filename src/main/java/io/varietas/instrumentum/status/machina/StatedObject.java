@@ -18,7 +18,7 @@ package io.varietas.instrumentum.status.machina;
 /**
  * <h2>StatedObject</h2>
  * <p>
- * This interface must be implemented by each type that wants to be handled by a FSM.
+ * This interface must be implemented by each type that wants to be handled by a FSM. The stated object does not persist changes.
  *
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/8/2017

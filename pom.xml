@@ -7,8 +7,11 @@
     <packaging>jar</packaging>
 
     <name>|VCI| status machina - The finite state machine</name>
-    <description>The finite state machine library contains all necessary functionality for usage of a finite state machine. The goal is to use it in system components with unique states.</description>
-    
+    <description>
+        The finite state machine library contains all necessary functionality for usage of a finite state machine. The goal is to use it in system components with unique states. The project was
+        started in 2017 and first placed within the varietas framework. In the early 2018, the FSM was moved in a standalone project for separated development.
+    </description>
+
     <inceptionYear>2017</inceptionYear>
 
     <scm>

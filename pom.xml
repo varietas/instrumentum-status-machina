@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.varietas</groupId>
     <artifactId>instrumentum-status-machina</artifactId>
-    <version>1.0.0.0-SNAPSHOT</version>
+    <version>1.0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>|VCI| status machina - The finite state machine</name>

@@ -6,16 +6,23 @@
     <version>1.0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
     <name>|VCI| status machina - The finite state machine</name>
     <description>
         The finite state machine library contains all necessary functionality for usage of a finite state machine. The goal is to use it in system components with unique states. The project was
         started in 2017 and first placed within the varietas framework. In the early 2018, the FSM was moved in a standalone project for separated development.
     </description>
+    <url>https://team.varietas.io/project/view/3/</url>
 
     <inceptionYear>2017</inceptionYear>
     <issueManagement>
         <system>Github Issue System</system>
-        <url>https://github.com/varietas/test-repo/issues</url>
+        <url>https://github.com/varietas/instrumentum-status-machina/issues</url>
     </issueManagement>
 
     <scm>
@@ -62,52 +69,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <releaseProfiles>release</releaseProfiles>
-                    <goals>deploy</goals>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-git-commons</artifactId>
-                        <version>1.10.0</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-api</artifactId>
-                        <version>1.10.0</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <!-- JaCoCo plugin will be moved to parent pom in future because it will be used in all Java-based artifacts -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>

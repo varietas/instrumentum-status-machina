@@ -23,7 +23,6 @@ import io.varietas.instrumentum.status.machina.models.Event;
 import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineWithChainListener;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithTransitionListener;
 import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineWithoutListener;
-import io.varietas.instrumentum.status.machina.builders.impl.ChainStateMachineBuilderImpl;
 import io.varietas.instrumentum.status.machina.StateMachine;
 import io.varietas.instrumentum.status.machina.builders.StateMachineBuilder;
 import io.varietas.instrumentum.status.machina.configuration.CFSMConfiguration;
@@ -41,19 +40,14 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author Michael Rhöse
  */
 @Slf4j
-@RunWith(JUnit4.class)
 public class ChainStateMachineBuilderImplTest {
-
-    private final StateMachineBuilder<CFSMConfiguration> instance = new ChainStateMachineBuilderImpl();
 
     @Test
     public void testExtractConfigurationWithoutTransitionListener() {
@@ -95,7 +89,7 @@ public class ChainStateMachineBuilderImplTest {
     private void assertStateMachineConfiguration(final Class<? extends StateMachine> stateMachineType, final boolean isAssertMethod, final boolean isAssertListeners, final boolean isAssertChainListener) {
 
         CFSMConfiguration expectedResult = this.createConfiguration(stateMachineType);
-        CFSMConfiguration result = instance.extractConfiguration(stateMachineType).configuration();
+        CFSMConfiguration result = new ChainStateMachineBuilderImpl().extractConfiguration(stateMachineType).configuration();
 
         Assertions.assertThat(expectedResult.getStateType()).isEqualTo(result.getStateType());
         Assertions.assertThat(expectedResult.getEventType()).isEqualTo(result.getEventType());

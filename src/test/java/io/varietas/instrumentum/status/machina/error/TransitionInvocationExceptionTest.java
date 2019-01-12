@@ -17,7 +17,7 @@ package io.varietas.instrumentum.status.machina.error;
 
 import io.varietas.instrumentum.status.machina.models.Event;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  *

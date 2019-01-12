@@ -15,8 +15,8 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -27,7 +27,7 @@ public class AbstractChainStateMachineTest {
     public AbstractChainStateMachineTest() {
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() {
     }
 

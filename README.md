@@ -15,5 +15,5 @@ If you find a bug, please create a JUnit test that reproduces the issue. This te
 
 ## About varietas.io
 
-The [varietas.io](https://varietas.io) project is a pure Open Source Community and a framework at the same time. The community aims to help other OS projects succeed, connect developers and give them a platform (or better a home) for their projects. Feel free to join us.
-The framework is a kind of plug-in framework for monolithic applications that allows the use of microservices to distribute functions. Read more on the project page.
+The [varietas.io](https://varietas.io) project is a pure Open Source framework.
+The framework is a kind of plug-in framework for monolithic applications that allow the use of microservices to distribute functions. Read more on the project page and feel free to join us.

@@ -35,8 +35,7 @@ import lombok.ToString;
  * <li>the list of transitions, which are passed.</li>
  * </ul>
  * <p>
- * The transitions are collected while the configuration is created automatically by the {@link StateMachineBuilderImpl}. Its recommended that a configuration is created once per {@link StateMachine}
- * and shared between the instances.
+ * The transitions are collected while the configuration is created automatically by the {@link StateMachineBuilderImpl}. Its recommended that a configuration is created once per {@link StateMachine} and shared between the instances.
  *
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/7/2017

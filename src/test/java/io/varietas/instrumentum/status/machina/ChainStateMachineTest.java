@@ -15,27 +15,16 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import io.varietas.instrumentum.status.machina.builders.impl.ChainStateMachineBuilderImpl;
+import io.varietas.instrumentum.status.machina.error.MachineCreationException;
 
 /**
  *
  * @author Michael Rhöse
  */
-public class AbstractChainStateMachineTest {
+public class ChainStateMachineTest extends StateMachineTests {
 
-    public AbstractChainStateMachineTest() {
+    public StateMachine getStateMachine(Class<? extends StateMachine> machineClazz) throws MachineCreationException {
+        return new ChainStateMachineBuilderImpl().extractConfiguration(machineClazz).build();
     }
-
-    @BeforeAll
-    public static void setUpClass() {
-    }
-
-    /**
-     * Test of fireChain method, of class AbstractChainStateMachine.
-     */
-    @Test
-    public void testFireChain() throws Exception {
-    }
-
 }

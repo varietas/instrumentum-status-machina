@@ -15,7 +15,6 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import io.varietas.instrumentum.status.machina.builders.impl.StateMachineBuilderImpl;
 import io.varietas.instrumentum.status.machina.error.InvalidTransitionException;
 import io.varietas.instrumentum.status.machina.error.MachineCreationException;
 import io.varietas.instrumentum.status.machina.machines.transition.FailingStateMachine;
@@ -25,23 +24,39 @@ import io.varietas.instrumentum.status.machina.machines.transition.StateMachineW
 import io.varietas.instrumentum.status.machina.models.Event;
 import io.varietas.instrumentum.status.machina.models.State;
 import io.varietas.instrumentum.status.machina.models.TestEntity;
-import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author Michael Rhöse
  */
-@Slf4j
-public class AbstractStateMachineTests {
+public class StateMachineTests {
 
-    /**
-     * Test of fire method, of class AbstractStateMachine.
-     */
+    private SoftAssertions softly;
+
+    @BeforeEach
+    public void beforeEach() {
+        this.softly = new SoftAssertions();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        softly.assertAll();
+        this.softly = null;
+    }
+
+    public StateMachine getStateMachine(Class<? extends StateMachine> machineClazz) throws MachineCreationException {
+        return StateMachineFactory.getStateMachine(machineClazz);
+    }
+
     @Test
     public void testFireWithoutListenerRegisterToDelete() throws Exception {
-        StateMachine stateMachine = new StateMachineBuilderImpl().extractConfiguration(StateMachineWithoutListener.class).build();
+
+        StateMachine stateMachine = this.getStateMachine(StateMachineWithoutListener.class);
 
         TestEntity entity = new TestEntity(State.AVAILABLE, 0);
 
@@ -54,7 +69,8 @@ public class AbstractStateMachineTests {
 
     @Test
     public void testFireInvalidTransitionError() throws Exception {
-        StateMachine stateMachine = new StateMachineBuilderImpl().extractConfiguration(StateMachineWithoutListener.class).build();
+
+        StateMachine stateMachine = this.getStateMachine(StateMachineWithoutListener.class);
 
         TestEntity entity = new TestEntity(State.AVAILABLE, 0);
 
@@ -63,16 +79,14 @@ public class AbstractStateMachineTests {
 
     @Test
     public void testFailMachineBuilding() {
-        Assertions.assertThatThrownBy(() -> new StateMachineBuilderImpl().extractConfiguration(FailingStateMachine.class).build())
+        Assertions.assertThatThrownBy(() -> this.getStateMachine(FailingStateMachine.class))
                 .isInstanceOf(MachineCreationException.class);
     }
 
-    /**
-     * Test of fire method, of class AbstractStateMachine.
-     */
     @Test
     public void testFireWithoutListenerRegisterToPark() throws Exception {
-        StateMachine stateMachine = new StateMachineBuilderImpl().extractConfiguration(StateMachineWithoutListener.class).build();
+
+        StateMachine stateMachine = this.getStateMachine(StateMachineWithoutListener.class);
 
         TestEntity entity = new TestEntity(State.AVAILABLE, 0);
 
@@ -82,12 +96,9 @@ public class AbstractStateMachineTests {
         this.assertTransition(stateMachine, Event.PARK, State.PARKED, entity, -4);
     }
 
-    /**
-     * Test of fire method, of class AbstractStateMachine.
-     */
     @Test
     public void testFireWithBeforeListener() throws Exception {
-        StateMachine stateMachine = new StateMachineBuilderImpl().extractConfiguration(StateMachineWithTransitionBeforeListener.class).build();
+        StateMachine stateMachine = this.getStateMachine(StateMachineWithTransitionBeforeListener.class);
 
         TestEntity entity = new TestEntity(State.AVAILABLE, 0);
 
@@ -98,12 +109,9 @@ public class AbstractStateMachineTests {
         this.assertTransition(stateMachine, Event.DELETE, State.DELETED, entity, 393);
     }
 
-    /**
-     * Test of fire method, of class AbstractStateMachine.
-     */
     @Test
     public void testFireWithAfterListener() throws Exception {
-        StateMachine stateMachine = new StateMachineBuilderImpl().extractConfiguration(StateMachineWithTransitionAfterListener.class).build();
+        StateMachine stateMachine = this.getStateMachine(StateMachineWithTransitionAfterListener.class);
 
         TestEntity entity = new TestEntity(State.AVAILABLE, 0);
 
@@ -116,15 +124,14 @@ public class AbstractStateMachineTests {
 
     private void assertTransition(final StateMachine stateMachine, final Event event, final State state, final TestEntity entity, final int expectedValue) {
         stateMachine.fire(event, entity);
-        Assertions.assertThat(entity.getValue()).isEqualTo(expectedValue);
-        Assertions.assertThat(entity.state()).isEqualTo(state);
-        LOGGER.info("Value after transition {}: {} | {}", event, entity.state(), entity.getValue());
+        this.softly.assertThat(entity.getValue()).isEqualTo(expectedValue);
+        this.softly.assertThat(entity.state()).isEqualTo(state);
     }
 
     @Test
     public void testForInvalidTransition() throws MachineCreationException {
+        StateMachine stateMachine = this.getStateMachine(StateMachineWithTransitionAfterListener.class);
 
-        StateMachine stateMachine = new StateMachineBuilderImpl().extractConfiguration(StateMachineWithTransitionAfterListener.class).build();
         TestEntity entity = new TestEntity(State.AVAILABLE, 0);
         Assertions
                 .assertThatThrownBy(() -> stateMachine.fire(Event.ACTIVATE, entity))

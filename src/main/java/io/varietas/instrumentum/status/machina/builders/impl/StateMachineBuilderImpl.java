@@ -35,8 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 public class StateMachineBuilderImpl extends AbstractStateMachineBuilder<FSMConfiguration> {
 
     /**
-     * Extracts the configuration from a given {@link StateMachine}. This process should be done only once per state machine type and shared between the instances because the collection of information
-     * is a big process and can take a while.
+     * Extracts the configuration from a given {@link StateMachine}. This process should be done only once per state machine type and shared between the instances because the collection of information is a big process and can take a while.
      *
      * @param machineType State machine type where the configuration is present.
      *
@@ -58,15 +57,17 @@ public class StateMachineBuilderImpl extends AbstractStateMachineBuilder<FSMConf
                 this.stateType,
                 this.eventType);
 
-        LOGGER.debug("Configuration for '{}' created:\n"
-                + "-> {} transitions collected\n"
-                + "-> {} used for state type\n"
-                + "-> {} used for event type.",
-                this.configuration.getMachineType().getSimpleName(),
-                this.transitions.size(),
-                this.stateType.getSimpleName(),
-                this.eventType.getSimpleName()
-        );
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Configuration for '{}' created:\n"
+                    + "-> {} transitions collected\n"
+                    + "-> {} used for state type\n"
+                    + "-> {} used for event type.",
+                    this.configuration.getMachineType().getSimpleName(),
+                    this.transitions.size(),
+                    this.stateType.getSimpleName(),
+                    this.eventType.getSimpleName()
+            );
+        }
 
         return this;
     }

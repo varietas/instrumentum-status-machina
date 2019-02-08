@@ -24,7 +24,6 @@ import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineW
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithTransitionListener;
 import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineWithoutListener;
 import io.varietas.instrumentum.status.machina.StateMachine;
-import io.varietas.instrumentum.status.machina.builders.StateMachineBuilder;
 import io.varietas.instrumentum.status.machina.configuration.CFSMConfiguration;
 import io.varietas.instrumentum.status.machina.configuration.impl.CFSMConfigurationImpl;
 import io.varietas.instrumentum.status.machina.containers.ChainContainer;
@@ -38,16 +37,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author Michael Rhöse
  */
-@Slf4j
 public class ChainStateMachineBuilderImplTest {
+
+    private SoftAssertions softly;
+
+    @BeforeEach
+    public void beforeEach() {
+        this.softly = new SoftAssertions();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        softly.assertAll();
+        this.softly = null;
+    }
 
     @Test
     public void testExtractConfigurationWithoutTransitionListener() {
@@ -91,40 +104,37 @@ public class ChainStateMachineBuilderImplTest {
         CFSMConfiguration expectedResult = this.createConfiguration(stateMachineType);
         CFSMConfiguration result = new ChainStateMachineBuilderImpl().extractConfiguration(stateMachineType).configuration();
 
-        Assertions.assertThat(expectedResult.getStateType()).isEqualTo(result.getStateType());
-        Assertions.assertThat(expectedResult.getEventType()).isEqualTo(result.getEventType());
-        Assertions.assertThat(((CFSMConfigurationImpl) expectedResult).getChainType()).isEqualTo(((CFSMConfigurationImpl) result).getChainType());
+        this.softly.assertThat(expectedResult.getStateType()).isEqualTo(result.getStateType());
+        this.softly.assertThat(expectedResult.getEventType()).isEqualTo(result.getEventType());
+        this.softly.assertThat(((CFSMConfigurationImpl) expectedResult).getChainType()).isEqualTo(((CFSMConfigurationImpl) result).getChainType());
 
-        Assertions.assertThat(expectedResult.getTransitions()).hasSameSizeAs(result.getTransitions());
+        this.softly.assertThat(expectedResult.getTransitions()).hasSameSizeAs(result.getTransitions());
 
         for (int index = 0; index < result.getTransitions().size(); index++) {
             TransitionContainer expContainer = expectedResult.getTransitions().get(index);
             Optional<TransitionContainer> container = result.getTransitions().stream()
                     .filter(res -> res.getFrom().equals(expContainer.getFrom()) && res.getTo().equals(expContainer.getTo()))
                     .findFirst();
-            Assertions.assertThat(container).isPresent();
+            this.softly.assertThat(container).overridingErrorMessage("Transaction container 's' doesn't contained in list", expContainer.getOn().name()).isPresent();
             this.assertTransitionContainer(container.get(), expContainer, isAssertMethod, isAssertListeners);
         }
 
         if (isAssertChainListener) {
-            Assertions.assertThat(((CFSMConfigurationImpl) expectedResult).getChains()).hasSameSizeAs(((CFSMConfigurationImpl) result).getChains());
+            this.softly.assertThat(((CFSMConfigurationImpl) expectedResult).getChains()).hasSameSizeAs(((CFSMConfigurationImpl) result).getChains());
         }
     }
 
     private void assertTransitionContainer(final TransitionContainer one, final TransitionContainer other, final boolean isAssertMethod, final boolean isAssertListeners) {
 
-        Assertions.assertThat(one.getFrom()).isEqualTo(other.getFrom());
-        LOGGER.info("From equals {} | {}", one.getFrom(), other.getFrom());
-        Assertions.assertThat(one.getTo()).isEqualTo(other.getTo());
-        LOGGER.info("To equals {} | {}", one.getTo(), other.getTo());
-        Assertions.assertThat(one.getOn()).isEqualTo(other.getOn());
-        LOGGER.info("On equals {} | {}", one.getOn(), other.getOn());
+        this.softly.assertThat(one.getFrom()).isEqualTo(other.getFrom());
+        this.softly.assertThat(one.getTo()).isEqualTo(other.getTo());
+        this.softly.assertThat(one.getOn()).isEqualTo(other.getOn());
 
         if (isAssertMethod) {
-            Assertions.assertThat(one.getCalledMethod()).isEqualTo(other.getCalledMethod());
+            this.softly.assertThat(one.getCalledMethod()).isEqualTo(other.getCalledMethod());
         }
         if (isAssertListeners) {
-            Assertions.assertThat(one.getListeners()).hasSameElementsAs(other.getListeners());
+            this.softly.assertThat(one.getListeners()).hasSameElementsAs(other.getListeners());
         }
     }
 

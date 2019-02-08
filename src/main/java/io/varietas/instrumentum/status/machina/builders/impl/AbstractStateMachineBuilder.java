@@ -81,6 +81,7 @@ abstract class AbstractStateMachineBuilder<CONFIGURATION extends FSMConfiguratio
      * Collects available transitions from the {@link StateMachine}. Transitions are identified by the {@link Transition} annotation.
      *
      * @param machineType The machine where the transitions are configured.
+     *
      * @return List of all available transitions.
      */
     protected List<TransitionContainer> collectTransitions(final Class<? extends StateMachine> machineType) {
@@ -93,8 +94,7 @@ abstract class AbstractStateMachineBuilder<CONFIGURATION extends FSMConfiguratio
     }
 
     /**
-     * Creates transition containers available on a single method. One method can used by multiple transitions. Each transition is configured by a single {@link Transition} annotation. So, multiple
-     * {@link Transition} annotations can be available on a single method.
+     * Creates transition containers available on a single method. One method can used by multiple transitions. Each transition is configured by a single {@link Transition} annotation. So, multiple {@link Transition} annotations can be available on a single method.
      *
      * @param method Method where the transitions are configured.
      *
@@ -113,8 +113,10 @@ abstract class AbstractStateMachineBuilder<CONFIGURATION extends FSMConfiguratio
         Enum from = Enum.valueOf(this.stateType, transition.from());
         Enum to = Enum.valueOf(stateType, transition.to());
         Enum on = Enum.valueOf(this.eventType, transition.on());
-        LOGGER.debug("Transition from '{}' to '{}' on '{}' will be created.", from.name(), to.name(), on.name());
-        LOGGER.debug("{} listeners for transition {} added.", (Objects.nonNull(listeners) ? listeners.size() : 0), on.name());
+        if (LOGGER.isErrorEnabled()) {
+            LOGGER.debug("Transition from '{}' to '{}' on '{}' will be created.", from.name(), to.name(), on.name());
+            LOGGER.debug("{} listeners for transition {} added.", (Objects.nonNull(listeners) ? listeners.size() : 0), on.name());
+        }
         return new TransitionContainer<>(
                 from,
                 to,
@@ -142,6 +144,7 @@ abstract class AbstractStateMachineBuilder<CONFIGURATION extends FSMConfiguratio
      *
      * @param type       Type which has to be checked for the existing of a method.
      * @param methodName Method that is searched on a type.
+     *
      * @return True if the method exists on the type, otherwise false.
      */
     protected final boolean existsMethod(final Class<?> type, final String methodName) {

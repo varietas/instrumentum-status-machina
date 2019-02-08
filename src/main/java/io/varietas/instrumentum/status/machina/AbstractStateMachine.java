@@ -19,6 +19,7 @@ import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.ListenerContainer;
 import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
 import io.varietas.instrumentum.status.machina.error.InvalidTransitionException;
+import io.varietas.instrumentum.status.machina.error.InvalidTransitionListenerException;
 import io.varietas.instrumentum.status.machina.error.TransitionInvocationException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -93,7 +94,9 @@ public abstract class AbstractStateMachine implements StateMachine {
         }
 
         try {
-            LOGGER.trace("State change to {} entered.", transition.getOn());
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("State change to {} entered.", transition.getOn());
+            }
 
             if (Objects.nonNull(transition.getListeners())) {
                 transition.getListeners().forEach(listener -> this.executeListener((ListenerContainer) listener, "before", transition.getOn(), target));
@@ -106,7 +109,9 @@ public abstract class AbstractStateMachine implements StateMachine {
                 transition.getListeners().forEach(listener -> this.executeListener((ListenerContainer) listener, "after", transition.getOn(), target));
             }
 
-            LOGGER.trace("State change to {} finished.", transition.getOn());
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("State change to {} finished.", transition.getOn());
+            }
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw new TransitionInvocationException(transition.getOn(), transition.getCalledMethod().getName(), ex.getLocalizedMessage());
         }
@@ -123,11 +128,15 @@ public abstract class AbstractStateMachine implements StateMachine {
         }
 
         try {
-            Object listenerInstance = listener.getListener().newInstance();
+            Object listenerInstance = listener.getListener().getDeclaredConstructor().newInstance();
             Method method = listener.getListener().getMethod(methodName, on.getDeclaringClass(), target.getClass());
             method.invoke(listenerInstance, on, target);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException ex) {
-            LOGGER.error("Couldn't call listener method '{}'. {}: {}", methodName, ex.getClass().getSimpleName(), ((Objects.nonNull(ex.getMessage())) ? ex.getMessage() : "No message available"));
+
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("Couldn't call listener method '{}'. {}: {}", methodName, ex.getClass().getSimpleName(), ((Objects.nonNull(ex.getMessage())) ? ex.getMessage() : "No message available"));
+            }
+            throw new InvalidTransitionListenerException(listener.getListener(), "Listener on method '" + methodName + ".", ex);
         }
     }
 }

@@ -29,16 +29,30 @@ import io.varietas.instrumentum.status.machina.models.State;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author Michael Rhöse
  */
-@Slf4j
 public class StateMachineBuilderImplTest {
+
+    private SoftAssertions softly;
+
+    @BeforeEach
+    public void beforeEach() {
+        this.softly = new SoftAssertions();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        softly.assertAll();
+        this.softly = null;
+    }
 
     @Test
     public void testExtractConfiguration() {
@@ -75,9 +89,9 @@ public class StateMachineBuilderImplTest {
     @Test
     public void testMultipleListenersAvailable() throws MachineCreationException {
         FSMConfiguration configuration = new StateMachineBuilderImpl().extractConfiguration(StateMachineWithMultipleListeners.class).configuration();
-        Assertions.assertThat(configuration.getTransitions()).hasSize(1);
+        this.softly.assertThat(configuration.getTransitions()).hasSize(1);
 
-        Assertions.assertThat(configuration.getTransitions().get(0).getListeners()).hasSize(2);
+        this.softly.assertThat(configuration.getTransitions().get(0).getListeners()).hasSize(2);
     }
 
     private void assertStateMachineConfiguration(final Class<? extends StateMachine> stateMachineType, final boolean isAssertMethod, final boolean isAssertListeners) {
@@ -87,35 +101,32 @@ public class StateMachineBuilderImplTest {
         StateMachineBuilderImpl instance = new StateMachineBuilderImpl();
         FSMConfiguration result = instance.extractConfiguration(stateMachineType).configuration();
 
-        Assertions.assertThat(expextedResult.getStateType()).isEqualTo(result.getStateType());
-        Assertions.assertThat(expextedResult.getEventType()).isEqualTo(result.getEventType());
+        this.softly.assertThat(expextedResult.getStateType()).isEqualTo(result.getStateType());
+        this.softly.assertThat(expextedResult.getEventType()).isEqualTo(result.getEventType());
 
-        Assertions.assertThat(expextedResult.getTransitions()).hasSameSizeAs(result.getTransitions());
+        this.softly.assertThat(expextedResult.getTransitions()).hasSameSizeAs(result.getTransitions());
 
         for (int index = 0; index < result.getTransitions().size(); index++) {
             TransitionContainer expContainer = expextedResult.getTransitions().get(index);
             Optional<TransitionContainer> container = result.getTransitions().stream()
                     .filter(res -> res.getFrom().equals(expContainer.getFrom()) && res.getTo().equals(expContainer.getTo()))
                     .findFirst();
-            Assertions.assertThat(container).isPresent();
+            this.softly.assertThat(container).isPresent();
             this.assertTransitionContainer(container.get(), expContainer, isAssertMethod, isAssertListeners);
         }
     }
 
     private void assertTransitionContainer(final TransitionContainer one, final TransitionContainer other, final boolean isAssertMethod, final boolean isAssertListeners) {
 
-        Assertions.assertThat(one.getFrom()).isEqualTo(other.getFrom());
-        LOGGER.info("From equals {} | {}", one.getFrom(), other.getFrom());
-        Assertions.assertThat(one.getTo()).isEqualTo(other.getTo());
-        LOGGER.info("To equals {} | {}", one.getTo(), other.getTo());
-        Assertions.assertThat(one.getOn()).isEqualTo(other.getOn());
-        LOGGER.info("On equals {} | {}", one.getOn(), other.getOn());
+        this.softly.assertThat(one.getFrom()).isEqualTo(other.getFrom());
+        this.softly.assertThat(one.getTo()).isEqualTo(other.getTo());
+        this.softly.assertThat(one.getOn()).isEqualTo(other.getOn());
 
         if (isAssertMethod) {
-            Assertions.assertThat(one.getCalledMethod()).isEqualTo(other.getCalledMethod());
+            this.softly.assertThat(one.getCalledMethod()).isEqualTo(other.getCalledMethod());
         }
         if (isAssertListeners) {
-            Assertions.assertThat(one.getListeners()).hasSameElementsAs(other.getListeners());
+            this.softly.assertThat(one.getListeners()).hasSameElementsAs(other.getListeners());
         }
     }
 

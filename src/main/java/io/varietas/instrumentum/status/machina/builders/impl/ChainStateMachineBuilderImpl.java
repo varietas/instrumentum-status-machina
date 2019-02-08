@@ -57,8 +57,7 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
     private final List<ChainContainer> chains = new ArrayList<>();
 
     /**
-     * Extracts the configuration from a given {@link StateMachine}. This process should be done only once per state machine type and shared between the instances because the collection of information
-     * is a big process and can take a while.
+     * Extracts the configuration from a given {@link StateMachine}. This process should be done only once per state machine type and shared between the instances because the collection of information is a big process and can take a while.
      *
      * @param machineType State machine type where the configuration is present.
      *
@@ -84,28 +83,30 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
                 this.eventType,
                 this.chainType);
 
-        LOGGER.debug("Configuration for '{}' created:\n"
-                + "-> {} transitions collected\n"
-                + "-> {} chains collected\n"
-                + "-> {} used for state type\n"
-                + "-> {} used for event type\n"
-                + "-> {} used for chain type.",
-                this.configuration.getMachineType().getSimpleName(),
-                this.transitions.size(),
-                this.chains.size(),
-                this.stateType.getSimpleName(),
-                this.eventType.getSimpleName(),
-                this.chainType.getSimpleName()
-        );
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Configuration for '{}' created:\n"
+                    + "-> {} transitions collected\n"
+                    + "-> {} chains collected\n"
+                    + "-> {} used for state type\n"
+                    + "-> {} used for event type\n"
+                    + "-> {} used for chain type.",
+                    this.configuration.getMachineType().getSimpleName(),
+                    this.transitions.size(),
+                    this.chains.size(),
+                    this.stateType.getSimpleName(),
+                    this.eventType.getSimpleName(),
+                    this.chainType.getSimpleName()
+            );
+        }
 
         return this;
     }
 
     /**
-     * The varietas.io transition implementation supports transition chains. These chains allow the definition of transition on programming time. That makes execution of chained transitions with a
-     * single command possible. This method creates all available transition chains.
+     * The varietas.io transition implementation supports transition chains. These chains allow the definition of transition on programming time. That makes execution of chained transitions with a single command possible. This method creates all available transition chains.
      *
      * @param machineType The machine where the chains are configured.
+     *
      * @return List of all available transition chains.
      */
     private List<ChainContainer> createChains(final Class<? extends StateMachine> machineType) {
@@ -155,12 +156,19 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
                 listeners
         );
 
-        LOGGER.debug("Chain {}: {} -> {}", res.getOn(), res.getFrom(), res.getTo());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Chain {}: {} -> {}", res.getOn(), res.getFrom(), res.getTo());
+        }
         res.getChainParts().forEach(part -> {
             TransitionContainer partContainer = ((TransitionContainer) part);
-            LOGGER.debug("  - {}: {} -> {}", partContainer.getOn(), partContainer.getFrom(), partContainer.getTo());
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("  - {}: {} -> {}", partContainer.getOn(), partContainer.getFrom(), partContainer.getTo());
+            }
         });
-        LOGGER.debug("{} listeners for chain {} added.", (Objects.nonNull(res.getListeners()) ? res.getListeners().size() : 0), res.getOn());
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("{} listeners for chain {} added.", (Objects.nonNull(res.getListeners()) ? res.getListeners().size() : 0), res.getOn());
+        }
 
         return res;
     }
@@ -219,8 +227,7 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
      * @param abourt       End state of the chain.
      * @param possiblePart Currently used start transition.
      * @param chainParts   List of all collected transitions.
-     * @param fallback     Abort criteria. This is simply a counter which is increased each recursive step. If the counter greater than the current number of available transitions, the algorithm
-     *                     detects no possible way from the start to the end.
+     * @param fallback     Abort criteria. This is simply a counter which is increased each recursive step. If the counter greater than the current number of available transitions, the algorithm detects no possible way from the start to the end.
      *
      * @return True if the end state is located, otherwise false.
      */
@@ -239,7 +246,9 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
                 .collect(Collectors.toList());
 
         if (nextPossibles.isEmpty()) {
-            LOGGER.trace("There is no transition available from '{}' to '{}'.", possiblePart.getFrom().name(), abourt.name());
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("There is no transition available from '{}' to '{}'.", possiblePart.getFrom().name(), abourt.name());
+            }
             return false;
         }
 

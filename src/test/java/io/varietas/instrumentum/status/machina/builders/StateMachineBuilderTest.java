@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.varietas.instrumentum.status.machina.builders.impl;
+package io.varietas.instrumentum.status.machina.builders;
 
+import io.varietas.instrumentum.status.machina.builders.SimpleStateMachineBuilder;
 import io.varietas.instrumentum.status.machina.StateMachine;
 import io.varietas.instrumentum.status.machina.builders.StateMachineBuilder;
 import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
-import io.varietas.instrumentum.status.machina.configuration.impl.FSMConfigurationImpl;
+import io.varietas.instrumentum.status.machina.configuration.DefaultFSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
 import io.varietas.instrumentum.status.machina.error.MachineCreationException;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineNotContrivable;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithMultipleListeners;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithoutListener;
-import io.varietas.instrumentum.status.machina.models.Event;
-import io.varietas.instrumentum.status.machina.models.State;
-import java.util.ArrayList;
-import java.util.List;
+import io.varietas.instrumentum.status.machina.models.ExampleEvent;
+import io.varietas.instrumentum.status.machina.models.ExampleState;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
@@ -39,7 +39,8 @@ import org.junit.jupiter.api.Test;
  *
  * @author Michael Rhöse
  */
-public class StateMachineBuilderImplTest {
+@Slf4j
+public class StateMachineBuilderTest {
 
     private SoftAssertions softly;
 
@@ -60,35 +61,36 @@ public class StateMachineBuilderImplTest {
     }
 
     @Test
+    @SuppressWarnings("null")
     public void testNullStateMachineType() {
-        Assertions.assertThatThrownBy(() -> new StateMachineBuilderImpl().extractConfiguration(null)).isInstanceOf(NullPointerException.class);
+        Assertions.assertThatThrownBy(() -> new SimpleStateMachineBuilder().extractConfiguration(null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
     public void testMachineCreationException() {
-        Assertions.assertThatThrownBy(() -> new StateMachineBuilderImpl().extractConfiguration(StateMachineNotContrivable.class).build()).isInstanceOf(MachineCreationException.class);
+        Assertions.assertThatThrownBy(() -> new SimpleStateMachineBuilder().extractConfiguration(StateMachineNotContrivable.class).build()).isInstanceOf(MachineCreationException.class);
     }
 
     @Test
     public void testCreationOfValideMachine() {
-        Assertions.assertThat(new StateMachineBuilderImpl().extractConfiguration(StateMachineWithoutListener.class)).isNotNull();
+        Assertions.assertThat(new SimpleStateMachineBuilder().extractConfiguration(StateMachineWithoutListener.class)).isNotNull();
     }
 
     @Test
     public void testCreationOfValideMachineConfiguration() {
-        StateMachineBuilder<FSMConfiguration> builder = new StateMachineBuilderImpl().extractConfiguration(StateMachineWithoutListener.class);
+        StateMachineBuilder<FSMConfiguration> builder = new SimpleStateMachineBuilder().extractConfiguration(StateMachineWithoutListener.class);
         Assertions.assertThat(builder.configuration()).isNotNull();
     }
 
     @Test
     public void testSetConfiguration() throws MachineCreationException {
-        FSMConfiguration configuration = new StateMachineBuilderImpl().extractConfiguration(StateMachineWithoutListener.class).configuration();
-        Assertions.assertThat(new StateMachineBuilderImpl().configuration(configuration).build()).isNotNull();
+        FSMConfiguration configuration = new SimpleStateMachineBuilder().extractConfiguration(StateMachineWithoutListener.class).configuration();
+        Assertions.assertThat(new SimpleStateMachineBuilder().configuration(configuration).build()).isNotNull();
     }
 
     @Test
     public void testMultipleListenersAvailable() throws MachineCreationException {
-        FSMConfiguration configuration = new StateMachineBuilderImpl().extractConfiguration(StateMachineWithMultipleListeners.class).configuration();
+        FSMConfiguration configuration = new SimpleStateMachineBuilder().extractConfiguration(StateMachineWithMultipleListeners.class).configuration();
         this.softly.assertThat(configuration.getTransitions()).hasSize(1);
 
         this.softly.assertThat(configuration.getTransitions().get(0).getListeners()).hasSize(2);
@@ -98,7 +100,7 @@ public class StateMachineBuilderImplTest {
 
         FSMConfiguration expextedResult = this.createConfiguration(stateMachineType);
 
-        StateMachineBuilderImpl instance = new StateMachineBuilderImpl();
+        SimpleStateMachineBuilder instance = new SimpleStateMachineBuilder();
         FSMConfiguration result = instance.extractConfiguration(stateMachineType).configuration();
 
         this.softly.assertThat(expextedResult.getStateType()).isEqualTo(result.getStateType());
@@ -131,25 +133,27 @@ public class StateMachineBuilderImplTest {
     }
 
     private FSMConfiguration createConfiguration(final Class<? extends StateMachine> machineType) {
-        List<TransitionContainer> transitions = new ArrayList<TransitionContainer>() {
-            {
-                add(new TransitionContainer(State.AVAILABLE, State.REGISTERED, Event.REGISTER, null, null)); // 2
-                add(new TransitionContainer(State.REGISTERED, State.ACTIVATED, Event.ACTIVATE, null, null)); // 3
-                add(new TransitionContainer(State.PARKED, State.ACTIVATED, Event.ACTIVATE, null, null)); // 4
-                add(new TransitionContainer(State.REGISTERED, State.DELETED, Event.DELETE, null, null)); // 0
-                add(new TransitionContainer(State.UNREGISTERED, State.DELETED, Event.DELETE, null, null)); // 1
-                add(new TransitionContainer(State.ACTIVATED, State.DEACTIVATED, Event.DEACTIVATE, null, null)); // 5
-                add(new TransitionContainer(State.DEACTIVATED, State.UNREGISTERED, Event.UNREGISTER, null, null)); // 6
-                add(new TransitionContainer(State.PARKED, State.UNREGISTERED, Event.UNREGISTER, null, null)); // 7
-                add(new TransitionContainer(State.DEACTIVATED, State.PARKED, Event.PARK, null, null)); // 8
-            }
-        };
+        try {
+            return DefaultFSMConfiguration.of(machineType, ExampleState.class, ExampleEvent.class)
+                    .andAddTransition(TransitionContainer.of(ExampleState.AVAILABLE, ExampleState.REGISTERED, ExampleEvent.REGISTER, StateMachineBuilderTest.class.getDeclaredMethod("calledTransitionMethod"))) // 2
+                    .andAddTransition(TransitionContainer.of(ExampleState.REGISTERED, ExampleState.ACTIVATED, ExampleEvent.ACTIVATE, StateMachineBuilderTest.class.getDeclaredMethod("calledTransitionMethod"))) // 3
+                    .andAddTransition(TransitionContainer.of(ExampleState.PARKED, ExampleState.ACTIVATED, ExampleEvent.ACTIVATE, StateMachineBuilderTest.class.getDeclaredMethod("calledTransitionMethod"))) // 4
+                    .andAddTransition(TransitionContainer.of(ExampleState.REGISTERED, ExampleState.DELETED, ExampleEvent.DELETE, StateMachineBuilderTest.class.getDeclaredMethod("calledTransitionMethod"))) // 0
+                    .andAddTransition(TransitionContainer.of(ExampleState.UNREGISTERED, ExampleState.DELETED, ExampleEvent.DELETE, StateMachineBuilderTest.class.getDeclaredMethod("calledTransitionMethod"))) // 1
+                    .andAddTransition(TransitionContainer.of(ExampleState.ACTIVATED, ExampleState.DEACTIVATED, ExampleEvent.DEACTIVATE, StateMachineBuilderTest.class.getDeclaredMethod("calledTransitionMethod"))) // 5
+                    .andAddTransition(TransitionContainer.of(ExampleState.DEACTIVATED, ExampleState.UNREGISTERED, ExampleEvent.UNREGISTER, StateMachineBuilderTest.class.getDeclaredMethod("calledTransitionMethod"))) // 6
+                    .andAddTransition(TransitionContainer.of(ExampleState.PARKED, ExampleState.UNREGISTERED, ExampleEvent.UNREGISTER, StateMachineBuilderTest.class.getDeclaredMethod("calledTransitionMethod"))) // 7
+                    .andAddTransition(TransitionContainer.of(ExampleState.DEACTIVATED, ExampleState.PARKED, ExampleEvent.PARK, StateMachineBuilderTest.class.getDeclaredMethod("calledTransitionMethod"))); // 8
+        } catch (NoSuchMethodException | SecurityException ex) {
+            LOGGER.error(ex.getLocalizedMessage());
+            throw new RuntimeException(ex);
+        }
+    }
 
-        return new FSMConfigurationImpl(
-                machineType,
-                transitions,
-                State.class,
-                Event.class
-        );
+    /**
+     * This method is used as the called method for a transition.
+     */
+    public void calledTransitionMethod() {
+        LOGGER.info("io.varietas.instrumentum.status.machina.builders.impl.SimpleChainStateMachineBuilderTest.calledTransitionMethod()");
     }
 }

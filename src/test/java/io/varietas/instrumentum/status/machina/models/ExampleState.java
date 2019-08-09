@@ -16,14 +16,18 @@
 package io.varietas.instrumentum.status.machina.models;
 
 /**
- * <h2>Chain</h2>
+ * <h2>State</h2>
  *
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/31/2017
  */
-public enum Chain {
-    INSTALLING,
-    UPDATED,
-    PARKING,
-    DELETION
+public enum ExampleState {
+
+    AVAILABLE,
+    REGISTERED,
+    ACTIVATED,
+    DEACTIVATED,
+    PARKED,
+    UNREGISTERED,
+    DELETED,
 }

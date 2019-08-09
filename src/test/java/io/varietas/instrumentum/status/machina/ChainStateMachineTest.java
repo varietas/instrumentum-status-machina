@@ -15,7 +15,7 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import io.varietas.instrumentum.status.machina.builders.impl.ChainStateMachineBuilderImpl;
+import io.varietas.instrumentum.status.machina.builders.SimpleChainStateMachineBuilder;
 import io.varietas.instrumentum.status.machina.error.MachineCreationException;
 
 /**
@@ -25,6 +25,6 @@ import io.varietas.instrumentum.status.machina.error.MachineCreationException;
 public class ChainStateMachineTest extends StateMachineTests {
 
     public StateMachine getStateMachine(Class<? extends StateMachine> machineClazz) throws MachineCreationException {
-        return new ChainStateMachineBuilderImpl().extractConfiguration(machineClazz).build();
+        return new SimpleChainStateMachineBuilder().extractConfiguration(machineClazz).build();
     }
 }

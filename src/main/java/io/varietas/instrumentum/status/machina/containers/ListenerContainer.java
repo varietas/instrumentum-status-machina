@@ -15,10 +15,9 @@
  */
 package io.varietas.instrumentum.status.machina.containers;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
+import lombok.Value;
 
 /**
  * <h2>ListenerContainer</h2>
@@ -28,11 +27,10 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode
-@Getter
-@AllArgsConstructor
-public final class ListenerContainer {
+@Value(staticConstructor = "of")
+public class ListenerContainer {
 
-    private final Class<?> listener;
-    private final boolean before;
-    private final boolean after;
+    Class<?> listener;
+    boolean before;
+    boolean after;
 }

@@ -21,8 +21,8 @@ import io.varietas.instrumentum.status.machina.machines.transition.FailingStateM
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithTransitionAfterListener;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithTransitionBeforeListener;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithoutListener;
-import io.varietas.instrumentum.status.machina.models.Event;
-import io.varietas.instrumentum.status.machina.models.State;
+import io.varietas.instrumentum.status.machina.models.ExampleEvent;
+import io.varietas.instrumentum.status.machina.models.ExampleState;
 import io.varietas.instrumentum.status.machina.models.TestEntity;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
@@ -58,13 +58,13 @@ public class StateMachineTests {
 
         StateMachine stateMachine = this.getStateMachine(StateMachineWithoutListener.class);
 
-        TestEntity entity = new TestEntity(State.AVAILABLE, 0);
+        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
 
-        this.assertTransition(stateMachine, Event.REGISTER, State.REGISTERED, entity, 1);
-        this.assertTransition(stateMachine, Event.ACTIVATE, State.ACTIVATED, entity, 3);
-        this.assertTransition(stateMachine, Event.DEACTIVATE, State.DEACTIVATED, entity, 1);
-        this.assertTransition(stateMachine, Event.UNREGISTER, State.UNREGISTERED, entity, 0);
-        this.assertTransition(stateMachine, Event.DELETE, State.DELETED, entity, -7);
+        this.assertTransition(stateMachine, ExampleEvent.REGISTER, ExampleState.REGISTERED, entity, 1);
+        this.assertTransition(stateMachine, ExampleEvent.ACTIVATE, ExampleState.ACTIVATED, entity, 3);
+        this.assertTransition(stateMachine, ExampleEvent.DEACTIVATE, ExampleState.DEACTIVATED, entity, 1);
+        this.assertTransition(stateMachine, ExampleEvent.UNREGISTER, ExampleState.UNREGISTERED, entity, 0);
+        this.assertTransition(stateMachine, ExampleEvent.DELETE, ExampleState.DELETED, entity, -7);
     }
 
     @Test
@@ -72,9 +72,9 @@ public class StateMachineTests {
 
         StateMachine stateMachine = this.getStateMachine(StateMachineWithoutListener.class);
 
-        TestEntity entity = new TestEntity(State.AVAILABLE, 0);
+        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
 
-        Assertions.assertThatThrownBy(() -> stateMachine.fire(Event.ACTIVATE, entity)).isInstanceOf(InvalidTransitionException.class);
+        Assertions.assertThatThrownBy(() -> stateMachine.fire(ExampleEvent.ACTIVATE, entity)).isInstanceOf(InvalidTransitionException.class);
     }
 
     @Test
@@ -88,41 +88,41 @@ public class StateMachineTests {
 
         StateMachine stateMachine = this.getStateMachine(StateMachineWithoutListener.class);
 
-        TestEntity entity = new TestEntity(State.AVAILABLE, 0);
+        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
 
-        this.assertTransition(stateMachine, Event.REGISTER, State.REGISTERED, entity, 1);
-        this.assertTransition(stateMachine, Event.ACTIVATE, State.ACTIVATED, entity, 3);
-        this.assertTransition(stateMachine, Event.DEACTIVATE, State.DEACTIVATED, entity, 1);
-        this.assertTransition(stateMachine, Event.PARK, State.PARKED, entity, -4);
+        this.assertTransition(stateMachine, ExampleEvent.REGISTER, ExampleState.REGISTERED, entity, 1);
+        this.assertTransition(stateMachine, ExampleEvent.ACTIVATE, ExampleState.ACTIVATED, entity, 3);
+        this.assertTransition(stateMachine, ExampleEvent.DEACTIVATE, ExampleState.DEACTIVATED, entity, 1);
+        this.assertTransition(stateMachine, ExampleEvent.PARK, ExampleState.PARKED, entity, -4);
     }
 
     @Test
     public void testFireWithBeforeListener() throws Exception {
         StateMachine stateMachine = this.getStateMachine(StateMachineWithTransitionBeforeListener.class);
 
-        TestEntity entity = new TestEntity(State.AVAILABLE, 0);
+        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
 
-        this.assertTransition(stateMachine, Event.REGISTER, State.REGISTERED, entity, 81);
-        this.assertTransition(stateMachine, Event.ACTIVATE, State.ACTIVATED, entity, 163);
-        this.assertTransition(stateMachine, Event.DEACTIVATE, State.DEACTIVATED, entity, 241);
-        this.assertTransition(stateMachine, Event.UNREGISTER, State.UNREGISTERED, entity, 320);
-        this.assertTransition(stateMachine, Event.DELETE, State.DELETED, entity, 393);
+        this.assertTransition(stateMachine, ExampleEvent.REGISTER, ExampleState.REGISTERED, entity, 81);
+        this.assertTransition(stateMachine, ExampleEvent.ACTIVATE, ExampleState.ACTIVATED, entity, 163);
+        this.assertTransition(stateMachine, ExampleEvent.DEACTIVATE, ExampleState.DEACTIVATED, entity, 241);
+        this.assertTransition(stateMachine, ExampleEvent.UNREGISTER, ExampleState.UNREGISTERED, entity, 320);
+        this.assertTransition(stateMachine, ExampleEvent.DELETE, ExampleState.DELETED, entity, 393);
     }
 
     @Test
     public void testFireWithAfterListener() throws Exception {
         StateMachine stateMachine = this.getStateMachine(StateMachineWithTransitionAfterListener.class);
 
-        TestEntity entity = new TestEntity(State.AVAILABLE, 0);
+        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
 
-        this.assertTransition(stateMachine, Event.REGISTER, State.REGISTERED, entity, -79);
-        this.assertTransition(stateMachine, Event.ACTIVATE, State.ACTIVATED, entity, -157);
-        this.assertTransition(stateMachine, Event.DEACTIVATE, State.DEACTIVATED, entity, -239);
-        this.assertTransition(stateMachine, Event.UNREGISTER, State.UNREGISTERED, entity, -320);
-        this.assertTransition(stateMachine, Event.DELETE, State.DELETED, entity, -407);
+        this.assertTransition(stateMachine, ExampleEvent.REGISTER, ExampleState.REGISTERED, entity, -79);
+        this.assertTransition(stateMachine, ExampleEvent.ACTIVATE, ExampleState.ACTIVATED, entity, -157);
+        this.assertTransition(stateMachine, ExampleEvent.DEACTIVATE, ExampleState.DEACTIVATED, entity, -239);
+        this.assertTransition(stateMachine, ExampleEvent.UNREGISTER, ExampleState.UNREGISTERED, entity, -320);
+        this.assertTransition(stateMachine, ExampleEvent.DELETE, ExampleState.DELETED, entity, -407);
     }
 
-    private void assertTransition(final StateMachine stateMachine, final Event event, final State state, final TestEntity entity, final int expectedValue) {
+    private void assertTransition(final StateMachine stateMachine, final ExampleEvent event, final ExampleState state, final TestEntity entity, final int expectedValue) {
         stateMachine.fire(event, entity);
         this.softly.assertThat(entity.getValue()).isEqualTo(expectedValue);
         this.softly.assertThat(entity.state()).isEqualTo(state);
@@ -132,9 +132,9 @@ public class StateMachineTests {
     public void testForInvalidTransition() throws MachineCreationException {
         StateMachine stateMachine = this.getStateMachine(StateMachineWithTransitionAfterListener.class);
 
-        TestEntity entity = new TestEntity(State.AVAILABLE, 0);
+        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
         Assertions
-                .assertThatThrownBy(() -> stateMachine.fire(Event.ACTIVATE, entity))
+                .assertThatThrownBy(() -> stateMachine.fire(ExampleEvent.ACTIVATE, entity))
                 .isInstanceOf(InvalidTransitionException.class)
                 .hasMessage("State of target 'AVAILABLE' doesn't match required state for tarnsition 'ACTIVATE'.");
     }

@@ -16,10 +16,9 @@
 package io.varietas.instrumentum.status.machina.containers;
 
 import io.varietas.instrumentum.status.machina.StatedObject;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
+import lombok.Value;
 
 /**
  * <h2>TransitionChainMessage</h2>
@@ -31,8 +30,7 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode
-@Getter
-@AllArgsConstructor
+@Value(staticConstructor = "of")
 public class TransitionMessage {
 
     private final Enum transition;

@@ -15,7 +15,7 @@
  */
 package io.varietas.instrumentum.status.machina.listeners;
 
-import io.varietas.instrumentum.status.machina.models.Event;
+import io.varietas.instrumentum.status.machina.models.ExampleEvent;
 import io.varietas.instrumentum.status.machina.models.TestEntity;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,11 +28,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimpleTransitionListener {
 
-    public void after(final Event transition, final TestEntity target) {
+    public void after(final ExampleEvent transition, final TestEntity target) {
         target.setValue(target.getValue() - 80);
     }
 
-    public void before(final Event transition, final TestEntity target) {
+    public void before(final ExampleEvent transition, final TestEntity target) {
         target.setValue(target.getValue() + 80);
     }
 }

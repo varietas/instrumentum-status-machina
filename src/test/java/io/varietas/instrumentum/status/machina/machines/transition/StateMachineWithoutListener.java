@@ -15,13 +15,13 @@
  */
 package io.varietas.instrumentum.status.machina.machines.transition;
 
-import io.varietas.instrumentum.status.machina.AbstractStateMachine;
+import io.varietas.instrumentum.status.machina.BasicStateMachine;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.Transition;
 import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
-import io.varietas.instrumentum.status.machina.models.Chain;
-import io.varietas.instrumentum.status.machina.models.Event;
-import io.varietas.instrumentum.status.machina.models.State;
+import io.varietas.instrumentum.status.machina.models.ExampleChain;
+import io.varietas.instrumentum.status.machina.models.ExampleEvent;
+import io.varietas.instrumentum.status.machina.models.ExampleState;
 import io.varietas.instrumentum.status.machina.models.TestEntity;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,43 +29,43 @@ import lombok.extern.slf4j.Slf4j;
  * <h2>StateMachineWithoutListener</h2>
  */
 @Slf4j
-@StateMachineConfiguration(stateType = State.class, eventType = Event.class, chainType = Chain.class)
-public class StateMachineWithoutListener extends AbstractStateMachine {
+@StateMachineConfiguration(stateType = ExampleState.class, eventType = ExampleEvent.class, chainType = ExampleChain.class)
+public class StateMachineWithoutListener extends BasicStateMachine {
 
     public StateMachineWithoutListener(FSMConfiguration configuration) {
         super(configuration);
     }
 
     @Transition(from = "AVAILABLE", on = "REGISTER", to = "REGISTERED")
-    public void fromAvailableToRegistered(final State from, final State to, final Event event, final TestEntity context) {
+    public void fromAvailableToRegistered(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
         context.setValue(context.getValue() + 1);
     }
 
     @Transition(from = "REGISTERED", on = "ACTIVATE", to = "ACTIVATED")
     @Transition(from = "PARKED", on = "ACTIVATE", to = "ACTIVATED")
-    public void fromAnyToActivated(final State from, final State to, final Event event, final TestEntity context) {
+    public void fromAnyToActivated(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
         context.setValue(context.getValue() + 2);
     }
 
     @Transition(from = "REGISTERED", on = "DELETE", to = "DELETED")
     @Transition(from = "UNREGISTERED", on = "DELETE", to = "DELETED")
-    public void fromAnyToDeleted(final State from, final State to, final Event event, final TestEntity context) {
+    public void fromAnyToDeleted(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
         context.setValue(context.getValue() - 7);
     }
 
     @Transition(from = "ACTIVATED", on = "DEACTIVATE", to = "DEACTIVATED")
-    public void fromActivatedToDeactivated(final State from, final State to, final Event event, final TestEntity context) {
+    public void fromActivatedToDeactivated(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
         context.setValue(context.getValue() - 2);
     }
 
     @Transition(from = "DEACTIVATED", on = "UNREGISTER", to = "UNREGISTERED")
     @Transition(from = "PARKED", on = "UNREGISTER", to = "UNREGISTERED")
-    public void fromAnyToUnregistered(final State from, final State to, final Event event, final TestEntity context) {
+    public void fromAnyToUnregistered(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
         context.setValue(context.getValue() - 1);
     }
 
     @Transition(from = "DEACTIVATED", on = "PARK", to = "PARKED")
-    public void fromDeactivatedToParked(final State from, final State to, final Event event, final TestEntity context) {
+    public void fromDeactivatedToParked(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
         context.setValue(context.getValue() - 5);
     }
 }

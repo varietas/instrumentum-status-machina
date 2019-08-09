@@ -15,7 +15,7 @@
  */
 package io.varietas.instrumentum.status.machina.listeners;
 
-import io.varietas.instrumentum.status.machina.models.Chain;
+import io.varietas.instrumentum.status.machina.models.ExampleChain;
 import io.varietas.instrumentum.status.machina.models.TestEntity;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,11 +28,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimpleChainListener {
 
-    public void after(final Chain chain, final TestEntity target) {
+    public void after(final ExampleChain chain, final TestEntity target) {
         target.setValue(target.getValue() - 100);
     }
 
-    public void before(final Chain chain, final TestEntity target) {
+    public void before(final ExampleChain chain, final TestEntity target) {
         target.setValue(target.getValue() + 100);
     }
 }

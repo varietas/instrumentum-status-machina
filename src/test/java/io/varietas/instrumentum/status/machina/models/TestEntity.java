@@ -31,20 +31,20 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public class TestEntity implements StatedObject<State> {
+public class TestEntity implements StatedObject<ExampleState> {
 
-    private State state;
+    private ExampleState state;
     @Getter
     @Setter
     private int value;
 
     @Override
-    public State state() {
+    public ExampleState state() {
         return this.state;
     }
 
     @Override
-    public void state(State state) {
+    public void state(ExampleState state) {
         this.state = state;
     }
 }

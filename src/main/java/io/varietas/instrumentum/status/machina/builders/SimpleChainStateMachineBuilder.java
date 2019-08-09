@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.varietas.instrumentum.status.machina.builders.impl;
+package io.varietas.instrumentum.status.machina.builders;
 
 import io.varietas.instrumentum.status.machina.ChainStateMachine;
 import io.varietas.instrumentum.status.machina.StateMachine;
@@ -22,9 +22,8 @@ import io.varietas.instrumentum.status.machina.annotations.ChainListeners;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.TransitionChain;
 import io.varietas.instrumentum.status.machina.annotations.TransitionChains;
-import io.varietas.instrumentum.status.machina.builders.StateMachineBuilder;
 import io.varietas.instrumentum.status.machina.configuration.CFSMConfiguration;
-import io.varietas.instrumentum.status.machina.configuration.impl.CFSMConfigurationImpl;
+import io.varietas.instrumentum.status.machina.configuration.DefaultCFSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.ChainContainer;
 import io.varietas.instrumentum.status.machina.containers.ListenerContainer;
 import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
@@ -50,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version 1.0.0.0, 10/27/2017
  */
 @Slf4j
-public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CFSMConfiguration> {
+public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFSMConfiguration> {
 
     protected Class<? extends Enum> chainType;
 
@@ -75,13 +74,9 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
         this.transitions.addAll(this.collectTransitions(machineType));
         this.chains.addAll(this.createChains(machineType));
 
-        this.configuration = new CFSMConfigurationImpl(
-                machineType,
-                this.transitions,
-                this.chains,
-                this.stateType,
-                this.eventType,
-                this.chainType);
+        this.configuration = DefaultCFSMConfiguration.of(machineType, this.stateType, this.eventType, this.chainType)
+                .andAddChains(this.chains)
+                .andAddTransitions(this.transitions);
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Configuration for '{}' created:\n"
@@ -148,13 +143,9 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
             throw new TransitionChainCreationException(true, from.name(), to.name(), on.name());
         }
 
-        final ChainContainer res = new ChainContainer<>(
-                from,
-                to,
-                on,
-                chainParts.get(),
-                listeners
-        );
+        final ChainContainer res = ChainContainer.of(from, to, on)
+                .andAddAll(chainParts.get())
+                .andAddAll(listeners);
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Chain {}: {} -> {}", res.getOn(), res.getFrom(), res.getTo());
@@ -187,8 +178,8 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
 
         return Stream.of(type.getAnnotationsByType(ChainListener.class))
                 .map(annot -> {
-                    Class<?> listener = annot.value();
-                    ListenerContainer listenerContainer = new ListenerContainer(listener, this.existsMethod(listener, "before"), this.existsMethod(listener, "after"));
+                    final Class<?> listener = annot.value();
+                    final ListenerContainer listenerContainer = ListenerContainer.of(listener, this.existsMethod(listener, "before"), this.existsMethod(listener, "after"));
                     return new Pair(listenerContainer, Arrays.asList(annot.forChains()));
                 })
                 .collect(Collectors.toList());
@@ -241,7 +232,7 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
             return false;
         }
 
-        List<TransitionContainer> nextPossibles = this.transitions.stream()
+        final List<TransitionContainer> nextPossibles = this.transitions.stream()
                 .filter(transition -> transition.getFrom().equals(possiblePart.getTo()))
                 .collect(Collectors.toList());
 

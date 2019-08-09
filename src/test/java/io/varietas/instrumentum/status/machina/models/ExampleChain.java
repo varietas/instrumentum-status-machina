@@ -16,16 +16,14 @@
 package io.varietas.instrumentum.status.machina.models;
 
 /**
- * <h2>Event</h2>
+ * <h2>Chain</h2>
  *
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/31/2017
  */
-public enum Event {
-    REGISTER,
-    ACTIVATE,
-    DEACTIVATE,
-    UNREGISTER,
-    DELETE,
-    PARK,
+public enum ExampleChain {
+    INSTALLING,
+    UPDATED,
+    PARKING,
+    DELETION
 }

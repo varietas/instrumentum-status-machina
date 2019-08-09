@@ -15,6 +15,8 @@
  */
 package io.varietas.instrumentum.status.machina.error;
 
+import io.varietas.instrumentum.status.machina.listeners.SimpleChainListener;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -22,22 +24,43 @@ import org.junit.jupiter.api.Test;
  * @author Michael Rhöse
  */
 public class InvalidTransitionListenerExceptionTest {
-    
+
     public InvalidTransitionListenerExceptionTest() {
     }
 
-    /**
-     * Test of getLocalizedMessage method, of class InvalidTransitionListenerException.
-     */
     @Test
     public void testGetLocalizedMessage() {
-        System.out.println("getLocalizedMessage");
-        InvalidTransitionListenerException instance = null;
-        String expResult = "";
+        InvalidTransitionListenerException instance = new InvalidTransitionListenerException(SimpleChainListener.class, "There was an error while performing the listener.");
+        String expResult = "Transition listener [io.varietas.instrumentum.status.machina.listeners.SimpleChainListener] not executable. There was an error while performing the listener.";
         String result = instance.getLocalizedMessage();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Assertions.assertThat(result).isEqualTo(expResult);
     }
-    
+
+    @Test
+    public void testGetLocalizedMessageWithAdditionalThrowable() {
+        InvalidTransitionListenerException instance = new InvalidTransitionListenerException(SimpleChainListener.class, "There was an error while performing the listener.", new NullPointerException("Any null pointer"));
+        String expResult = "Transition listener [io.varietas.instrumentum.status.machina.listeners.SimpleChainListener] not executable. There was an error while performing the listener. NullPointerException: Any null pointer.";
+        String result = instance.getLocalizedMessage();
+        Assertions.assertThat(result).isEqualTo(expResult);
+    }
+
+    @Test
+    public void testNullListenerTypeAndAnyMessage() {
+        Assertions.assertThatThrownBy(() -> new InvalidTransitionListenerException(null, "")).isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    public void testAnyListenerTypeAndNullMessage() {
+        Assertions.assertThatThrownBy(() -> new InvalidTransitionListenerException(SimpleChainListener.class, null)).isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    public void testNullListenerTypeAndAnyMessageAndAnyCause() {
+        Assertions.assertThatThrownBy(() -> new InvalidTransitionListenerException(null, "", new NullPointerException())).isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    public void testAnyListenerTypeAndNullMessageAnyCause() {
+        Assertions.assertThatThrownBy(() -> new InvalidTransitionListenerException(SimpleChainListener.class, null, new NullPointerException())).isInstanceOf(NullPointerException.class);
+    }
 }

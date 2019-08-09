@@ -15,7 +15,7 @@
  */
 package io.varietas.instrumentum.status.machina.error;
 
-import io.varietas.instrumentum.status.machina.models.Event;
+import io.varietas.instrumentum.status.machina.models.ExampleEvent;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +27,7 @@ public class InvalidTransitionExceptionTest {
 
     @Test
     public void testGetLocalizedMessageWithoutAdditionalThrowable() {
-        InvalidTransitionException instance = new InvalidTransitionException(Event.REGISTER, "The transition is not possible");
+        InvalidTransitionException instance = new InvalidTransitionException(ExampleEvent.REGISTER, "The transition is not possible");
         String expResult = "Transition 'REGISTER' isn't possible: The transition is not possible.";
         String result = instance.getLocalizedMessage();
         Assertions.assertThat(result).isEqualTo(expResult);
@@ -35,7 +35,7 @@ public class InvalidTransitionExceptionTest {
 
     @Test
     public void testGetLocalizedMessageWithAdditionalThrowable() {
-        InvalidTransitionException instance = new InvalidTransitionException(Event.REGISTER, "The transition is not possible", new NullPointerException("Any null pointer"));
+        InvalidTransitionException instance = new InvalidTransitionException(ExampleEvent.REGISTER, "The transition is not possible", new NullPointerException("Any null pointer"));
         String expResult = "Transition 'REGISTER' isn't possible: The transition is not possible. NullPointerException: Any null pointer.";
         String result = instance.getLocalizedMessage();
         Assertions.assertThat(result).isEqualTo(expResult);
@@ -48,7 +48,7 @@ public class InvalidTransitionExceptionTest {
 
     @Test
     public void testAnyEnumAndNullMessage() {
-        Assertions.assertThatThrownBy(() -> new InvalidTransitionException(Event.ACTIVATE, null)).isInstanceOf(NullPointerException.class);
+        Assertions.assertThatThrownBy(() -> new InvalidTransitionException(ExampleEvent.ACTIVATE, null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -58,6 +58,6 @@ public class InvalidTransitionExceptionTest {
 
     @Test
     public void testAnyEnumAndNullMessageAnyCause() {
-        Assertions.assertThatThrownBy(() -> new InvalidTransitionException(Event.ACTIVATE, null, new NullPointerException())).isInstanceOf(NullPointerException.class);
+        Assertions.assertThatThrownBy(() -> new InvalidTransitionException(ExampleEvent.ACTIVATE, null, new NullPointerException())).isInstanceOf(NullPointerException.class);
     }
 }

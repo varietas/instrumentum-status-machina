@@ -15,14 +15,14 @@
  */
 package io.varietas.instrumentum.status.machina.machines.chain;
 
-import io.varietas.instrumentum.status.machina.AbstractChainStateMachine;
+import io.varietas.instrumentum.status.machina.BasicChainStateMachine;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.Transition;
 import io.varietas.instrumentum.status.machina.annotations.TransitionChain;
 import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
-import io.varietas.instrumentum.status.machina.models.Chain;
-import io.varietas.instrumentum.status.machina.models.Event;
-import io.varietas.instrumentum.status.machina.models.State;
+import io.varietas.instrumentum.status.machina.models.ExampleChain;
+import io.varietas.instrumentum.status.machina.models.ExampleEvent;
+import io.varietas.instrumentum.status.machina.models.ExampleState;
 import io.varietas.instrumentum.status.machina.models.TestEntity;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,20 +31,20 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @TransitionChain(from = "AVAILABLE", on = "INSTALLING", to = "ACTIVATED")
-@StateMachineConfiguration(stateType = State.class, eventType = Event.class, chainType = Chain.class)
-public class ChainStateMachineSimple extends AbstractChainStateMachine {
+@StateMachineConfiguration(stateType = ExampleState.class, eventType = ExampleEvent.class, chainType = ExampleChain.class)
+public class ChainStateMachineSimple extends BasicChainStateMachine {
 
     public ChainStateMachineSimple(FSMConfiguration configuration) {
         super(configuration);
     }
 
     @Transition(from = "AVAILABLE", on = "REGISTER", to = "REGISTERED")
-    public void fromAvailableToRegistered(final State from, final State to, final Event event, final TestEntity context) {
+    public void fromAvailableToRegistered(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
         context.setValue(context.getValue() + 1);
     }
 
     @Transition(from = "PARKED", on = "ACTIVATE", to = "ACTIVATED")
-    public void fromAnyToActivated(final State from, final State to, final Event event, final TestEntity context) {
+    public void fromAnyToActivated(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
         context.setValue(context.getValue() + 2);
     }
 }

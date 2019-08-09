@@ -21,12 +21,20 @@ import lombok.NonNull;
 /**
  * <h2>InvalidTransitionException</h2>
  * <p>
- * Signals the triggering of a FSMs by an invalid transition. The reasons can be e.g. not present transition or mismatching start state.
+ * The exception is thrown by the {@link io.varietas.instrumentum.status.machina.AbstractStateMachine} while executing a listener for a transition. The reasons are:
+ * <ul>
+ * <li>{@link NoSuchMethodException}</li>
+ * <li>{@link SecurityException}</li>
+ * <li>{@link IllegalAccessException}</li>
+ * <li>{@link IllegalArgumentException}</li>
+ * <li>{@link InvocationTargetException}</li>
+ * <li>{@link InstantiationException}</li>
+ * </ul>
  *
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/8/2017
  */
-public class InvalidTransitionListenerException extends RuntimeException {
+public final class InvalidTransitionListenerException extends RuntimeException {
 
     private final Class<?> listenerType;
 

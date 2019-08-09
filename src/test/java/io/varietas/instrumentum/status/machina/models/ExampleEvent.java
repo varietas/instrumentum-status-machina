@@ -16,18 +16,16 @@
 package io.varietas.instrumentum.status.machina.models;
 
 /**
- * <h2>State</h2>
+ * <h2>Event</h2>
  *
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/31/2017
  */
-public enum State {
-
-    AVAILABLE,
-    REGISTERED,
-    ACTIVATED,
-    DEACTIVATED,
-    PARKED,
-    UNREGISTERED,
-    DELETED,
+public enum ExampleEvent {
+    REGISTER,
+    ACTIVATE,
+    DEACTIVATE,
+    UNREGISTER,
+    DELETE,
+    PARK,
 }

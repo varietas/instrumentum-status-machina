@@ -36,11 +36,11 @@ import lombok.extern.slf4j.Slf4j;
  * @version 1.0.0.0, 10/7/2017
  */
 @Slf4j
-public abstract class AbstractStateMachine implements StateMachine {
+public abstract class BasicStateMachine implements StateMachine {
 
     protected final FSMConfiguration configuration;
 
-    public AbstractStateMachine(final FSMConfiguration configuration) {
+    public BasicStateMachine(final FSMConfiguration configuration) {
         this.configuration = configuration;
     }
 

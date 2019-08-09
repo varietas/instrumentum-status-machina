@@ -17,11 +17,15 @@ package io.varietas.instrumentum.status.machina.containers;
 
 import io.varietas.instrumentum.status.machina.annotations.Transition;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.NonNull;
 import lombok.ToString;
+import lombok.Value;
 
 /**
  * <h2>TransitionContainer</h2>
@@ -41,17 +45,63 @@ import lombok.ToString;
  */
 @ToString(exclude = {"calledMethod"})
 @EqualsAndHashCode(exclude = "calledMethod")
-@Getter
-@AllArgsConstructor
+@Value
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransitionContainer<STATE_TYPE extends Enum, TRANSITION_TYPE extends Enum> {
 
-    private final STATE_TYPE from;
+    STATE_TYPE from;
 
-    private final STATE_TYPE to;
+    STATE_TYPE to;
 
-    private final TRANSITION_TYPE on;
+    TRANSITION_TYPE on;
 
-    private final Method calledMethod;
+    Method calledMethod;
 
-    private final List<ListenerContainer> listeners;
+    List<ListenerContainer> listeners;
+
+    /**
+     * Creates a {@link TransitionContainer} with the basic information. Adding listeners is possible by {@link TransitionContainer#andAddListener(io.varietas.instrumentum.status.machina.containers.ListenerContainer)} or {@link TransitionContainer#andAddListeners(java.util.List)}.
+     *
+     * @param from         Type that marks the start of the transition
+     * @param to           Type that marks the end of the transition
+     * @param on           Type that is used as the identifier of the transition
+     * @param calledMethod The method that represents the handler of the call
+     *
+     * @return An instance with the basic information of the transition
+     */
+    public static TransitionContainer of(@NonNull final Enum from, @NonNull final Enum to, @NonNull final Enum on, @NonNull final Method calledMethod) {
+        return new TransitionContainer(from, to, on, calledMethod, new ArrayList<>());
+    }
+
+    /**
+     * Adds a listener to the transition.
+     *
+     * @param container Container that has to be added to the transition
+     *
+     * @return The instance of this container for a fluent like usage.
+     */
+    public TransitionContainer andAddListener(@NonNull final ListenerContainer container) {
+
+        listeners.add(container);
+
+        return this;
+    }
+
+    /**
+     * Adds a list of listeners to the transition.
+     *
+     * @param containers List of listeners that have to be added to the transition
+     *
+     * @return The instance of this container for a fluent like usage.
+     */
+    public TransitionContainer andAddListeners(final List<ListenerContainer> containers) {
+
+        if (Objects.isNull(containers) || containers.isEmpty()) {
+            return this;
+        }
+
+        this.listeners.addAll(containers);
+
+        return this;
+    }
 }

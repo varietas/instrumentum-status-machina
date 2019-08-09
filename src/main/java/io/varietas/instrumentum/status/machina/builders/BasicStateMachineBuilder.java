@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.varietas.instrumentum.status.machina.builders.impl;
+package io.varietas.instrumentum.status.machina.builders;
 
 import io.varietas.instrumentum.status.machina.StateMachine;
 import io.varietas.instrumentum.status.machina.annotations.Transition;
 import io.varietas.instrumentum.status.machina.annotations.TransitionListener;
 import io.varietas.instrumentum.status.machina.annotations.TransitionListeners;
 import io.varietas.instrumentum.status.machina.annotations.Transitions;
-import io.varietas.instrumentum.status.machina.builders.StateMachineBuilder;
 import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.ListenerContainer;
 import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
@@ -39,7 +38,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * <h2>AbstractStateMachineBuilder</h2>
+ * <h2>BasicStateMachineBuilder</h2>
  * <p>
  * This class represents the common of all FSM builders. Please see specific implementations for usage.
  *
@@ -48,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
  * @param <CONFIGURATION> Generic type of configuration that is created by the builder.
  */
 @Slf4j
-abstract class AbstractStateMachineBuilder<CONFIGURATION extends FSMConfiguration> implements StateMachineBuilder<CONFIGURATION> {
+abstract class BasicStateMachineBuilder<CONFIGURATION extends FSMConfiguration> implements StateMachineBuilder<CONFIGURATION> {
 
     @Getter
     @Accessors(fluent = true, chain = true)
@@ -111,19 +110,13 @@ abstract class AbstractStateMachineBuilder<CONFIGURATION extends FSMConfiguratio
 
     private TransitionContainer createTransitionContainer(final Transition transition, final Method method, final List<ListenerContainer> listeners) {
         Enum from = Enum.valueOf(this.stateType, transition.from());
-        Enum to = Enum.valueOf(stateType, transition.to());
+        Enum to = Enum.valueOf(this.stateType, transition.to());
         Enum on = Enum.valueOf(this.eventType, transition.on());
         if (LOGGER.isErrorEnabled()) {
             LOGGER.debug("Transition from '{}' to '{}' on '{}' will be created.", from.name(), to.name(), on.name());
             LOGGER.debug("{} listeners for transition {} added.", (Objects.nonNull(listeners) ? listeners.size() : 0), on.name());
         }
-        return new TransitionContainer<>(
-                from,
-                to,
-                on,
-                method,
-                listeners
-        );
+        return TransitionContainer.of(from, to, on, method).andAddListeners(listeners);
     }
 
     private List<ListenerContainer> extractTransitionListener(final Method method) {
@@ -134,7 +127,7 @@ abstract class AbstractStateMachineBuilder<CONFIGURATION extends FSMConfiguratio
         return Stream.of(method.getAnnotationsByType(TransitionListener.class))
                 .map(annot -> {
                     Class<?> listener = annot.value();
-                    return new ListenerContainer(listener, this.existsMethod(listener, "before"), this.existsMethod(listener, "after"));
+                    return ListenerContainer.of(listener, this.existsMethod(listener, "before"), this.existsMethod(listener, "after"));
                 })
                 .collect(Collectors.toList());
     }
@@ -148,6 +141,6 @@ abstract class AbstractStateMachineBuilder<CONFIGURATION extends FSMConfiguratio
      * @return True if the method exists on the type, otherwise false.
      */
     protected final boolean existsMethod(final Class<?> type, final String methodName) {
-        return Stream.of(type.getMethods()).filter(method -> method.getName().equals(methodName)).findFirst().isPresent();
+        return Stream.of(type.getMethods()).anyMatch(method -> method.getName().equals(methodName));
     }
 }

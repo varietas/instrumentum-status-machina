@@ -52,7 +52,7 @@ import lombok.Value;
 @EqualsAndHashCode(exclude = "chainParts")
 @Value
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ChainContainer<STATE_TYPE extends Enum, TRANSITION_TYPE extends Enum, CHAIN_TYPE extends Enum> {
+public class ChainContainer<STATE_TYPE extends Enum<?>, TRANSITION_TYPE extends Enum<?>, CHAIN_TYPE extends Enum<?>> {
 
     STATE_TYPE from;
 
@@ -60,21 +60,24 @@ public class ChainContainer<STATE_TYPE extends Enum, TRANSITION_TYPE extends Enu
 
     CHAIN_TYPE on;
 
-    List<TransitionContainer> chainParts;
+    List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> chainParts;
 
     List<ListenerContainer> listeners;
 
     /**
      * Creates a {@link ChainContainer} with the basic information. Adding chain parts and listeners is possible by {@link ChainContainer#andAdd(java.lang.Object)} or {@link ChainContainer#andAddAll(java.util.List)}.
      *
-     * @param from Type that marks the start of the chain
-     * @param to   Type that marks the end of the chain
-     * @param on   Type that is used as the identifier of the chain
+     * @param from              Type that marks the start of the chain
+     * @param to                Type that marks the end of the chain
+     * @param on                Type that is used as the identifier of the chain
+     * @param <STATE_TYPE>      Generic type of enumeration which is used to represent the states.
+     * @param <TRANSITION_TYPE> Generic type of enumeration which is used to represent the occurred event (Event identifier).
+     * @param <CHAIN_TYPE>      Generic type of enumeration which is used to represent a chain event (Chain identifier).
      *
      * @return An instance with the basic information of the chain
      */
-    public static ChainContainer of(@NonNull final Enum from, @NonNull final Enum to, @NonNull final Enum on) {
-        return new ChainContainer(from, to, on, new ArrayList<>(), new ArrayList<>());
+    public static <STATE_TYPE extends Enum<?>, TRANSITION_TYPE extends Enum<?>, CHAIN_TYPE extends Enum<?>> ChainContainer<STATE_TYPE, TRANSITION_TYPE, CHAIN_TYPE> of(@NonNull final STATE_TYPE from, @NonNull STATE_TYPE to, @NonNull final CHAIN_TYPE on) {
+        return new ChainContainer<>(from, to, on, new ArrayList<>(), new ArrayList<>());
     }
 
     /**
@@ -88,7 +91,8 @@ public class ChainContainer<STATE_TYPE extends Enum, TRANSITION_TYPE extends Enu
      *
      * @return The instance of this container for a fluent like usage.
      */
-    public ChainContainer andAdd(@NonNull final Object container) {
+    @SuppressWarnings("unchecked")
+    public ChainContainer<STATE_TYPE, TRANSITION_TYPE, CHAIN_TYPE> andAdd(@NonNull final Object container) {
         final boolean isTransitionContainer = TransitionContainer.class.isInstance(container);
         final boolean isListenerContainer = ListenerContainer.class.isInstance(container);
 
@@ -97,7 +101,7 @@ public class ChainContainer<STATE_TYPE extends Enum, TRANSITION_TYPE extends Enu
         }
 
         if (isTransitionContainer) {
-            this.chainParts.add((TransitionContainer) container);
+            this.chainParts.add((TransitionContainer<STATE_TYPE, TRANSITION_TYPE>) container);
         } else {
             this.listeners.add((ListenerContainer) container);
         }
@@ -117,7 +121,8 @@ public class ChainContainer<STATE_TYPE extends Enum, TRANSITION_TYPE extends Enu
      *
      * @return The instance of this container for a fluent like usage.
      */
-    public <LIST extends List<?>> ChainContainer andAddAll(final LIST containers) {
+    @SuppressWarnings("unchecked")
+    public <LIST extends List<?>> ChainContainer<STATE_TYPE, TRANSITION_TYPE, CHAIN_TYPE> andAddAll(final LIST containers) {
 
         if (Objects.isNull(containers) || containers.isEmpty()) {
             return this;
@@ -131,7 +136,7 @@ public class ChainContainer<STATE_TYPE extends Enum, TRANSITION_TYPE extends Enu
         }
 
         if (isTransitionContainer) {
-            this.chainParts.addAll((List<? extends TransitionContainer>) containers);
+            this.chainParts.addAll((List<? extends TransitionContainer<STATE_TYPE, TRANSITION_TYPE>>) containers);
         } else {
             this.listeners.addAll((List<? extends ListenerContainer>) containers);
         }

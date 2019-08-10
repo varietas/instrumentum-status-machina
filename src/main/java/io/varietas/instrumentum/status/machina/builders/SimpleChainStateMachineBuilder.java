@@ -38,6 +38,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -49,11 +50,13 @@ import lombok.extern.slf4j.Slf4j;
  * @version 1.0.0.0, 10/27/2017
  */
 @Slf4j
+@NoArgsConstructor(staticName = "getBuilder")
 public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFSMConfiguration> {
 
-    protected Class<? extends Enum> chainType;
+    @SuppressWarnings("rawtypes")
+    protected Class<? extends Enum<?>> chainType;
 
-    private final List<ChainContainer> chains = new ArrayList<>();
+    private final List<ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>>> chains = new ArrayList<>();
 
     /**
      * Extracts the configuration from a given {@link StateMachine}. This process should be done only once per state machine type and shared between the instances because the collection of information is a big process and can take a while.
@@ -104,7 +107,7 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
      *
      * @return List of all available transition chains.
      */
-    private List<ChainContainer> createChains(final Class<? extends StateMachine> machineType) {
+    private List<ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>>> createChains(final Class<? extends StateMachine> machineType) {
 
         if (!machineType.isAnnotationPresent(TransitionChain.class) && !machineType.isAnnotationPresent(TransitionChains.class)) {
             return Collections.emptyList();
@@ -133,17 +136,26 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
      *
      * @return Chain container with all relevant information.
      */
-    private ChainContainer createChain(final TransitionChain chain, final List<ListenerContainer> listeners) {
-        final Enum from = Enum.valueOf(this.stateType, chain.from());
-        final Enum to = Enum.valueOf(stateType, chain.to());
-        final Enum on = Enum.valueOf(this.chainType, chain.on());
-        Optional<List<TransitionContainer>> chainParts = this.recursive(from, to);
+    private ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>> createChain(final TransitionChain chain, final List<ListenerContainer> listeners) {
+        @SuppressWarnings("rawtypes")
+        final Class<? extends Enum> stateClazzType = this.stateType;
+        @SuppressWarnings("rawtypes")
+        final Class<? extends Enum> chainClazzType = this.chainType;
+
+        @SuppressWarnings("unchecked")
+        final Enum<?> from = Enum.valueOf(stateClazzType, chain.from());
+        @SuppressWarnings("unchecked")
+        final Enum<?> to = Enum.valueOf(stateClazzType, chain.to());
+        @SuppressWarnings("unchecked")
+        final Enum<?> on = Enum.valueOf(chainClazzType, chain.on());
+        Optional<List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>>> chainParts = this.recursive(from, to);
 
         if (!chainParts.isPresent()) {
             throw new TransitionChainCreationException(true, from.name(), to.name(), on.name());
         }
 
-        final ChainContainer res = ChainContainer.of(from, to, on)
+        @SuppressWarnings("unchecked")
+        final ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>> res = ChainContainer.of(from, to, on)
                 .andAddAll(chainParts.get())
                 .andAddAll(listeners);
 
@@ -151,7 +163,8 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
             LOGGER.debug("Chain {}: {} -> {}", res.getOn(), res.getFrom(), res.getTo());
         }
         res.getChainParts().forEach(part -> {
-            TransitionContainer partContainer = ((TransitionContainer) part);
+            @SuppressWarnings("unchecked")
+            TransitionContainer<? extends Enum<?>, ? extends Enum<?>> partContainer = part;
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("  - {}: {} -> {}", partContainer.getOn(), partContainer.getFrom(), partContainer.getTo());
             }
@@ -171,6 +184,7 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
      *
      * @return Collected chain listeners as list.
      */
+    @SuppressWarnings("unchecked")
     private List<Pair> extractChainListener(final Class<?> type) {
         if (!type.isAnnotationPresent(ChainListeners.class) && !type.isAnnotationPresent(ChainListener.class)) {
             return Collections.EMPTY_LIST;
@@ -193,15 +207,15 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
      *
      * @return List of all required transitions as containers.
      */
-    private Optional<List<TransitionContainer>> recursive(final Enum from, final Enum to) {
+    private Optional<List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>>> recursive(final Enum<?> from, final Enum<?> to) {
 
-        List<TransitionContainer> possibleParts = this.transitions.stream()
+        List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> possibleParts = this.transitions.stream()
                 .filter(transition -> transition.getFrom().equals(from))
                 .collect(Collectors.toList());
 
         return possibleParts.stream()
                 .map((possiblePart) -> {
-                    List<TransitionContainer> temp = new ArrayList<>();
+                    List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> temp = new ArrayList<>();
                     temp.add(possiblePart);
                     if (!this.recursive(to, possiblePart, temp, 1)) {
                         return null;
@@ -222,7 +236,7 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
      *
      * @return True if the end state is located, otherwise false.
      */
-    private boolean recursive(final Enum abourt, final TransitionContainer possiblePart, final List<TransitionContainer> chainParts, final int fallBack) {
+    private boolean recursive(final Enum<?> abourt, final TransitionContainer<? extends Enum<?>, ? extends Enum<?>> possiblePart, final List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> chainParts, final int fallBack) {
 
         if (possiblePart.getTo().equals(abourt)) {
             return true;
@@ -232,7 +246,7 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
             return false;
         }
 
-        final List<TransitionContainer> nextPossibles = this.transitions.stream()
+        final List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> nextPossibles = this.transitions.stream()
                 .filter(transition -> transition.getFrom().equals(possiblePart.getTo()))
                 .collect(Collectors.toList());
 
@@ -244,9 +258,9 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
         }
 
         if (nextPossibles.size() == 1) {
-            List<TransitionContainer> temp = new ArrayList<>();
+            List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> temp = new ArrayList<>();
 
-            TransitionContainer toAdd = nextPossibles.get(0);
+            TransitionContainer<? extends Enum<?>, ? extends Enum<?>> toAdd = nextPossibles.get(0);
 
             chainParts.add(toAdd);
             if (!this.recursive(abourt, toAdd, temp, fallBack + 1)) {
@@ -257,9 +271,9 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
             return true;
         }
 
-        final List<List<TransitionContainer>> buffer = nextPossibles.stream()
+        final List<List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>>> buffer = nextPossibles.stream()
                 .map((nextPossible) -> {
-                    List<TransitionContainer> temp = new ArrayList<>();
+                    List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> temp = new ArrayList<>();
                     temp.add(nextPossible);
                     if (!this.recursive(abourt, nextPossible, temp, fallBack + 1)) {
                         return null;

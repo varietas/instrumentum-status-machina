@@ -47,6 +47,7 @@ import lombok.Value;
 @EqualsAndHashCode(exclude = "calledMethod")
 @Value
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@SuppressWarnings("rawtypes")
 public class TransitionContainer<STATE_TYPE extends Enum, TRANSITION_TYPE extends Enum> {
 
     STATE_TYPE from;
@@ -62,15 +63,17 @@ public class TransitionContainer<STATE_TYPE extends Enum, TRANSITION_TYPE extend
     /**
      * Creates a {@link TransitionContainer} with the basic information. Adding listeners is possible by {@link TransitionContainer#andAddListener(io.varietas.instrumentum.status.machina.containers.ListenerContainer)} or {@link TransitionContainer#andAddListeners(java.util.List)}.
      *
-     * @param from         Type that marks the start of the transition
-     * @param to           Type that marks the end of the transition
-     * @param on           Type that is used as the identifier of the transition
-     * @param calledMethod The method that represents the handler of the call
+     * @param from              Type that marks the start of the transition
+     * @param to                Type that marks the end of the transition
+     * @param on                Type that is used as the identifier of the transition
+     * @param calledMethod      The method that represents the handler of the call
+     * @param <STATE_TYPE>      Generic type of enumeration which is used to represent the states.
+     * @param <TRANSITION_TYPE> Generic type of enumeration which is used to represent the occurred event (Event identifier).
      *
      * @return An instance with the basic information of the transition
      */
-    public static TransitionContainer of(@NonNull final Enum from, @NonNull final Enum to, @NonNull final Enum on, @NonNull final Method calledMethod) {
-        return new TransitionContainer(from, to, on, calledMethod, new ArrayList<>());
+    public static <STATE_TYPE extends Enum<?>, TRANSITION_TYPE extends Enum<?>> TransitionContainer<STATE_TYPE, TRANSITION_TYPE> of(@NonNull final STATE_TYPE from, @NonNull final STATE_TYPE to, @NonNull final TRANSITION_TYPE on, @NonNull final Method calledMethod) {
+        return new TransitionContainer<>(from, to, on, calledMethod, new ArrayList<>());
     }
 
     /**
@@ -80,7 +83,7 @@ public class TransitionContainer<STATE_TYPE extends Enum, TRANSITION_TYPE extend
      *
      * @return The instance of this container for a fluent like usage.
      */
-    public TransitionContainer andAddListener(@NonNull final ListenerContainer container) {
+    public TransitionContainer<STATE_TYPE, TRANSITION_TYPE> andAddListener(@NonNull final ListenerContainer container) {
 
         listeners.add(container);
 
@@ -94,7 +97,7 @@ public class TransitionContainer<STATE_TYPE extends Enum, TRANSITION_TYPE extend
      *
      * @return The instance of this container for a fluent like usage.
      */
-    public TransitionContainer andAddListeners(final List<ListenerContainer> containers) {
+    public TransitionContainer<STATE_TYPE, TRANSITION_TYPE> andAddListeners(final List<ListenerContainer> containers) {
 
         if (Objects.isNull(containers) || containers.isEmpty()) {
             return this;

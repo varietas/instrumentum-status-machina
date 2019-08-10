@@ -85,26 +85,26 @@ public class SimpleChainStateMachineBuilderTest {
     @Test
     public void testFailingChainCreation() {
 
-        Assertions.assertThatThrownBy(() -> new SimpleChainStateMachineBuilder().extractConfiguration(ChainStateMachineSimple.class))
+        Assertions.assertThatThrownBy(() -> SimpleChainStateMachineBuilder.getBuilder().extractConfiguration(ChainStateMachineSimple.class))
                 .isInstanceOf(TransitionChainCreationException.class);
     }
 
     @Test
     public void testSingleChainAvailable() {
-        CFSMConfiguration configuration = new SimpleChainStateMachineBuilder().extractConfiguration(ChainStateMachineWithSingleTransitionChain.class).configuration();
+        CFSMConfiguration configuration = SimpleChainStateMachineBuilder.getBuilder().extractConfiguration(ChainStateMachineWithSingleTransitionChain.class).configuration();
         Assertions.assertThat(configuration.getChains()).hasSize(1);
     }
 
     @Test
     public void testNoAnnotationAvailable() {
-        CFSMConfiguration configuration = new SimpleChainStateMachineBuilder().extractConfiguration(ChainStateMachineNothingAvailable.class).configuration();
+        CFSMConfiguration configuration = SimpleChainStateMachineBuilder.getBuilder().extractConfiguration(ChainStateMachineNothingAvailable.class).configuration();
         Assertions.assertThat(configuration.getChains()).isEmpty();
     }
 
     private void assertStateMachineConfiguration(final Class<? extends StateMachine> stateMachineType, final boolean isAssertMethod, final boolean isAssertListeners, final boolean isAssertChainListener) {
 
         CFSMConfiguration expectedResult = this.createConfiguration(stateMachineType);
-        CFSMConfiguration result = new SimpleChainStateMachineBuilder().extractConfiguration(stateMachineType).configuration();
+        CFSMConfiguration result = SimpleChainStateMachineBuilder.getBuilder().extractConfiguration(stateMachineType).configuration();
 
         this.softly.assertThat(expectedResult.getStateType()).isEqualTo(result.getStateType());
         this.softly.assertThat(expectedResult.getEventType()).isEqualTo(result.getEventType());
@@ -113,8 +113,8 @@ public class SimpleChainStateMachineBuilderTest {
         this.softly.assertThat(expectedResult.getTransitions()).hasSameSizeAs(result.getTransitions());
 
         for (int index = 0; index < result.getTransitions().size(); index++) {
-            TransitionContainer expContainer = expectedResult.getTransitions().get(index);
-            Optional<TransitionContainer> container = result.getTransitions().stream()
+            TransitionContainer<? extends Enum<?>, ? extends Enum<?>> expContainer = expectedResult.getTransitions().get(index);
+            Optional<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> container = result.getTransitions().stream()
                     .filter(res -> res.getFrom().equals(expContainer.getFrom()) && res.getTo().equals(expContainer.getTo()))
                     .findFirst();
             this.softly.assertThat(container).overridingErrorMessage("Transaction container 's' doesn't contained in list", expContainer.getOn().name()).isPresent();
@@ -126,6 +126,7 @@ public class SimpleChainStateMachineBuilderTest {
         }
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void assertTransitionContainer(final TransitionContainer one, final TransitionContainer other, final boolean isAssertMethod, final boolean isAssertListeners) {
 
         this.softly.assertThat(one.getFrom()).isEqualTo(other.getFrom());
@@ -140,6 +141,7 @@ public class SimpleChainStateMachineBuilderTest {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private CFSMConfiguration createConfiguration(final Class<? extends StateMachine> machineType) {
 
         try {
@@ -149,7 +151,7 @@ public class SimpleChainStateMachineBuilderTest {
 
             final ListenerContainer chainListener = ListenerContainer.of(SimpleChainListener.class, true, true);
 
-            final List<TransitionContainer> transitions = new ArrayList<TransitionContainer>() {
+            final List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> transitions = new ArrayList<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>>() {
                 {
                     add(TransitionContainer.of(ExampleState.AVAILABLE, ExampleState.REGISTERED, ExampleEvent.REGISTER, action).andAddListener(transitionListener)); // 2
                     add(TransitionContainer.of(ExampleState.REGISTERED, ExampleState.ACTIVATED, ExampleEvent.ACTIVATE, action).andAddListener(transitionListener)); // 3
@@ -163,9 +165,8 @@ public class SimpleChainStateMachineBuilderTest {
                 }
             };
 
-            final List<ChainContainer> chains = new ArrayList<ChainContainer>() {
+            final List<ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>>> chains = new ArrayList<ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>>>() {
                 {
-
                     add(ChainContainer.of(ExampleState.AVAILABLE, ExampleState.ACTIVATED, ExampleChain.INSTALLING).andAdd(transitions.get(0)).andAdd(transitions.get(2)).andAdd(chainListener));
                     add(ChainContainer.of(ExampleState.ACTIVATED, ExampleState.PARKED, ExampleChain.PARKING).andAdd(transitions.get(5)).andAdd(transitions.get(8)).andAdd(chainListener));
                     add(ChainContainer.of(ExampleState.ACTIVATED, ExampleState.DELETED, ExampleChain.DELETION).andAdd(transitions.get(5)).andAdd(transitions.get(6)).andAdd(transitions.get(1)).andAdd(chainListener));

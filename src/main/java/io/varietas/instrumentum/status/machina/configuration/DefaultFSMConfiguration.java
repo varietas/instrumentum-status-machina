@@ -16,7 +16,6 @@
 package io.varietas.instrumentum.status.machina.configuration;
 
 import io.varietas.instrumentum.status.machina.StateMachine;
-import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,13 +44,13 @@ public class DefaultFSMConfiguration implements FSMConfiguration {
 
     private final Class<? extends StateMachine> machineType;
 
-    private final List<TransitionContainer> transitions;
+    private final List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> transitions;
 
-    private final Class<? extends Enum> stateType;
+    private final Class<? extends Enum<?>> stateType;
 
-    private final Class<? extends Enum> eventType;
+    private final Class<? extends Enum<?>> eventType;
 
-    public static DefaultFSMConfiguration of(Class<? extends StateMachine> machineType, final Class<? extends Enum> stateType, final Class<? extends Enum> eventType) {
+    public static DefaultFSMConfiguration of(Class<? extends StateMachine> machineType, final Class<? extends Enum<?>> stateType, final Class<? extends Enum<?>> eventType) {
 
         return new DefaultFSMConfiguration(machineType, new ArrayList<>(), stateType, eventType);
     }
@@ -63,7 +62,7 @@ public class DefaultFSMConfiguration implements FSMConfiguration {
      *
      * @return The instance of this container for a fluent like usage.
      */
-    public DefaultFSMConfiguration andAddTransition(@NonNull final TransitionContainer container) {
+    public DefaultFSMConfiguration andAddTransition(@NonNull final TransitionContainer<? extends Enum<?>, ? extends Enum<?>> container) {
 
         this.transitions.add(container);
 
@@ -77,7 +76,7 @@ public class DefaultFSMConfiguration implements FSMConfiguration {
      *
      * @return The instance of this container for a fluent like usage.
      */
-    public DefaultFSMConfiguration andAddTransitions(@NonNull final List<TransitionContainer> containers) {
+    public DefaultFSMConfiguration andAddTransitions(@NonNull final List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> containers) {
 
         if (containers.isEmpty()) {
             throw new NullPointerException("Empty list isn't allowed");

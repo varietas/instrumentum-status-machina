@@ -15,11 +15,9 @@
  */
 package io.varietas.instrumentum.status.machina.builders;
 
-import io.varietas.instrumentum.status.machina.builders.SimpleStateMachineBuilder;
 import io.varietas.instrumentum.status.machina.StateMachine;
-import io.varietas.instrumentum.status.machina.builders.StateMachineBuilder;
-import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.configuration.DefaultFSMConfiguration;
+import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
 import io.varietas.instrumentum.status.machina.error.MachineCreationException;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineNotContrivable;
@@ -63,34 +61,35 @@ public class StateMachineBuilderTest {
     @Test
     @SuppressWarnings("null")
     public void testNullStateMachineType() {
-        Assertions.assertThatThrownBy(() -> new SimpleStateMachineBuilder().extractConfiguration(null)).isInstanceOf(NullPointerException.class);
+        Assertions.assertThatThrownBy(() -> SimpleStateMachineBuilder.getBuilder().extractConfiguration(null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
     public void testMachineCreationException() {
-        Assertions.assertThatThrownBy(() -> new SimpleStateMachineBuilder().extractConfiguration(StateMachineNotContrivable.class).build()).isInstanceOf(MachineCreationException.class);
+        Assertions.assertThatThrownBy(() -> SimpleStateMachineBuilder.getBuilder().extractConfiguration(StateMachineNotContrivable.class).build()).isInstanceOf(MachineCreationException.class);
     }
 
     @Test
     public void testCreationOfValideMachine() {
-        Assertions.assertThat(new SimpleStateMachineBuilder().extractConfiguration(StateMachineWithoutListener.class)).isNotNull();
+        Assertions.assertThat(SimpleStateMachineBuilder.getBuilder().extractConfiguration(StateMachineWithoutListener.class)).isNotNull();
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testCreationOfValideMachineConfiguration() {
-        StateMachineBuilder<FSMConfiguration> builder = new SimpleStateMachineBuilder().extractConfiguration(StateMachineWithoutListener.class);
+        StateMachineBuilder<FSMConfiguration> builder = SimpleStateMachineBuilder.getBuilder().extractConfiguration(StateMachineWithoutListener.class);
         Assertions.assertThat(builder.configuration()).isNotNull();
     }
 
     @Test
     public void testSetConfiguration() throws MachineCreationException {
-        FSMConfiguration configuration = new SimpleStateMachineBuilder().extractConfiguration(StateMachineWithoutListener.class).configuration();
-        Assertions.assertThat(new SimpleStateMachineBuilder().configuration(configuration).build()).isNotNull();
+        FSMConfiguration configuration = SimpleStateMachineBuilder.getBuilder().extractConfiguration(StateMachineWithoutListener.class).configuration();
+        Assertions.assertThat(SimpleStateMachineBuilder.getBuilder().configuration(configuration).build()).isNotNull();
     }
 
     @Test
     public void testMultipleListenersAvailable() throws MachineCreationException {
-        FSMConfiguration configuration = new SimpleStateMachineBuilder().extractConfiguration(StateMachineWithMultipleListeners.class).configuration();
+        FSMConfiguration configuration = SimpleStateMachineBuilder.getBuilder().extractConfiguration(StateMachineWithMultipleListeners.class).configuration();
         this.softly.assertThat(configuration.getTransitions()).hasSize(1);
 
         this.softly.assertThat(configuration.getTransitions().get(0).getListeners()).hasSize(2);
@@ -100,7 +99,7 @@ public class StateMachineBuilderTest {
 
         FSMConfiguration expextedResult = this.createConfiguration(stateMachineType);
 
-        SimpleStateMachineBuilder instance = new SimpleStateMachineBuilder();
+        SimpleStateMachineBuilder instance = SimpleStateMachineBuilder.getBuilder();
         FSMConfiguration result = instance.extractConfiguration(stateMachineType).configuration();
 
         this.softly.assertThat(expextedResult.getStateType()).isEqualTo(result.getStateType());
@@ -109,8 +108,8 @@ public class StateMachineBuilderTest {
         this.softly.assertThat(expextedResult.getTransitions()).hasSameSizeAs(result.getTransitions());
 
         for (int index = 0; index < result.getTransitions().size(); index++) {
-            TransitionContainer expContainer = expextedResult.getTransitions().get(index);
-            Optional<TransitionContainer> container = result.getTransitions().stream()
+            TransitionContainer<? extends Enum<?>, ? extends Enum<?>> expContainer = expextedResult.getTransitions().get(index);
+            Optional<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> container = result.getTransitions().stream()
                     .filter(res -> res.getFrom().equals(expContainer.getFrom()) && res.getTo().equals(expContainer.getTo()))
                     .findFirst();
             this.softly.assertThat(container).isPresent();
@@ -118,6 +117,7 @@ public class StateMachineBuilderTest {
         }
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private void assertTransitionContainer(final TransitionContainer one, final TransitionContainer other, final boolean isAssertMethod, final boolean isAssertListeners) {
 
         this.softly.assertThat(one.getFrom()).isEqualTo(other.getFrom());

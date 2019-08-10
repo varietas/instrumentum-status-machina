@@ -36,12 +36,12 @@ public interface CFSMConfiguration extends FSMConfiguration {
      *
      * @return Collected chains.
      */
-    List<ChainContainer> getChains();
+    List<ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>>> getChains();
 
     /**
      * Returns the chain type of the current FSM type.
      *
      * @return Chain type.
      */
-    Class<? extends Enum> getChainType();
+    Class<? extends Enum<?>> getChainType();
 }

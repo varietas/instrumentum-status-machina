@@ -52,7 +52,7 @@ public abstract class BasicStateMachine implements StateMachine {
      *
      * @return Expected container for the transition, otherwise an empty Optional.
      */
-    protected Optional<TransitionContainer> findTransitionContainer(final Enum event, final Enum currentState) {
+    protected Optional<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> findTransitionContainer(final Enum<?> event, final Enum<?> currentState) {
         return this.configuration.getTransitions().stream()
                 .filter(transit -> transit.getOn().equals(event) && (transit.getFrom().equals(currentState) || transit.getTo().equals(currentState)))
                 .findFirst();
@@ -66,14 +66,14 @@ public abstract class BasicStateMachine implements StateMachine {
      *
      * @return True if the states matches and the transition is possible, otherwise false.
      */
-    protected boolean isTransitionPossible(final Enum currentState, final TransitionContainer expectedTransition) {
+    protected boolean isTransitionPossible(final Enum<?> currentState, final TransitionContainer<? extends Enum<?>, ? extends Enum<?>> expectedTransition) {
         return currentState.equals(expectedTransition.getFrom());
     }
 
     @Override
-    public void fire(final Enum transition, final StatedObject target) throws TransitionInvocationException, InvalidTransitionException {
+    public void fire(final Enum<?> transition, final Statable<?> target) throws TransitionInvocationException, InvalidTransitionException {
 
-        final Optional<TransitionContainer> transitionContainer = this.findTransitionContainer(transition, target.state());
+        final Optional<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> transitionContainer = this.findTransitionContainer(transition, target.state());
 
         if (!transitionContainer.isPresent()) {
             throw new InvalidTransitionException(transition, "State of target '" + target.state().name() + "' doesn't match required state for tarnsition '" + transition.name() + "'.");
@@ -88,7 +88,8 @@ public abstract class BasicStateMachine implements StateMachine {
      * @param transition Container of transition which has to be performed.
      * @param target     Transition target.
      */
-    protected void fire(final TransitionContainer transition, final StatedObject target) throws InvalidTransitionException {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected void fire(final TransitionContainer<? extends Enum<?>, ? extends Enum<?>> transition, final Statable target) throws InvalidTransitionException {
         if (!this.isTransitionPossible(target.state(), transition)) {
             throw new InvalidTransitionException(transition.getOn(), "Current state " + target.state().name() + " doesn't match required state " + transition.getFrom().name() + ".");
         }
@@ -99,14 +100,14 @@ public abstract class BasicStateMachine implements StateMachine {
             }
 
             if (Objects.nonNull(transition.getListeners())) {
-                transition.getListeners().forEach(listener -> this.executeListener((ListenerContainer) listener, "before", transition.getOn(), target));
+                transition.getListeners().forEach(listener -> this.executeListener(listener, "before", transition.getOn(), target));
             }
 
             transition.getCalledMethod().invoke(this, transition.getFrom(), transition.getTo(), transition.getOn(), target);
             target.state(transition.getTo());
 
             if (Objects.nonNull(transition.getListeners())) {
-                transition.getListeners().forEach(listener -> this.executeListener((ListenerContainer) listener, "after", transition.getOn(), target));
+                transition.getListeners().forEach(listener -> this.executeListener(listener, "after", transition.getOn(), target));
             }
 
             if (LOGGER.isTraceEnabled()) {
@@ -117,7 +118,7 @@ public abstract class BasicStateMachine implements StateMachine {
         }
     }
 
-    protected void executeListener(final ListenerContainer listener, final String methodName, final Enum on, final Object target) {
+    protected void executeListener(final ListenerContainer listener, final String methodName, final Enum<?> on, final Object target) {
 
         if (methodName.equals("before") && !listener.isBefore()) {
             return;

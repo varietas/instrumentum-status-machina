@@ -15,9 +15,9 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import io.varietas.instrumentum.status.machina.builders.StateMachineBuilder;
 import io.varietas.instrumentum.status.machina.builders.SimpleChainStateMachineBuilder;
 import io.varietas.instrumentum.status.machina.builders.SimpleStateMachineBuilder;
+import io.varietas.instrumentum.status.machina.builders.StateMachineBuilder;
 import io.varietas.instrumentum.status.machina.error.MachineCreationException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -34,12 +34,12 @@ import lombok.NoArgsConstructor;
 public class StateMachineFactory {
 
     public static StateMachine getStateMachine(final Class<? extends StateMachine> type) throws MachineCreationException {
-        StateMachineBuilder builder;
+        StateMachineBuilder<?> builder;
 
         if (type == ChainStateMachine.class) {
-            builder = new SimpleChainStateMachineBuilder();
+            builder = SimpleChainStateMachineBuilder.getBuilder();
         } else {
-            builder = new SimpleStateMachineBuilder();
+            builder = SimpleStateMachineBuilder.getBuilder();
         }
 
         return builder.extractConfiguration(type).build();

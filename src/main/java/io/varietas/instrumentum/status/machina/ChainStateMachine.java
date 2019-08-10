@@ -58,5 +58,5 @@ public interface ChainStateMachine extends StateMachine {
      * @throws TransitionInvocationException   Thrown if the upcoming transition and/or chain event isn't configured for the current FSM.
      * @throws InvalidTransitionChainException Thrown if the current state of a target isn't equals to the expected transition start state.
      */
-    void fireChain(final Enum transitionChain, final StatedObject target) throws TransitionInvocationException, InvalidTransitionChainException;
+    void fireChain(Enum<?> transitionChain, Statable<?> target) throws TransitionInvocationException, InvalidTransitionChainException;
 }

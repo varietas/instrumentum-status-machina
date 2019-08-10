@@ -16,10 +16,10 @@
 package io.varietas.instrumentum.status.machina.builders;
 
 import io.varietas.instrumentum.status.machina.StateMachine;
-import io.varietas.instrumentum.status.machina.configuration.DefaultFSMConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
-import io.varietas.instrumentum.status.machina.builders.StateMachineBuilder;
+import io.varietas.instrumentum.status.machina.configuration.DefaultFSMConfiguration;
 import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version 1.0.0.0, 10/9/2017
  */
 @Slf4j
+@NoArgsConstructor(staticName = "getBuilder")
 public class SimpleStateMachineBuilder extends BasicStateMachineBuilder<FSMConfiguration> {
 
     /**
@@ -42,7 +43,7 @@ public class SimpleStateMachineBuilder extends BasicStateMachineBuilder<FSMConfi
      * @return The instance of the builder for a fluent like API.
      */
     @Override
-    public StateMachineBuilder extractConfiguration(@NonNull final Class<? extends StateMachine> machineType) {
+    public StateMachineBuilder<FSMConfiguration> extractConfiguration(@NonNull final Class<? extends StateMachine> machineType) {
 
         StateMachineConfiguration machineConfiguration = machineType.getAnnotation(StateMachineConfiguration.class);
 

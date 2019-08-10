@@ -53,11 +53,10 @@ abstract class BasicStateMachineBuilder<CONFIGURATION extends FSMConfiguration> 
     @Accessors(fluent = true, chain = true)
     @Setter
     protected CONFIGURATION configuration;
+    protected Class<? extends Enum<?>> stateType;
+    protected Class<? extends Enum<?>> eventType;
 
-    protected Class<? extends Enum> stateType;
-    protected Class<? extends Enum> eventType;
-
-    protected final List<TransitionContainer> transitions = new ArrayList<>();
+    protected final List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> transitions = new ArrayList<>();
 
     /**
      * Builds an instance of the {@link StateMachine}. The instance is initialised with the configuration of the type.
@@ -83,7 +82,7 @@ abstract class BasicStateMachineBuilder<CONFIGURATION extends FSMConfiguration> 
      *
      * @return List of all available transitions.
      */
-    protected List<TransitionContainer> collectTransitions(final Class<? extends StateMachine> machineType) {
+    protected List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> collectTransitions(final Class<? extends StateMachine> machineType) {
         return Stream.of(machineType.getMethods())
                 .filter(method -> method.isAnnotationPresent(Transitions.class) || method.isAnnotationPresent(Transition.class))
                 .map(this::createTransitionContainers)
@@ -99,7 +98,7 @@ abstract class BasicStateMachineBuilder<CONFIGURATION extends FSMConfiguration> 
      *
      * @return List of all available transitions as transition containers.
      */
-    private List<TransitionContainer> createTransitionContainers(final Method method) {
+    private List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> createTransitionContainers(final Method method) {
 
         final List<ListenerContainer> listeners = this.extractTransitionListener(method);
 
@@ -108,10 +107,19 @@ abstract class BasicStateMachineBuilder<CONFIGURATION extends FSMConfiguration> 
                 .collect(Collectors.toList());
     }
 
-    private TransitionContainer createTransitionContainer(final Transition transition, final Method method, final List<ListenerContainer> listeners) {
-        Enum from = Enum.valueOf(this.stateType, transition.from());
-        Enum to = Enum.valueOf(this.stateType, transition.to());
-        Enum on = Enum.valueOf(this.eventType, transition.on());
+    private TransitionContainer<? extends Enum<?>, ? extends Enum<?>> createTransitionContainer(final Transition transition, final Method method, final List<ListenerContainer> listeners) {
+        @SuppressWarnings("rawtypes")
+        final Class<? extends Enum> stateClazzType = this.stateType;
+        @SuppressWarnings("rawtypes")
+        final Class<? extends Enum> eventClazzType = this.eventType;
+
+        @SuppressWarnings("unchecked")
+        final Enum<?> from = Enum.valueOf(stateClazzType, transition.from());
+        @SuppressWarnings("unchecked")
+        final Enum<?> to = Enum.valueOf(stateClazzType, transition.to());
+        @SuppressWarnings("unchecked")
+        final Enum<?> on = Enum.valueOf(eventClazzType, transition.on());
+
         if (LOGGER.isErrorEnabled()) {
             LOGGER.debug("Transition from '{}' to '{}' on '{}' will be created.", from.name(), to.name(), on.name());
             LOGGER.debug("{} listeners for transition {} added.", (Objects.nonNull(listeners) ? listeners.size() : 0), on.name());
@@ -126,7 +134,7 @@ abstract class BasicStateMachineBuilder<CONFIGURATION extends FSMConfiguration> 
 
         return Stream.of(method.getAnnotationsByType(TransitionListener.class))
                 .map(annot -> {
-                    Class<?> listener = annot.value();
+                    final Class<?> listener = annot.value();
                     return ListenerContainer.of(listener, this.existsMethod(listener, "before"), this.existsMethod(listener, "after"));
                 })
                 .collect(Collectors.toList());

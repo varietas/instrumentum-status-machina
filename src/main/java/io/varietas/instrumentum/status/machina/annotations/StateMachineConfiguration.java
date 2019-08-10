@@ -39,19 +39,19 @@ public @interface StateMachineConfiguration {
      *
      * @return Type of state.
      */
-    Class<? extends Enum> stateType();
+    Class<? extends Enum<?>> stateType();
 
     /**
      * Type of enumeration which is used to represent the occurred event (Event identifier).
      *
      * @return Type of event.
      */
-    Class<? extends Enum> eventType();
+    Class<? extends Enum<?>> eventType();
 
     /**
      * Type of enumeration which is used to represent a chain event (Chain identifier).
      *
      * @return Type of chain.
      */
-    Class<? extends Enum> chainType();
+    Class<? extends Enum<?>> chainType();
 }

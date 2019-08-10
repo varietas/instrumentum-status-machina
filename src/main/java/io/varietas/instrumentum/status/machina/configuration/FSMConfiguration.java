@@ -43,19 +43,19 @@ public interface FSMConfiguration {
      *
      * @return Collected transitions.
      */
-    List<TransitionContainer> getTransitions();
+    List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> getTransitions();
 
     /**
      * Returns the state type of the current FSM type.
      *
      * @return State type.
      */
-    Class<? extends Enum> getStateType();
+    Class<? extends Enum<?>> getStateType();
 
     /**
      * Returns the event type of the current FSM type.
      *
      * @return event type.
      */
-    Class<? extends Enum> getEventType();
+    Class<? extends Enum<?>> getEventType();
 }

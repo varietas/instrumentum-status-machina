@@ -24,7 +24,8 @@ package io.varietas.instrumentum.status.machina;
  * @version 1.0.0.0, 10/8/2017
  * @param <STATE_TYPE> Generic type of state types.
  */
-public interface StatedObject<STATE_TYPE extends Enum> {
+@SuppressWarnings("rawtypes")
+public interface Statable<STATE_TYPE extends Enum> {
 
     /**
      * The state signals the FSM which transition is possible and which current state an object has.

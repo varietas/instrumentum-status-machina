@@ -19,6 +19,7 @@ import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.ListenerContainer;
 import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
 import io.varietas.instrumentum.status.machina.error.InvalidTransitionException;
+import io.varietas.instrumentum.status.machina.error.InvalidTransitionListenerException;
 import io.varietas.instrumentum.status.machina.error.TransitionInvocationException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -35,11 +36,11 @@ import lombok.extern.slf4j.Slf4j;
  * @version 1.0.0.0, 10/7/2017
  */
 @Slf4j
-public abstract class AbstractStateMachine implements StateMachine {
+public abstract class BasicStateMachine implements StateMachine {
 
     protected final FSMConfiguration configuration;
 
-    public AbstractStateMachine(final FSMConfiguration configuration) {
+    public BasicStateMachine(final FSMConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -51,7 +52,7 @@ public abstract class AbstractStateMachine implements StateMachine {
      *
      * @return Expected container for the transition, otherwise an empty Optional.
      */
-    protected Optional<TransitionContainer> findTransitionContainer(final Enum event, final Enum currentState) {
+    protected Optional<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> findTransitionContainer(final Enum<?> event, final Enum<?> currentState) {
         return this.configuration.getTransitions().stream()
                 .filter(transit -> transit.getOn().equals(event) && (transit.getFrom().equals(currentState) || transit.getTo().equals(currentState)))
                 .findFirst();
@@ -65,14 +66,14 @@ public abstract class AbstractStateMachine implements StateMachine {
      *
      * @return True if the states matches and the transition is possible, otherwise false.
      */
-    protected boolean isTransitionPossible(final Enum currentState, final TransitionContainer expectedTransition) {
+    protected boolean isTransitionPossible(final Enum<?> currentState, final TransitionContainer<? extends Enum<?>, ? extends Enum<?>> expectedTransition) {
         return currentState.equals(expectedTransition.getFrom());
     }
 
     @Override
-    public void fire(final Enum transition, final StatedObject target) throws TransitionInvocationException, InvalidTransitionException {
+    public void fire(final Enum<?> transition, final Statable<?> target) throws TransitionInvocationException, InvalidTransitionException {
 
-        final Optional<TransitionContainer> transitionContainer = this.findTransitionContainer(transition, target.state());
+        final Optional<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> transitionContainer = this.findTransitionContainer(transition, target.state());
 
         if (!transitionContainer.isPresent()) {
             throw new InvalidTransitionException(transition, "State of target '" + target.state().name() + "' doesn't match required state for tarnsition '" + transition.name() + "'.");
@@ -87,32 +88,37 @@ public abstract class AbstractStateMachine implements StateMachine {
      * @param transition Container of transition which has to be performed.
      * @param target     Transition target.
      */
-    protected void fire(final TransitionContainer transition, final StatedObject target) throws InvalidTransitionException {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected void fire(final TransitionContainer<? extends Enum<?>, ? extends Enum<?>> transition, final Statable target) throws InvalidTransitionException {
         if (!this.isTransitionPossible(target.state(), transition)) {
             throw new InvalidTransitionException(transition.getOn(), "Current state " + target.state().name() + " doesn't match required state " + transition.getFrom().name() + ".");
         }
 
         try {
-            LOGGER.trace("State change to {} entered.", transition.getOn());
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("State change to {} entered.", transition.getOn());
+            }
 
             if (Objects.nonNull(transition.getListeners())) {
-                transition.getListeners().forEach(listener -> this.executeListener((ListenerContainer) listener, "before", transition.getOn(), target));
+                transition.getListeners().forEach(listener -> this.executeListener(listener, "before", transition.getOn(), target));
             }
 
             transition.getCalledMethod().invoke(this, transition.getFrom(), transition.getTo(), transition.getOn(), target);
             target.state(transition.getTo());
 
             if (Objects.nonNull(transition.getListeners())) {
-                transition.getListeners().forEach(listener -> this.executeListener((ListenerContainer) listener, "after", transition.getOn(), target));
+                transition.getListeners().forEach(listener -> this.executeListener(listener, "after", transition.getOn(), target));
             }
 
-            LOGGER.trace("State change to {} finished.", transition.getOn());
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("State change to {} finished.", transition.getOn());
+            }
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw new TransitionInvocationException(transition.getOn(), transition.getCalledMethod().getName(), ex.getLocalizedMessage());
         }
     }
 
-    protected void executeListener(final ListenerContainer listener, final String methodName, final Enum on, final Object target) {
+    protected void executeListener(final ListenerContainer listener, final String methodName, final Enum<?> on, final Object target) {
 
         if (methodName.equals("before") && !listener.isBefore()) {
             return;
@@ -123,11 +129,15 @@ public abstract class AbstractStateMachine implements StateMachine {
         }
 
         try {
-            Object listenerInstance = listener.getListener().newInstance();
+            Object listenerInstance = listener.getListener().getDeclaredConstructor().newInstance();
             Method method = listener.getListener().getMethod(methodName, on.getDeclaringClass(), target.getClass());
             method.invoke(listenerInstance, on, target);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException ex) {
-            LOGGER.error("Couldn't call listener method '{}'. {}: {}", methodName, ex.getClass().getSimpleName(), ((Objects.nonNull(ex.getMessage())) ? ex.getMessage() : "No message available"));
+
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("Couldn't call listener method '{}'. {}: {}", methodName, ex.getClass().getSimpleName(), ((Objects.nonNull(ex.getMessage())) ? ex.getMessage() : "No message available"));
+            }
+            throw new InvalidTransitionListenerException(listener.getListener(), "Listener on method '" + methodName + ".", ex);
         }
     }
 }

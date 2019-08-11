@@ -15,41 +15,32 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import io.varietas.instrumentum.status.machina.error.InvalidTransitionException;
+import io.varietas.instrumentum.status.machina.error.InvalidTransitionChainException;
 import io.varietas.instrumentum.status.machina.error.TransitionInvocationException;
 
 /**
  * <h2>ChainStateMachine</h2>
  * <p>
- * This interface has to be implemented by each finite state machine that provides the chaining of transition. It represents the minimal API of a FSM and makes the usage within DI frameworks e.g.
- * Spring or agrestis imputare possible.
- *
+ * This interface has to be implemented by each finite state machine that provides the chaining of transition. It represents the minimal API of a FSM and makes the usage within DI frameworks e.g. Spring or agrestis imputare possible.
+ * <p>
  * <h3>Getting instance</h3>
- * Status machina (SM) extracts the configuration from a machine class and invokes the transition methods respectively the chain on the machine instance. For creating an instance, the
- * {@link io.varietas.instrumentum.status.machina.builders.StateMachineBuilder} is the best way. There are different implementations of the builder available. The taken builder depends on the state
- * machine type.
- *
- * <pre>
+ * Status machina (SM) extracts the configuration from a machine class and invokes the transition methods respectively the chain on the machine instance. For creating an instance, the {@link io.varietas.instrumentum.status.machina.builders.StateMachineBuilder} is the best way. There are different implementations of the builder available. The taken builder depends on the state machine type.
  * <code>
+ * <pre>
  *  CustomStateMachine machine = new ChainStateMachineBuilderImpl()
  *      .extractConfiguration(CustomStateMachine.class)
  *      .build();
- * </code>
  * </pre>
- *
- * The {@link io.varietas.instrumentum.status.machina.configuration.CFSMConfiguration} can be stored separately for instancing multiple machines.
- *
- * <pre>
+ * </code> The {@link io.varietas.instrumentum.status.machina.configuration.CFSMConfiguration} can be stored separately for instancing multiple machines.
  * <code>
+ * <pre>
  *  CFSMConfiguration configuration = new ChainStateMachineBuilderImpl()
  *      .extractConfiguration(CustomStateMachine.class)
  *      .configuration();
  *
  *  CustomStateMachine machine = new ChainStateMachineBuilderImpl().configuration(configuration).build()
- * </code>
  * </pre>
- *
- * An example for a basic state machine can be found in the test package (machines/transition/StateMachineWithoutListener.java).
+ * </code> An example for a basic state machine can be found in the test package (machines/transition/StateMachineWithoutListener.java).
  *
  * @see io.varietas.instrumentum.status.machina.builders.StateMachineBuilder
  *
@@ -59,15 +50,13 @@ import io.varietas.instrumentum.status.machina.error.TransitionInvocationExcepti
 public interface ChainStateMachine extends StateMachine {
 
     /**
-     * Executes the actual logic for a upcoming event on the given object. The first step is the comparison of the current state of the object with the required state of the transition. If an object
-     * isn't in the right state, an {@link InvalidTransitionException} is thrown. The state machine invokes every transition that are specified for the chain event. Important: The transitions running
-     * one after another.
+     * Executes the actual logic for a upcoming event on the given object. The first step is the comparison of the current state of the object with the required state of the transition. If an object isn't in the right state, an {@link InvalidTransitionException} is thrown. The state machine invokes every transition that are specified for the chain event. Important: The transitions running one after another.
      *
      * @param transitionChain Upcoming transition chain event that triggers the FSM.
      * @param target          Transition operation target.
      *
-     * @throws TransitionInvocationException Thrown if the upcoming transition and/or chain event isn't configured for the current FSM.
-     * @throws InvalidTransitionException    Thrown if the current state of a target isn't equals to the expected transition start state.
+     * @throws TransitionInvocationException   Thrown if the upcoming transition and/or chain event isn't configured for the current FSM.
+     * @throws InvalidTransitionChainException Thrown if the current state of a target isn't equals to the expected transition start state.
      */
-    void fireChain(final Enum transitionChain, final StatedObject target) throws TransitionInvocationException, InvalidTransitionException;
+    void fireChain(Enum<?> transitionChain, Statable<?> target) throws TransitionInvocationException, InvalidTransitionChainException;
 }

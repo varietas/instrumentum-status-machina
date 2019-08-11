@@ -15,27 +15,29 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 /**
+ * <h2>StatedObject</h2>
+ * <p>
+ * This interface must be implemented by each type that wants to be handled by a FSM. The stated object does not persist changes.
  *
  * @author Michael Rhöse
+ * @version 1.0.0.0, 10/8/2017
+ * @param <STATE_TYPE> Generic type of state types.
  */
-public class AbstractChainStateMachineTest {
-
-    public AbstractChainStateMachineTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
+@SuppressWarnings("rawtypes")
+public interface Statable<STATE_TYPE extends Enum> {
 
     /**
-     * Test of fireChain method, of class AbstractChainStateMachine.
+     * The state signals the FSM which transition is possible and which current state an object has.
+     *
+     * @return Current state of the object.
      */
-    @Test
-    public void testFireChain() throws Exception {
-    }
+    STATE_TYPE state();
 
+    /**
+     * Sets the new state for the current object. This method should only be used by FSM!
+     *
+     * @param state New state of current object.
+     */
+    void state(STATE_TYPE state);
 }

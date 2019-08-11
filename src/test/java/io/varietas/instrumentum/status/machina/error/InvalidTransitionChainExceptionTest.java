@@ -15,22 +15,19 @@
  */
 package io.varietas.instrumentum.status.machina.error;
 
-import io.varietas.instrumentum.status.machina.models.Chain;
+import io.varietas.instrumentum.status.machina.models.ExampleChain;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author Michael Rhöse
  */
-@RunWith(JUnit4.class)
 public class InvalidTransitionChainExceptionTest {
 
     @Test
     public void testGetLocalizedMessage() {
-        InvalidTransitionChainException instance = new InvalidTransitionChainException(Chain.INSTALLING);
+        InvalidTransitionChainException instance = new InvalidTransitionChainException(ExampleChain.INSTALLING);
         String expResult = "Chain 'INSTALLING' isn't possible'.";
         String result = instance.getLocalizedMessage();
         Assertions.assertThat(result).isEqualTo(expResult);
@@ -38,7 +35,7 @@ public class InvalidTransitionChainExceptionTest {
 
     @Test
     public void testGetLocalizedMessageWithAdditionalMessage() {
-        InvalidTransitionChainException instance = new InvalidTransitionChainException(Chain.INSTALLING, "Any message");
+        InvalidTransitionChainException instance = new InvalidTransitionChainException(ExampleChain.INSTALLING, "Any message");
         String expResult = "Chain 'INSTALLING' isn't possible': Any message.";
         String result = instance.getLocalizedMessage();
         Assertions.assertThat(result).isEqualTo(expResult);
@@ -46,7 +43,7 @@ public class InvalidTransitionChainExceptionTest {
 
     @Test
     public void testGetLocalizedMessageWithAdditionalMessageAndCause() {
-        InvalidTransitionChainException instance = new InvalidTransitionChainException(Chain.INSTALLING, "Any message", new NullPointerException("Any null pointer"));
+        InvalidTransitionChainException instance = new InvalidTransitionChainException(ExampleChain.INSTALLING, "Any message", new NullPointerException("Any null pointer"));
         String expResult = "Chain 'INSTALLING' isn't possible': Any message. NullPointerException: Any null pointer.";
         String result = instance.getLocalizedMessage();
         Assertions.assertThat(result).isEqualTo(expResult);
@@ -54,7 +51,7 @@ public class InvalidTransitionChainExceptionTest {
 
     @Test
     public void testGetLocalizedMessageWithAdditionalCause() {
-        InvalidTransitionChainException instance = new InvalidTransitionChainException(Chain.INSTALLING, new NullPointerException("Any null pointer"));
+        InvalidTransitionChainException instance = new InvalidTransitionChainException(ExampleChain.INSTALLING, new NullPointerException("Any null pointer"));
         String expResult = "Chain 'INSTALLING' isn't possible'. NullPointerException: Any null pointer.";
         String result = instance.getLocalizedMessage();
         Assertions.assertThat(result).isEqualTo(expResult);

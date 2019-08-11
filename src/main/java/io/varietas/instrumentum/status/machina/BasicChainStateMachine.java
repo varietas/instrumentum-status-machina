@@ -15,12 +15,10 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import io.varietas.instrumentum.status.machina.configuration.impl.CFSMConfigurationImpl;
+import io.varietas.instrumentum.status.machina.configuration.DefaultCFSMConfiguration;
 import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.ChainContainer;
-import io.varietas.instrumentum.status.machina.containers.ListenerContainer;
-import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
-import io.varietas.instrumentum.status.machina.error.InvalidTransitionException;
+import io.varietas.instrumentum.status.machina.error.InvalidTransitionChainException;
 import io.varietas.instrumentum.status.machina.error.TransitionInvocationException;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,9 +31,9 @@ import java.util.Optional;
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/27/2017
  */
-public abstract class AbstractChainStateMachine extends AbstractStateMachine implements ChainStateMachine {
+public abstract class BasicChainStateMachine extends BasicStateMachine implements ChainStateMachine {
 
-    public AbstractChainStateMachine(FSMConfiguration configuration) {
+    public BasicChainStateMachine(FSMConfiguration configuration) {
         super(configuration);
     }
 
@@ -47,33 +45,34 @@ public abstract class AbstractChainStateMachine extends AbstractStateMachine imp
      *
      * @return Expected container for the transition chain, otherwise an empty Optional.
      */
-    protected Optional<ChainContainer> findChainContainer(final Enum transitionChain, final Enum startState) {
-        return ((CFSMConfigurationImpl) this.configuration).getChains().stream()
+    protected Optional<ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>>> findChainContainer(final Enum<?> transitionChain, final Enum<?> startState) {
+        return ((DefaultCFSMConfiguration) this.configuration).getChains().stream()
                 .filter(chain -> chain.getOn().equals(transitionChain))
                 .filter(chain -> chain.getFrom().equals(startState))
                 .findFirst();
     }
 
     @Override
-    public void fireChain(Enum transitionChain, StatedObject target) throws TransitionInvocationException, InvalidTransitionException {
-        final Optional<ChainContainer> chainContainer = this.findChainContainer(transitionChain, target.state());
+    @SuppressWarnings("unchecked")
+    public void fireChain(final Enum<?> transitionChain, final Statable<?> target) throws TransitionInvocationException, InvalidTransitionChainException {
+        final Optional<ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>>> chainContainer = this.findChainContainer(transitionChain, target.state());
 
         if (!chainContainer.isPresent()) {
-            throw new InvalidTransitionException(transitionChain, "Couldn't find chain.");
+            throw new TransitionInvocationException(transitionChain, "Couldn't find chain.");
         }
 
         if (!target.state().equals(chainContainer.get().getFrom())) {
-            throw new InvalidTransitionException(transitionChain, "Current state " + target.state().name() + " doesn't match required state " + chainContainer.get().getFrom().name() + ".");
+            throw new InvalidTransitionChainException(transitionChain, "Current state " + target.state().name() + " doesn't match required state " + chainContainer.get().getFrom().name() + ".");
         }
 
         if (Objects.nonNull(chainContainer.get().getListeners())) {
-            chainContainer.get().getListeners().forEach(listener -> this.executeListener((ListenerContainer) listener, "before", chainContainer.get().getOn(), target));
+            chainContainer.get().getListeners().forEach(listener -> this.executeListener(listener, "before", chainContainer.get().getOn(), target));
         }
 
-        chainContainer.get().getChainParts().forEach(chainPart -> this.fire((TransitionContainer) chainPart, target));
+        chainContainer.get().getChainParts().forEach(chainPart -> this.fire(chainPart, target));
 
         if (Objects.nonNull(chainContainer.get().getListeners())) {
-            chainContainer.get().getListeners().forEach(listener -> this.executeListener((ListenerContainer) listener, "after", chainContainer.get().getOn(), target));
+            chainContainer.get().getListeners().forEach(listener -> this.executeListener(listener, "after", chainContainer.get().getOn(), target));
         }
     }
 }

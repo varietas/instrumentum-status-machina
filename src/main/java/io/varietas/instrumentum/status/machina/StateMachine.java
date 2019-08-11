@@ -21,23 +21,23 @@ import io.varietas.instrumentum.status.machina.error.TransitionInvocationExcepti
 /**
  * <h2>StateMachine</h2>
  * This interface has to be implemented by each finite state machine. It represents the minimal API of a FSM and makes the usage within DI frameworks e.g. Spring or agrestis imputare possible.
- *
+ * <p>
  * <h3>Getting instance</h3>
- * Status machina (SM) extracts the configuration from a machine class and invokes the transition methods on the machine instance. For creating an instance, the
- * {@link io.varietas.instrumentum.status.machina.builders.StateMachineBuilder} is the best way. There are different implementations of the builder available. The taken builder depends on the state
- * machine type.
- *
- * <pre>
+ * Status machina (SM) extracts the configuration from a machine class and invokes the transition methods on the machine instance. For creating an instance, the {@link io.varietas.instrumentum.status.machina.builders.StateMachineBuilder} is the best way. There are different implementations of the builder available. The taken builder depends on the state machine type.
+ * <p>
+ * <
+ * pre>
  * <code>
  *  CustomStateMachine machine = new StateMachineBuilderImpl()
  *      .extractConfiguration(CustomStateMachine.class)
  *      .build();
  * </code>
  * </pre>
- *
+ * <p>
  * The {@link io.varietas.instrumentum.status.machina.configuration.FSMConfiguration} can be stored separately for instancing multiple machines.
- *
- * <pre>
+ * <p>
+ * <
+ * pre>
  * <code>
  *  FSMConfiguration configuration = new StateMachineBuilderImpl()
  *      .extractConfiguration(CustomStateMachine.class)
@@ -46,7 +46,7 @@ import io.varietas.instrumentum.status.machina.error.TransitionInvocationExcepti
  *  CustomStateMachine machine = new StateMachineBuilderImpl().configuration(configuration).build()
  * </code>
  * </pre>
- *
+ * <p>
  * An example for a basic state machine can be found in the test package (machines/transition/StateMachineWithoutListener.java).
  *
  * @see io.varietas.instrumentum.status.machina.builders.StateMachineBuilder
@@ -58,8 +58,7 @@ import io.varietas.instrumentum.status.machina.error.TransitionInvocationExcepti
 public interface StateMachine {
 
     /**
-     * Executes the corresponding logic for a upcoming event on the given object. The first step is the comparison of the current state of the object with the required state of the transition. If an
-     * object isn't in the right state, an {@link InvalidTransitionException} is thrown.
+     * Executes the corresponding logic for a upcoming event on the given object. The first step is the comparison of the current state of the object with the required state of the transition. If an object isn't in the right state, an {@link InvalidTransitionException} is thrown.
      *
      * @param transition Upcoming transition event that triggers the FSM.
      * @param target     Transition operation target.
@@ -67,5 +66,5 @@ public interface StateMachine {
      * @throws TransitionInvocationException Thrown if the upcoming transition event isn't configured for the current FSM.
      * @throws InvalidTransitionException    Thrown if the current state of a target isn't equals to the expected transition start state.
      */
-    void fire(final Enum transition, final StatedObject target) throws TransitionInvocationException, InvalidTransitionException;
+    void fire(Enum<?> transition, Statable<?> target) throws TransitionInvocationException, InvalidTransitionException;
 }

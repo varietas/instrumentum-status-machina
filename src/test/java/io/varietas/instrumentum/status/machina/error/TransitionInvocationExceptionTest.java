@@ -15,9 +15,9 @@
  */
 package io.varietas.instrumentum.status.machina.error;
 
-import io.varietas.instrumentum.status.machina.models.Event;
+import io.varietas.instrumentum.status.machina.models.ExampleEvent;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -27,7 +27,7 @@ public class TransitionInvocationExceptionTest {
 
     @Test
     public void testGetLocalizedMessage() {
-        TransitionInvocationException instance = new TransitionInvocationException(Event.ACTIVATE, "activationMethod");
+        TransitionInvocationException instance = new TransitionInvocationException(ExampleEvent.ACTIVATE, "activationMethod");
         String expResult = "Couldn't invoke method 'activationMethod' for transition 'ACTIVATE'.";
         String result = instance.getLocalizedMessage();
         Assertions.assertThat(result).isEqualTo(expResult);
@@ -35,7 +35,7 @@ public class TransitionInvocationExceptionTest {
 
     @Test
     public void testGetLocalizedMessageWithAdditionalMessage() {
-        TransitionInvocationException instance = new TransitionInvocationException(Event.ACTIVATE, "activationMethod", "Any message");
+        TransitionInvocationException instance = new TransitionInvocationException(ExampleEvent.ACTIVATE, "activationMethod", "Any message");
         String expResult = "Couldn't invoke method 'activationMethod' for transition 'ACTIVATE': Any message.";
         String result = instance.getLocalizedMessage();
         Assertions.assertThat(result).isEqualTo(expResult);
@@ -43,7 +43,7 @@ public class TransitionInvocationExceptionTest {
 
     @Test
     public void testGetLocalizedMessageAdditionalMessageAndCause() {
-        TransitionInvocationException instance = new TransitionInvocationException(Event.ACTIVATE, "activationMethod", "Any message", new NullPointerException("Any null pointer"));
+        TransitionInvocationException instance = new TransitionInvocationException(ExampleEvent.ACTIVATE, "activationMethod", "Any message", new NullPointerException("Any null pointer"));
         String expResult = "Couldn't invoke method 'activationMethod' for transition 'ACTIVATE': Any message. NullPointerException: Any null pointer.";
         String result = instance.getLocalizedMessage();
         Assertions.assertThat(result).isEqualTo(expResult);
@@ -51,7 +51,7 @@ public class TransitionInvocationExceptionTest {
 
     @Test
     public void testGetLocalizedMessageAdditionalCause() {
-        TransitionInvocationException instance = new TransitionInvocationException(Event.ACTIVATE, "activationMethod", new NullPointerException("Any null pointer"));
+        TransitionInvocationException instance = new TransitionInvocationException(ExampleEvent.ACTIVATE, "activationMethod", new NullPointerException("Any null pointer"));
         String expResult = "Couldn't invoke method 'activationMethod' for transition 'ACTIVATE'. NullPointerException: Any null pointer.";
         String result = instance.getLocalizedMessage();
         Assertions.assertThat(result).isEqualTo(expResult);
@@ -64,7 +64,7 @@ public class TransitionInvocationExceptionTest {
 
     @Test
     public void testNullMethod() {
-        Assertions.assertThatThrownBy(() -> new TransitionInvocationException(Event.ACTIVATE, null)).isInstanceOf(NullPointerException.class);
+        Assertions.assertThatThrownBy(() -> new TransitionInvocationException(ExampleEvent.ACTIVATE, null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class TransitionInvocationExceptionTest {
 
     @Test
     public void testNullMethodWithAdditionalMessage() {
-        Assertions.assertThatThrownBy(() -> new TransitionInvocationException(Event.ACTIVATE, null, "")).isInstanceOf(NullPointerException.class);
+        Assertions.assertThatThrownBy(() -> new TransitionInvocationException(ExampleEvent.ACTIVATE, null, "")).isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -84,7 +84,7 @@ public class TransitionInvocationExceptionTest {
 
     @Test
     public void testNullMethodWithAdditionalMessageAndCause() {
-        Assertions.assertThatThrownBy(() -> new TransitionInvocationException(Event.ACTIVATE, null, "", new NullPointerException())).isInstanceOf(NullPointerException.class);
+        Assertions.assertThatThrownBy(() -> new TransitionInvocationException(ExampleEvent.ACTIVATE, null, "", new NullPointerException())).isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -94,6 +94,6 @@ public class TransitionInvocationExceptionTest {
 
     @Test
     public void testNullMethodWithAdditionalCause() {
-        Assertions.assertThatThrownBy(() -> new TransitionInvocationException(Event.ACTIVATE, null, new NullPointerException())).isInstanceOf(NullPointerException.class);
+        Assertions.assertThatThrownBy(() -> new TransitionInvocationException(ExampleEvent.ACTIVATE, null, new NullPointerException())).isInstanceOf(NullPointerException.class);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Michael Rhöse.
+ * Copyright 2019 Michael Rhöse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,37 +16,48 @@
 package io.varietas.instrumentum.status.machina.error;
 
 import java.util.Objects;
-import lombok.NonNull;
 
 /**
- * <h2>InvalidTransitionException</h2>
+ * <h2>IllegalContainerException</h2>
  * <p>
- * Signals the triggering of an invalid transition. The reasons can be e.g. not present transition or mismatching start state.
+ * The exception signals the use of an object with an unexpected type.
  *
  * @author Michael Rhöse
- * @version 1.0.0.0, 10/8/2017
+ * @version 1.0.1.0, 08/08/2019
  */
-public class InvalidTransitionException extends RuntimeException {
+public class UnexpectedArgumentException extends RuntimeException {
 
-    private final Enum transition;
+    private Class<?> type;
+    private String message;
 
-    public InvalidTransitionException(@NonNull final Enum transition, @NonNull final String message) {
-        super(message);
-        this.transition = transition;
+    public UnexpectedArgumentException(final Object object) {
+        this.type = object.getClass();
     }
 
-    public InvalidTransitionException(@NonNull final Enum transition, @NonNull final String message, final Throwable cause) {
-        super(message, cause);
-        this.transition = transition;
+    public UnexpectedArgumentException(final Object object, final String message) {
+        this.message = message;
+        this.type = object.getClass();
+    }
+
+    public UnexpectedArgumentException(final Object object, final String message, final Throwable cause) {
+        super(cause);
+        this.message = message;
+        this.type = object.getClass();
     }
 
     @Override
     public String getLocalizedMessage() {
-        StringBuilder builder = new StringBuilder("Transition '")
-                .append(transition.name())
-                .append("' isn't possible: ")
-                .append(this.getMessage())
-                .append('.');
+
+        final StringBuilder builder = new StringBuilder("Object of type '")
+                .append(this.type.getCanonicalName())
+                .append("' isn't allowed");
+
+        if (Objects.nonNull(this.message)) {
+            builder.append("': ").append(this.message).append('.');
+        } else {
+            builder.append("'.");
+        }
+
         if (Objects.nonNull(super.getCause())) {
             builder
                     .append(' ')

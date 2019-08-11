@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 /**
  * <h2>TransitionListeners</h2>
- *
+ * <p>
  * The transition listeners allow the automated run of additional logic for a transition.
  *
  * @see io.varietas.instrumentum.status.machina.annotations.TransitionListener

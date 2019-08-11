@@ -15,16 +15,16 @@
  */
 package io.varietas.instrumentum.status.machina.machines.transition;
 
-import io.varietas.instrumentum.status.machina.AbstractStateMachine;
+import io.varietas.instrumentum.status.machina.BasicStateMachine;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.Transition;
 import io.varietas.instrumentum.status.machina.annotations.TransitionListener;
 import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.listeners.SimpleTransitionAfterListener;
 import io.varietas.instrumentum.status.machina.listeners.SimpleTransitionBeforeListener;
-import io.varietas.instrumentum.status.machina.models.Chain;
-import io.varietas.instrumentum.status.machina.models.Event;
-import io.varietas.instrumentum.status.machina.models.State;
+import io.varietas.instrumentum.status.machina.models.ExampleChain;
+import io.varietas.instrumentum.status.machina.models.ExampleEvent;
+import io.varietas.instrumentum.status.machina.models.ExampleState;
 import io.varietas.instrumentum.status.machina.models.TestEntity;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,8 +32,8 @@ import lombok.extern.slf4j.Slf4j;
  * <h2>StateMachineWithoutListener</h2>
  */
 @Slf4j
-@StateMachineConfiguration(stateType = State.class, eventType = Event.class, chainType = Chain.class)
-public class StateMachineWithMultipleListeners extends AbstractStateMachine {
+@StateMachineConfiguration(stateType = ExampleState.class, eventType = ExampleEvent.class, chainType = ExampleChain.class)
+public class StateMachineWithMultipleListeners extends BasicStateMachine {
 
     public StateMachineWithMultipleListeners(FSMConfiguration configuration) {
         super(configuration);
@@ -42,7 +42,7 @@ public class StateMachineWithMultipleListeners extends AbstractStateMachine {
     @TransitionListener(SimpleTransitionBeforeListener.class)
     @TransitionListener(SimpleTransitionAfterListener.class)
     @Transition(from = "ACTIVATED", on = "DEACTIVATE", to = "DEACTIVATED")
-    public void fromActivatedToDeactivated(final State from, final State to, final Event event, final TestEntity context) {
+    public void fromActivatedToDeactivated(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
         context.setValue(context.getValue() - 2);
     }
 }

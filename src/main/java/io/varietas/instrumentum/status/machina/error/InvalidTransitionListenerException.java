@@ -21,32 +21,45 @@ import lombok.NonNull;
 /**
  * <h2>InvalidTransitionException</h2>
  * <p>
- * Signals the triggering of an invalid transition. The reasons can be e.g. not present transition or mismatching start state.
+ * The exception is thrown by the {@link io.varietas.instrumentum.status.machina.AbstractStateMachine} while executing a listener for a transition. The reasons are:
+ * <ul>
+ * <li>{@link NoSuchMethodException}</li>
+ * <li>{@link SecurityException}</li>
+ * <li>{@link IllegalAccessException}</li>
+ * <li>{@link IllegalArgumentException}</li>
+ * <li>{@link InvocationTargetException}</li>
+ * <li>{@link InstantiationException}</li>
+ * </ul>
  *
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/8/2017
  */
-public class InvalidTransitionException extends RuntimeException {
+public final class InvalidTransitionListenerException extends RuntimeException {
 
-    private final Enum transition;
+    private final Class<?> listenerType;
 
-    public InvalidTransitionException(@NonNull final Enum transition, @NonNull final String message) {
+    public InvalidTransitionListenerException(@NonNull final Class<?> listenerType, @NonNull final String message) {
         super(message);
-        this.transition = transition;
+        this.listenerType = listenerType;
     }
 
-    public InvalidTransitionException(@NonNull final Enum transition, @NonNull final String message, final Throwable cause) {
+    public InvalidTransitionListenerException(@NonNull final Class<?> listenerType, @NonNull final String message, final Throwable cause) {
         super(message, cause);
-        this.transition = transition;
+        this.listenerType = listenerType;
     }
 
     @Override
     public String getLocalizedMessage() {
-        StringBuilder builder = new StringBuilder("Transition '")
-                .append(transition.name())
-                .append("' isn't possible: ")
-                .append(this.getMessage())
-                .append('.');
+        StringBuilder builder = new StringBuilder("Transition listener [")
+                .append(this.listenerType.getName())
+                .append("] not executable.");
+
+        if (Objects.nonNull(super.getMessage())) {
+            builder
+                    .append(' ')
+                    .append(this.getMessage());
+        }
+
         if (Objects.nonNull(super.getCause())) {
             builder
                     .append(' ')

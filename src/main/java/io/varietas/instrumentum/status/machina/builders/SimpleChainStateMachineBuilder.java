@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.varietas.instrumentum.status.machina.builders.impl;
+package io.varietas.instrumentum.status.machina.builders;
 
 import io.varietas.instrumentum.status.machina.ChainStateMachine;
 import io.varietas.instrumentum.status.machina.StateMachine;
@@ -22,9 +22,8 @@ import io.varietas.instrumentum.status.machina.annotations.ChainListeners;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.TransitionChain;
 import io.varietas.instrumentum.status.machina.annotations.TransitionChains;
-import io.varietas.instrumentum.status.machina.builders.StateMachineBuilder;
 import io.varietas.instrumentum.status.machina.configuration.CFSMConfiguration;
-import io.varietas.instrumentum.status.machina.configuration.impl.CFSMConfigurationImpl;
+import io.varietas.instrumentum.status.machina.configuration.DefaultCFSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.ChainContainer;
 import io.varietas.instrumentum.status.machina.containers.ListenerContainer;
 import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
@@ -39,6 +38,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -50,15 +50,16 @@ import lombok.extern.slf4j.Slf4j;
  * @version 1.0.0.0, 10/27/2017
  */
 @Slf4j
-public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CFSMConfiguration> {
+@NoArgsConstructor(staticName = "getBuilder")
+public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFSMConfiguration> {
 
-    protected Class<? extends Enum> chainType;
+    @SuppressWarnings("rawtypes")
+    protected Class<? extends Enum<?>> chainType;
 
-    private final List<ChainContainer> chains = new ArrayList<>();
+    private final List<ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>>> chains = new ArrayList<>();
 
     /**
-     * Extracts the configuration from a given {@link StateMachine}. This process should be done only once per state machine type and shared between the instances because the collection of information
-     * is a big process and can take a while.
+     * Extracts the configuration from a given {@link StateMachine}. This process should be done only once per state machine type and shared between the instances because the collection of information is a big process and can take a while.
      *
      * @param machineType State machine type where the configuration is present.
      *
@@ -76,39 +77,37 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
         this.transitions.addAll(this.collectTransitions(machineType));
         this.chains.addAll(this.createChains(machineType));
 
-        this.configuration = new CFSMConfigurationImpl(
-                machineType,
-                this.transitions,
-                this.chains,
-                this.stateType,
-                this.eventType,
-                this.chainType);
+        this.configuration = DefaultCFSMConfiguration.of(machineType, this.stateType, this.eventType, this.chainType)
+                .andAddChains(this.chains)
+                .andAddTransitions(this.transitions);
 
-        LOGGER.debug("Configuration for '{}' created:\n"
-                + "-> {} transitions collected\n"
-                + "-> {} chains collected\n"
-                + "-> {} used for state type\n"
-                + "-> {} used for event type\n"
-                + "-> {} used for chain type.",
-                this.configuration.getMachineType().getSimpleName(),
-                this.transitions.size(),
-                this.chains.size(),
-                this.stateType.getSimpleName(),
-                this.eventType.getSimpleName(),
-                this.chainType.getSimpleName()
-        );
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Configuration for '{}' created:\n"
+                    + "-> {} transitions collected\n"
+                    + "-> {} chains collected\n"
+                    + "-> {} used for state type\n"
+                    + "-> {} used for event type\n"
+                    + "-> {} used for chain type.",
+                    this.configuration.getMachineType().getSimpleName(),
+                    this.transitions.size(),
+                    this.chains.size(),
+                    this.stateType.getSimpleName(),
+                    this.eventType.getSimpleName(),
+                    this.chainType.getSimpleName()
+            );
+        }
 
         return this;
     }
 
     /**
-     * The varietas.io transition implementation supports transition chains. These chains allow the definition of transition on programming time. That makes execution of chained transitions with a
-     * single command possible. This method creates all available transition chains.
+     * The varietas.io transition implementation supports transition chains. These chains allow the definition of transition on programming time. That makes execution of chained transitions with a single command possible. This method creates all available transition chains.
      *
      * @param machineType The machine where the chains are configured.
+     *
      * @return List of all available transition chains.
      */
-    private List<ChainContainer> createChains(final Class<? extends StateMachine> machineType) {
+    private List<ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>>> createChains(final Class<? extends StateMachine> machineType) {
 
         if (!machineType.isAnnotationPresent(TransitionChain.class) && !machineType.isAnnotationPresent(TransitionChains.class)) {
             return Collections.emptyList();
@@ -137,30 +136,43 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
      *
      * @return Chain container with all relevant information.
      */
-    private ChainContainer createChain(final TransitionChain chain, final List<ListenerContainer> listeners) {
-        final Enum from = Enum.valueOf(this.stateType, chain.from());
-        final Enum to = Enum.valueOf(stateType, chain.to());
-        final Enum on = Enum.valueOf(this.chainType, chain.on());
-        Optional<List<TransitionContainer>> chainParts = this.recursive(from, to);
+    private ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>> createChain(final TransitionChain chain, final List<ListenerContainer> listeners) {
+        @SuppressWarnings("rawtypes")
+        final Class<? extends Enum> stateClazzType = this.stateType;
+        @SuppressWarnings("rawtypes")
+        final Class<? extends Enum> chainClazzType = this.chainType;
+
+        @SuppressWarnings("unchecked")
+        final Enum<?> from = Enum.valueOf(stateClazzType, chain.from());
+        @SuppressWarnings("unchecked")
+        final Enum<?> to = Enum.valueOf(stateClazzType, chain.to());
+        @SuppressWarnings("unchecked")
+        final Enum<?> on = Enum.valueOf(chainClazzType, chain.on());
+        Optional<List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>>> chainParts = this.recursive(from, to);
 
         if (!chainParts.isPresent()) {
             throw new TransitionChainCreationException(true, from.name(), to.name(), on.name());
         }
 
-        final ChainContainer res = new ChainContainer<>(
-                from,
-                to,
-                on,
-                chainParts.get(),
-                listeners
-        );
+        @SuppressWarnings("unchecked")
+        final ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>> res = ChainContainer.of(from, to, on)
+                .andAddAll(chainParts.get())
+                .andAddAll(listeners);
 
-        LOGGER.debug("Chain {}: {} -> {}", res.getOn(), res.getFrom(), res.getTo());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Chain {}: {} -> {}", res.getOn(), res.getFrom(), res.getTo());
+        }
         res.getChainParts().forEach(part -> {
-            TransitionContainer partContainer = ((TransitionContainer) part);
-            LOGGER.debug("  - {}: {} -> {}", partContainer.getOn(), partContainer.getFrom(), partContainer.getTo());
+            @SuppressWarnings("unchecked")
+            TransitionContainer<? extends Enum<?>, ? extends Enum<?>> partContainer = part;
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("  - {}: {} -> {}", partContainer.getOn(), partContainer.getFrom(), partContainer.getTo());
+            }
         });
-        LOGGER.debug("{} listeners for chain {} added.", (Objects.nonNull(res.getListeners()) ? res.getListeners().size() : 0), res.getOn());
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("{} listeners for chain {} added.", (Objects.nonNull(res.getListeners()) ? res.getListeners().size() : 0), res.getOn());
+        }
 
         return res;
     }
@@ -172,6 +184,7 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
      *
      * @return Collected chain listeners as list.
      */
+    @SuppressWarnings("unchecked")
     private List<Pair> extractChainListener(final Class<?> type) {
         if (!type.isAnnotationPresent(ChainListeners.class) && !type.isAnnotationPresent(ChainListener.class)) {
             return Collections.EMPTY_LIST;
@@ -179,8 +192,8 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
 
         return Stream.of(type.getAnnotationsByType(ChainListener.class))
                 .map(annot -> {
-                    Class<?> listener = annot.value();
-                    ListenerContainer listenerContainer = new ListenerContainer(listener, this.existsMethod(listener, "before"), this.existsMethod(listener, "after"));
+                    final Class<?> listener = annot.value();
+                    final ListenerContainer listenerContainer = ListenerContainer.of(listener, this.existsMethod(listener, "before"), this.existsMethod(listener, "after"));
                     return new Pair(listenerContainer, Arrays.asList(annot.forChains()));
                 })
                 .collect(Collectors.toList());
@@ -194,15 +207,15 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
      *
      * @return List of all required transitions as containers.
      */
-    private Optional<List<TransitionContainer>> recursive(final Enum from, final Enum to) {
+    private Optional<List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>>> recursive(final Enum<?> from, final Enum<?> to) {
 
-        List<TransitionContainer> possibleParts = this.transitions.stream()
+        List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> possibleParts = this.transitions.stream()
                 .filter(transition -> transition.getFrom().equals(from))
                 .collect(Collectors.toList());
 
         return possibleParts.stream()
                 .map((possiblePart) -> {
-                    List<TransitionContainer> temp = new ArrayList<>();
+                    List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> temp = new ArrayList<>();
                     temp.add(possiblePart);
                     if (!this.recursive(to, possiblePart, temp, 1)) {
                         return null;
@@ -219,12 +232,11 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
      * @param abourt       End state of the chain.
      * @param possiblePart Currently used start transition.
      * @param chainParts   List of all collected transitions.
-     * @param fallback     Abort criteria. This is simply a counter which is increased each recursive step. If the counter greater than the current number of available transitions, the algorithm
-     *                     detects no possible way from the start to the end.
+     * @param fallback     Abort criteria. This is simply a counter which is increased each recursive step. If the counter greater than the current number of available transitions, the algorithm detects no possible way from the start to the end.
      *
      * @return True if the end state is located, otherwise false.
      */
-    private boolean recursive(final Enum abourt, final TransitionContainer possiblePart, final List<TransitionContainer> chainParts, final int fallBack) {
+    private boolean recursive(final Enum<?> abourt, final TransitionContainer<? extends Enum<?>, ? extends Enum<?>> possiblePart, final List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> chainParts, final int fallBack) {
 
         if (possiblePart.getTo().equals(abourt)) {
             return true;
@@ -234,19 +246,21 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
             return false;
         }
 
-        List<TransitionContainer> nextPossibles = this.transitions.stream()
+        final List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> nextPossibles = this.transitions.stream()
                 .filter(transition -> transition.getFrom().equals(possiblePart.getTo()))
                 .collect(Collectors.toList());
 
         if (nextPossibles.isEmpty()) {
-            LOGGER.trace("There is no transition available from '{}' to '{}'.", possiblePart.getFrom().name(), abourt.name());
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("There is no transition available from '{}' to '{}'.", possiblePart.getFrom().name(), abourt.name());
+            }
             return false;
         }
 
         if (nextPossibles.size() == 1) {
-            List<TransitionContainer> temp = new ArrayList<>();
+            List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> temp = new ArrayList<>();
 
-            TransitionContainer toAdd = nextPossibles.get(0);
+            TransitionContainer<? extends Enum<?>, ? extends Enum<?>> toAdd = nextPossibles.get(0);
 
             chainParts.add(toAdd);
             if (!this.recursive(abourt, toAdd, temp, fallBack + 1)) {
@@ -257,9 +271,9 @@ public class ChainStateMachineBuilderImpl extends AbstractStateMachineBuilder<CF
             return true;
         }
 
-        final List<List<TransitionContainer>> buffer = nextPossibles.stream()
+        final List<List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>>> buffer = nextPossibles.stream()
                 .map((nextPossible) -> {
-                    List<TransitionContainer> temp = new ArrayList<>();
+                    List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> temp = new ArrayList<>();
                     temp.add(nextPossible);
                     if (!this.recursive(abourt, nextPossible, temp, fallBack + 1)) {
                         return null;

@@ -20,9 +20,8 @@ import java.util.List;
 
 /**
  * <h2>CFSMConfiguration</h2>
- *
- * This interface must be implemented by a container that stores the configuration for a {@link io.varietas.instrumentum.status.machina.ChainStateMachine}. It contains all information from the
- * {@link FSMConfiguration} and additional chain information.
+ * <p>
+ * This interface must be implemented by a container that stores the configuration for a {@link io.varietas.instrumentum.status.machina.ChainStateMachine}. It contains all information from the {@link FSMConfiguration} and additional chain information.
  *
  * @see FSMConfiguration
  * @see io.varietas.instrumentum.status.machina.ChainStateMachine
@@ -37,12 +36,12 @@ public interface CFSMConfiguration extends FSMConfiguration {
      *
      * @return Collected chains.
      */
-    List<ChainContainer> getChains();
+    List<ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>>> getChains();
 
     /**
      * Returns the chain type of the current FSM type.
      *
      * @return Chain type.
      */
-    Class<? extends Enum> getChainType();
+    Class<? extends Enum<?>> getChainType();
 }

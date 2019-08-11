@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.varietas.instrumentum.status.machina.builders.impl;
+package io.varietas.instrumentum.status.machina.builders;
 
 import io.varietas.instrumentum.status.machina.StateMachine;
-import io.varietas.instrumentum.status.machina.configuration.impl.FSMConfigurationImpl;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
-import io.varietas.instrumentum.status.machina.builders.StateMachineBuilder;
+import io.varietas.instrumentum.status.machina.configuration.DefaultFSMConfiguration;
 import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,18 +32,18 @@ import lombok.extern.slf4j.Slf4j;
  * @version 1.0.0.0, 10/9/2017
  */
 @Slf4j
-public class StateMachineBuilderImpl extends AbstractStateMachineBuilder<FSMConfiguration> {
+@NoArgsConstructor(staticName = "getBuilder")
+public class SimpleStateMachineBuilder extends BasicStateMachineBuilder<FSMConfiguration> {
 
     /**
-     * Extracts the configuration from a given {@link StateMachine}. This process should be done only once per state machine type and shared between the instances because the collection of information
-     * is a big process and can take a while.
+     * Extracts the configuration from a given {@link StateMachine}. This process should be done only once per state machine type and shared between the instances because the collection of information is a big process and can take a while.
      *
      * @param machineType State machine type where the configuration is present.
      *
      * @return The instance of the builder for a fluent like API.
      */
     @Override
-    public StateMachineBuilder extractConfiguration(@NonNull final Class<? extends StateMachine> machineType) {
+    public StateMachineBuilder<FSMConfiguration> extractConfiguration(@NonNull final Class<? extends StateMachine> machineType) {
 
         StateMachineConfiguration machineConfiguration = machineType.getAnnotation(StateMachineConfiguration.class);
 
@@ -52,21 +52,19 @@ public class StateMachineBuilderImpl extends AbstractStateMachineBuilder<FSMConf
 
         this.transitions.addAll(this.collectTransitions(machineType));
 
-        this.configuration = new FSMConfigurationImpl(
-                machineType,
-                this.transitions,
-                this.stateType,
-                this.eventType);
+        this.configuration = DefaultFSMConfiguration.of(machineType, this.stateType, this.eventType).andAddTransitions(this.transitions);
 
-        LOGGER.debug("Configuration for '{}' created:\n"
-                + "-> {} transitions collected\n"
-                + "-> {} used for state type\n"
-                + "-> {} used for event type.",
-                this.configuration.getMachineType().getSimpleName(),
-                this.transitions.size(),
-                this.stateType.getSimpleName(),
-                this.eventType.getSimpleName()
-        );
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Configuration for '{}' created:\n"
+                    + "-> {} transitions collected\n"
+                    + "-> {} used for state type\n"
+                    + "-> {} used for event type.",
+                    this.configuration.getMachineType().getSimpleName(),
+                    this.transitions.size(),
+                    this.stateType.getSimpleName(),
+                    this.eventType.getSimpleName()
+            );
+        }
 
         return this;
     }

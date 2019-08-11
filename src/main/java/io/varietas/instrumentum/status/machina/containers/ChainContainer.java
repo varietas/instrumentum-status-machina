@@ -93,20 +93,8 @@ public class ChainContainer<STATE_TYPE extends Enum<?>, TRANSITION_TYPE extends 
      */
     @SuppressWarnings("unchecked")
     public ChainContainer<STATE_TYPE, TRANSITION_TYPE, CHAIN_TYPE> andAdd(@NonNull final Object container) {
-        final boolean isTransitionContainer = TransitionContainer.class.isInstance(container);
-        final boolean isListenerContainer = ListenerContainer.class.isInstance(container);
 
-        if (!isTransitionContainer && !isListenerContainer) {
-            throw new UnexpectedArgumentException(container, "Given object is not instance of " + TransitionContainer.class.getCanonicalName() + " or " + ListenerContainer.class.getCanonicalName() + ".");
-        }
-
-        if (isTransitionContainer) {
-            this.chainParts.add((TransitionContainer<STATE_TYPE, TRANSITION_TYPE>) container);
-        } else {
-            this.listeners.add((ListenerContainer) container);
-        }
-
-        return this;
+        return this.checkSupportedTypesAndCallFunction(container);
     }
 
     /**
@@ -124,23 +112,44 @@ public class ChainContainer<STATE_TYPE extends Enum<?>, TRANSITION_TYPE extends 
     @SuppressWarnings("unchecked")
     public <LIST extends List<?>> ChainContainer<STATE_TYPE, TRANSITION_TYPE, CHAIN_TYPE> andAddAll(final LIST containers) {
 
-        if (Objects.isNull(containers) || containers.isEmpty()) {
+        return this.checkSupportedTypesAndCallFunction(containers);
+    }
+
+    @SuppressWarnings("unchecked")
+    private ChainContainer<STATE_TYPE, TRANSITION_TYPE, CHAIN_TYPE> checkSupportedTypesAndCallFunction(final Object any) {
+
+        if (Objects.isNull(any)) {
             return this;
         }
 
-        final boolean isTransitionContainer = TransitionContainer.class.isInstance(containers.get(0));
-        final boolean isListenerContainer = ListenerContainer.class.isInstance(containers.get(0));
+        final boolean isList = List.class.isInstance(any);
+
+        if (isList && ((List) any).isEmpty()) {
+            return this;
+        }
+
+        final Object used = (isList) ? ((List) any).get(0) : any;
+
+        final boolean isTransitionContainer = TransitionContainer.class.isInstance(used);
+        final boolean isListenerContainer = ListenerContainer.class.isInstance(used);
 
         if (!isTransitionContainer && !isListenerContainer) {
-            throw new UnexpectedArgumentException(containers, "Given object is not instance of " + TransitionContainer.class.getCanonicalName() + " or " + ListenerContainer.class.getCanonicalName());
+            throw new UnexpectedArgumentException(used, "Given object is not instance of " + TransitionContainer.class.getCanonicalName() + " or " + ListenerContainer.class.getCanonicalName());
         }
 
         if (isTransitionContainer) {
-            this.chainParts.addAll((List<? extends TransitionContainer<STATE_TYPE, TRANSITION_TYPE>>) containers);
+            if (isList) {
+                this.chainParts.addAll((List<? extends TransitionContainer<STATE_TYPE, TRANSITION_TYPE>>) any);
+            } else {
+                this.chainParts.add((TransitionContainer<STATE_TYPE, TRANSITION_TYPE>) any);
+            }
         } else {
-            this.listeners.addAll((List<? extends ListenerContainer>) containers);
+            if (isList) {
+                this.listeners.addAll((List) any);
+            } else {
+                this.listeners.add((ListenerContainer) any);
+            }
         }
-
         return this;
     }
 }

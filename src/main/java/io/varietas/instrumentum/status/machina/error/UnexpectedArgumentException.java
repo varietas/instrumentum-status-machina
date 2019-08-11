@@ -30,9 +30,6 @@ public class UnexpectedArgumentException extends RuntimeException {
     private Class<?> type;
     private String message;
 
-    public UnexpectedArgumentException() {
-    }
-
     public UnexpectedArgumentException(final Object object) {
         this.type = object.getClass();
     }

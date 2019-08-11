@@ -165,3 +165,4 @@ nbdist/
 
 
 # End of https://www.gitignore.io/api/netbeans,intellij,eclipse,maven
+/nb-configuration.xml

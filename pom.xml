@@ -75,6 +75,7 @@
                         <arg>-verbose</arg>
                         <arg>-Xlint:all,-options,-path</arg>
                     </compilerArgs>
+                    <release>12</release>
                 </configuration>
             </plugin>
             <plugin>

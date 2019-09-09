@@ -17,10 +17,12 @@ package io.varietas.instrumentum.status.machina.machines.chain;
 
 import io.varietas.instrumentum.status.machina.BasicChainStateMachine;
 import io.varietas.instrumentum.status.machina.annotations.ChainConfiguration;
+import io.varietas.instrumentum.status.machina.annotations.ChainListener;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.Transition;
 import io.varietas.instrumentum.status.machina.annotations.TransitionChain;
 import io.varietas.instrumentum.status.machina.configurations.FSMConfiguration;
+import io.varietas.instrumentum.status.machina.listeners.SimpleChainBeforeListener;
 import io.varietas.instrumentum.status.machina.models.ExampleChain;
 import io.varietas.instrumentum.status.machina.models.ExampleEvent;
 import io.varietas.instrumentum.status.machina.models.ExampleState;
@@ -32,14 +34,12 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @TransitionChain(from = "AVAILABLE", on = "INSTALLING", to = "ACTIVATED")
-@TransitionChain(from = "ACTIVATED", on = "PARKING", to = "PARKED")
-@TransitionChain(from = "ACTIVATED", on = "DELETION", to = "DELETED")
-@TransitionChain(from = "PARKED", on = "DELETION", to = "DELETED")
 @StateMachineConfiguration(stateType = ExampleState.class, eventType = ExampleEvent.class)
 @ChainConfiguration(chainType = ExampleChain.class)
-public class ChainStateMachineWithoutListener extends BasicChainStateMachine {
+@ChainListener(SimpleChainBeforeListener.class)
+public class ChainStateMachineWithBeforeListener extends BasicChainStateMachine {
 
-    public ChainStateMachineWithoutListener(FSMConfiguration configuration) {
+    public ChainStateMachineWithBeforeListener(FSMConfiguration configuration) {
         super(configuration);
     }
 
@@ -49,30 +49,7 @@ public class ChainStateMachineWithoutListener extends BasicChainStateMachine {
     }
 
     @Transition(from = "REGISTERED", on = "ACTIVATE", to = "ACTIVATED")
-    @Transition(from = "PARKED", on = "ACTIVATE", to = "ACTIVATED")
-    public void fromAnyToActivated(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
+    public void fromRegisteredToActivated(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
         context.setValue(context.getValue() + 2);
-    }
-
-    @Transition(from = "REGISTERED", on = "DELETE", to = "DELETED")
-    @Transition(from = "UNREGISTERED", on = "DELETE", to = "DELETED")
-    public void fromAnyToDeleted(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
-        context.setValue(context.getValue() - 7);
-    }
-
-    @Transition(from = "ACTIVATED", on = "DEACTIVATE", to = "DEACTIVATED")
-    public void fromActivatedToDeactivated(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
-        context.setValue(context.getValue() - 2);
-    }
-
-    @Transition(from = "DEACTIVATED", on = "UNREGISTER", to = "UNREGISTERED")
-    @Transition(from = "PARKED", on = "UNREGISTER", to = "UNREGISTERED")
-    public void fromAnyToUnregistered(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
-        context.setValue(context.getValue() - 1);
-    }
-
-    @Transition(from = "DEACTIVATED", on = "PARK", to = "PARKED")
-    public void fromDeactivatedToParked(final ExampleState from, final ExampleState to, final ExampleEvent event, final TestEntity context) {
-        context.setValue(context.getValue() - 5);
     }
 }

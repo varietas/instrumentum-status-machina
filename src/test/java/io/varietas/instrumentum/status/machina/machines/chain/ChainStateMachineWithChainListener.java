@@ -16,16 +16,17 @@
 package io.varietas.instrumentum.status.machina.machines.chain;
 
 import io.varietas.instrumentum.status.machina.BasicChainStateMachine;
+import io.varietas.instrumentum.status.machina.annotations.ChainConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.ChainListener;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.Transition;
 import io.varietas.instrumentum.status.machina.annotations.TransitionChain;
 import io.varietas.instrumentum.status.machina.configurations.FSMConfiguration;
+import io.varietas.instrumentum.status.machina.listeners.SimpleChainListener;
 import io.varietas.instrumentum.status.machina.models.ExampleChain;
 import io.varietas.instrumentum.status.machina.models.ExampleEvent;
 import io.varietas.instrumentum.status.machina.models.ExampleState;
 import io.varietas.instrumentum.status.machina.models.TestEntity;
-import io.varietas.instrumentum.status.machina.listeners.SimpleChainListener;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -37,7 +38,8 @@ import lombok.extern.slf4j.Slf4j;
 @TransitionChain(from = "ACTIVATED", on = "PARKING", to = "PARKED")
 @TransitionChain(from = "ACTIVATED", on = "DELETION", to = "DELETED")
 @TransitionChain(from = "PARKED", on = "DELETION", to = "DELETED")
-@StateMachineConfiguration(stateType = ExampleState.class, eventType = ExampleEvent.class, chainType = ExampleChain.class)
+@StateMachineConfiguration(stateType = ExampleState.class, eventType = ExampleEvent.class)
+@ChainConfiguration(chainType = ExampleChain.class)
 public class ChainStateMachineWithChainListener extends BasicChainStateMachine {
 
     public ChainStateMachineWithChainListener(FSMConfiguration configuration) {

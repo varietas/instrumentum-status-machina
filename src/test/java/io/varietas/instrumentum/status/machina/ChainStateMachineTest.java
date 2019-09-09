@@ -15,16 +15,102 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import io.varietas.instrumentum.status.machina.builders.SimpleChainStateMachineBuilder;
+import io.varietas.instrumentum.status.machina.errors.InvalidTransitionChainException;
+import io.varietas.instrumentum.status.machina.errors.InvalidTransitionException;
 import io.varietas.instrumentum.status.machina.errors.MachineCreationException;
+import io.varietas.instrumentum.status.machina.errors.TransitionInvocationException;
+import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineWithAfterListener;
+import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineWithBeforeListener;
+import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineWithoutListener;
+import io.varietas.instrumentum.status.machina.machines.chain.FailingChainStateMachine;
+import io.varietas.instrumentum.status.machina.models.ExampleChain;
+import io.varietas.instrumentum.status.machina.models.ExampleEvent;
+import io.varietas.instrumentum.status.machina.models.ExampleState;
+import io.varietas.instrumentum.status.machina.models.TestEntity;
+import org.assertj.core.api.Assertions;
+import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author Michael Rhöse
  */
-public class ChainStateMachineTest extends StateMachineTests {
+public class ChainStateMachineTest {
 
-    public StateMachine getStateMachine(Class<? extends StateMachine> machineClazz) throws MachineCreationException {
-        return SimpleChainStateMachineBuilder.getBuilder().extractConfiguration(machineClazz).build();
+    private SoftAssertions softly;
+
+    @BeforeEach
+    public void beforeEach() {
+        this.softly = new SoftAssertions();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        softly.assertAll();
+        this.softly = null;
+    }
+
+    public ChainStateMachine getStateMachine(Class<? extends ChainStateMachine> machineClazz) throws MachineCreationException {
+        return (ChainStateMachine) StateMachineFactory.getStateMachine(machineClazz);
+    }
+
+    @Test
+    public void testFireInvalidChainError() throws Exception {
+
+        ChainStateMachine stateMachine = this.getStateMachine(ChainStateMachineWithoutListener.class);
+
+        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
+
+        Assertions.assertThatThrownBy(() -> stateMachine.fire(ExampleEvent.ACTIVATE, entity)).isInstanceOf(InvalidTransitionException.class);
+    }
+
+    @Test
+    public void testFailMachineBuilding() {
+        Assertions.assertThatThrownBy(() -> this.getStateMachine(FailingChainStateMachine.class))
+                .isInstanceOf(MachineCreationException.class);
+    }
+
+    @Test
+    public void testFireChainWithoutListener() throws Exception {
+
+        ChainStateMachine stateMachine = this.getStateMachine(ChainStateMachineWithoutListener.class);
+
+        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
+        this.assertTransitionChain(stateMachine, ExampleChain.INSTALLING, ExampleState.ACTIVATED, entity, 3);
+
+        entity = new TestEntity(ExampleState.ACTIVATED, 0);
+        this.assertTransitionChain(stateMachine, ExampleChain.PARKING, ExampleState.PARKED, entity, -7);
+
+        entity = new TestEntity(ExampleState.ACTIVATED, 0);
+        this.assertTransitionChain(stateMachine, ExampleChain.DELETION, ExampleState.DELETED, entity, -10);
+
+        entity = new TestEntity(ExampleState.PARKED, 0);
+        this.assertTransitionChain(stateMachine, ExampleChain.DELETION, ExampleState.DELETED, entity, -8);
+    }
+
+    @Test
+    public void testFireChainWithBeforeListener() throws Exception {
+        ChainStateMachine stateMachine = this.getStateMachine(ChainStateMachineWithBeforeListener.class);
+
+        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
+
+        this.assertTransitionChain(stateMachine, ExampleChain.INSTALLING, ExampleState.ACTIVATED, entity, 104);
+    }
+
+    @Test
+    public void testFireChainWithAfterListener() throws Exception {
+        ChainStateMachine stateMachine = this.getStateMachine(ChainStateMachineWithAfterListener.class);
+
+        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
+
+        this.assertTransitionChain(stateMachine, ExampleChain.INSTALLING, ExampleState.ACTIVATED, entity, -99);
+    }
+
+    private void assertTransitionChain(final ChainStateMachine stateMachine, final ExampleChain event, final ExampleState state, final TestEntity entity, final int expectedValue) throws TransitionInvocationException, InvalidTransitionChainException, InvalidTransitionChainException {
+        stateMachine.fireChain(event, entity);
+        this.softly.assertThat(entity.getValue()).isEqualTo(expectedValue);
+        this.softly.assertThat(entity.state()).isEqualTo(state);
     }
 }

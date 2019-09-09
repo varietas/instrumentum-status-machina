@@ -20,18 +20,17 @@ import io.varietas.instrumentum.status.machina.annotations.StateMachineConfigura
 import io.varietas.instrumentum.status.machina.annotations.Transition;
 import io.varietas.instrumentum.status.machina.annotations.TransitionListener;
 import io.varietas.instrumentum.status.machina.configurations.FSMConfiguration;
-import io.varietas.instrumentum.status.machina.models.ExampleChain;
+import io.varietas.instrumentum.status.machina.listeners.SimpleTransitionListener;
 import io.varietas.instrumentum.status.machina.models.ExampleEvent;
 import io.varietas.instrumentum.status.machina.models.ExampleState;
 import io.varietas.instrumentum.status.machina.models.TestEntity;
-import io.varietas.instrumentum.status.machina.listeners.SimpleTransitionListener;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * <h2>StateMachineWithTransitionListener</h2>
  */
 @Slf4j
-@StateMachineConfiguration(stateType = ExampleState.class, eventType = ExampleEvent.class, chainType = ExampleChain.class)
+@StateMachineConfiguration(stateType = ExampleState.class, eventType = ExampleEvent.class)
 public class StateMachineWithTransitionListener extends BasicStateMachine {
 
     public StateMachineWithTransitionListener(FSMConfiguration configuration) {

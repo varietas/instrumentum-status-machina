@@ -18,7 +18,6 @@ package io.varietas.instrumentum.status.machina.machines.transition;
 import io.varietas.instrumentum.status.machina.BasicStateMachine;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.Transition;
-import io.varietas.instrumentum.status.machina.models.ExampleChain;
 import io.varietas.instrumentum.status.machina.models.ExampleEvent;
 import io.varietas.instrumentum.status.machina.models.ExampleState;
 import io.varietas.instrumentum.status.machina.models.TestEntity;
@@ -28,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
  * <h2>FailingStateMachine</h2>
  */
 @Slf4j
-@StateMachineConfiguration(stateType = ExampleState.class, eventType = ExampleEvent.class, chainType = ExampleChain.class)
+@StateMachineConfiguration(stateType = ExampleState.class, eventType = ExampleEvent.class)
 public class FailingStateMachine extends BasicStateMachine {
 
     public FailingStateMachine() {

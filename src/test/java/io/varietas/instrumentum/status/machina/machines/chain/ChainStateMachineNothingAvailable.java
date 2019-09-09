@@ -16,6 +16,7 @@
 package io.varietas.instrumentum.status.machina.machines.chain;
 
 import io.varietas.instrumentum.status.machina.BasicChainStateMachine;
+import io.varietas.instrumentum.status.machina.annotations.ChainConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.Transition;
 import io.varietas.instrumentum.status.machina.configurations.FSMConfiguration;
@@ -30,7 +31,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 //@TransitionChain(from = "AVAILABLE", on = "INSTALLING", to = "ACTIVATED")
-@StateMachineConfiguration(stateType = ExampleState.class, eventType = ExampleEvent.class, chainType = ExampleChain.class)
+@StateMachineConfiguration(stateType = ExampleState.class, eventType = ExampleEvent.class)
+@ChainConfiguration(chainType = ExampleChain.class)
 public class ChainStateMachineNothingAvailable extends BasicChainStateMachine {
 
     public ChainStateMachineNothingAvailable(FSMConfiguration configuration) {

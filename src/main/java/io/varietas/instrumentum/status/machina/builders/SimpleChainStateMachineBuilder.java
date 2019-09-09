@@ -17,6 +17,7 @@ package io.varietas.instrumentum.status.machina.builders;
 
 import io.varietas.instrumentum.status.machina.ChainStateMachine;
 import io.varietas.instrumentum.status.machina.StateMachine;
+import io.varietas.instrumentum.status.machina.annotations.ChainConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.ChainListener;
 import io.varietas.instrumentum.status.machina.annotations.ChainListeners;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
@@ -59,7 +60,8 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
     private final List<ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>>> chains = new ArrayList<>();
 
     /**
-     * Extracts the configuration from a given {@link StateMachine}. This process should be done only once per state machine type and shared between the instances because the collection of information is a big process and can take a while.
+     * Extracts the configuration from a given {@link StateMachine}. This process should be done only once per state machine type and shared between the instances because the collection of information
+     * is a big process and can take a while.
      *
      * @param machineType State machine type where the configuration is present.
      *
@@ -69,10 +71,11 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
     public StateMachineBuilder<CFSMConfiguration> extractConfiguration(final Class<? extends StateMachine> machineType) {
 
         StateMachineConfiguration machineConfiguration = machineType.getAnnotation(StateMachineConfiguration.class);
+        ChainConfiguration chainConfiguration = machineType.getAnnotation(ChainConfiguration.class);
 
         this.stateType = machineConfiguration.stateType();
         this.eventType = machineConfiguration.eventType();
-        this.chainType = machineConfiguration.chainType();
+        this.chainType = chainConfiguration.chainType();
 
         this.transitions.addAll(this.collectTransitions(machineType));
         this.chains.addAll(this.createChains(machineType));
@@ -101,7 +104,8 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
     }
 
     /**
-     * The varietas.io transition implementation supports transition chains. These chains allow the definition of transition on programming time. That makes execution of chained transitions with a single command possible. This method creates all available transition chains.
+     * The varietas.io transition implementation supports transition chains. These chains allow the definition of transition on programming time. That makes execution of chained transitions with a
+     * single command possible. This method creates all available transition chains.
      *
      * @param machineType The machine where the chains are configured.
      *
@@ -131,7 +135,7 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
     /**
      * Creates a chain container with all required information.
      *
-     * @param chain     Target chain of the container.
+     * @param chain Target chain of the container.
      * @param listeners Available listeners which have to be fired for this chain.
      *
      * @return Chain container with all relevant information.
@@ -203,7 +207,7 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
      * Collects all transitions required by transition chain from the already collected transitions.
      *
      * @param from Start state of the transition chain.
-     * @param to   End state of the transition chain.
+     * @param to End state of the transition chain.
      *
      * @return List of all required transitions as containers.
      */
@@ -229,10 +233,11 @@ public class SimpleChainStateMachineBuilder extends BasicStateMachineBuilder<CFS
     /**
      * Collects all transitions required by transition chain from the already collected transitions in a recursively way. This method searches a way from the start state to the end state.
      *
-     * @param abourt       End state of the chain.
+     * @param abourt End state of the chain.
      * @param possiblePart Currently used start transition.
-     * @param chainParts   List of all collected transitions.
-     * @param fallback     Abort criteria. This is simply a counter which is increased each recursive step. If the counter greater than the current number of available transitions, the algorithm detects no possible way from the start to the end.
+     * @param chainParts List of all collected transitions.
+     * @param fallback Abort criteria. This is simply a counter which is increased each recursive step. If the counter greater than the current number of available transitions, the algorithm detects
+     * no possible way from the start to the end.
      *
      * @return True if the end state is located, otherwise false.
      */

@@ -15,10 +15,12 @@
  */
 package io.varietas.instrumentum.status.machina;
 
+import io.varietas.instrumentum.status.machina.annotations.ChainConfiguration;
 import io.varietas.instrumentum.status.machina.builders.SimpleChainStateMachineBuilder;
 import io.varietas.instrumentum.status.machina.builders.SimpleStateMachineBuilder;
 import io.varietas.instrumentum.status.machina.builders.StateMachineBuilder;
 import io.varietas.instrumentum.status.machina.errors.MachineCreationException;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -33,10 +35,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StateMachineFactory {
 
+    /**
+     * Creates a state machine instance corresponding to the given state machine type.
+     *
+     * @param type State machine type
+     * @return Instance of the state machine with its configuration
+     * @throws MachineCreationException Thrown if an error occurred while configuration extraction or machine creation
+     */
     public static StateMachine getStateMachine(final Class<? extends StateMachine> type) throws MachineCreationException {
         StateMachineBuilder<?> builder;
 
-        if (type == ChainStateMachine.class) {
+        if (Objects.nonNull(type.getDeclaredAnnotation(ChainConfiguration.class))) {
             builder = SimpleChainStateMachineBuilder.getBuilder();
         } else {
             builder = SimpleStateMachineBuilder.getBuilder();

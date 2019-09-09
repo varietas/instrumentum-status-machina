@@ -22,7 +22,6 @@ import io.varietas.instrumentum.status.machina.annotations.TransitionListener;
 import io.varietas.instrumentum.status.machina.configurations.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.listeners.SimpleTransitionAfterListener;
 import io.varietas.instrumentum.status.machina.listeners.SimpleTransitionBeforeListener;
-import io.varietas.instrumentum.status.machina.models.ExampleChain;
 import io.varietas.instrumentum.status.machina.models.ExampleEvent;
 import io.varietas.instrumentum.status.machina.models.ExampleState;
 import io.varietas.instrumentum.status.machina.models.TestEntity;
@@ -32,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
  * <h2>StateMachineWithoutListener</h2>
  */
 @Slf4j
-@StateMachineConfiguration(stateType = ExampleState.class, eventType = ExampleEvent.class, chainType = ExampleChain.class)
+@StateMachineConfiguration(stateType = ExampleState.class, eventType = ExampleEvent.class)
 public class StateMachineWithMultipleListeners extends BasicStateMachine {
 
     public StateMachineWithMultipleListeners(FSMConfiguration configuration) {

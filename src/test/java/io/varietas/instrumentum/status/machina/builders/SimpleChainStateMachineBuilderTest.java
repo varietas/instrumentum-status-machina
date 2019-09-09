@@ -29,7 +29,6 @@ import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineS
 import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineWithChainListener;
 import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineWithSingleTransitionChain;
 import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineWithoutListener;
-import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithTransitionListener;
 import io.varietas.instrumentum.status.machina.models.ExampleChain;
 import io.varietas.instrumentum.status.machina.models.ExampleEvent;
 import io.varietas.instrumentum.status.machina.models.ExampleState;
@@ -70,12 +69,11 @@ public class SimpleChainStateMachineBuilderTest {
         this.assertStateMachineConfiguration(ChainStateMachineWithoutListener.class, false, false, true);
     }
 
-    @Test
-    public void testExtractConfigurationWithTransitionListener() {
-
-        this.assertStateMachineConfiguration(StateMachineWithTransitionListener.class, false, true, false);
-    }
-
+//    @Test
+//    public void testExtractConfigurationWithTransitionListener() {
+//
+//        this.assertStateMachineConfiguration(ChainStateMachineWithChainListener.class, false, true, false);
+//    }
     @Test
     public void testExtractConfigurationWithChainListener() {
 
@@ -178,7 +176,8 @@ public class SimpleChainStateMachineBuilderTest {
                     .andAddChains(chains)
                     .andAddTransitions(transitions);
 
-        } catch (NoSuchMethodException | SecurityException ex) {
+        }
+        catch (NoSuchMethodException | SecurityException ex) {
             LOGGER.error(ex.getLocalizedMessage());
             throw new RuntimeException(ex);
         }

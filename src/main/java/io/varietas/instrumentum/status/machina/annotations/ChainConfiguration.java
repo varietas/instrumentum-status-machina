@@ -22,9 +22,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <h2>StateMachineConfiguration</h2>
+ * <h2>ChainConfiguration</h2>
  * <p>
- * This annotation holds the general configuration of a state machine. This way of configuration is inspired by squirrel-framework FSM.
+ * This annotation holds the general configuration of a chain for a state machine. This way of configuration is inspired by squirrel-framework FSM.
  *
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/7/2017
@@ -32,19 +32,12 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface StateMachineConfiguration {
+public @interface ChainConfiguration {
 
     /**
-     * Type of enumeration which is used to represent the states.
+     * Type of enumeration which is used to represent a chain event (Chain identifier).
      *
-     * @return Type of state.
+     * @return Type of chain.
      */
-    Class<? extends Enum<?>> stateType();
-
-    /**
-     * Type of enumeration which is used to represent the occurred event (Event identifier).
-     *
-     * @return Type of event.
-     */
-    Class<? extends Enum<?>> eventType();
+    Class<? extends Enum<?>> chainType();
 }

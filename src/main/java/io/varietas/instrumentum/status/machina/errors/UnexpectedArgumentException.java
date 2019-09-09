@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Michael Rhöse.
+ * Copyright 2019 Michael Rhöse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,48 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.varietas.instrumentum.status.machina.error;
+package io.varietas.instrumentum.status.machina.errors;
 
 import java.util.Objects;
-import lombok.NonNull;
 
 /**
- * <h2>InvalidTransitionError</h2>
+ * <h2>IllegalContainerException</h2>
+ * <p>
+ * The exception signals the use of an object with an unexpected type.
  *
  * @author Michael Rhöse
- * @version 1.0.0.0, 10/8/2017
+ * @version 1.0.1.0, 08/08/2019
  */
-public class InvalidTransitionChainException extends Exception {
+public class UnexpectedArgumentException extends RuntimeException {
 
-    private final Enum chain;
+    private Class<?> type;
     private String message;
 
-    public InvalidTransitionChainException(@NonNull final Enum chain) {
-        this.chain = chain;
+    public UnexpectedArgumentException(final Object object) {
+        this.type = object.getClass();
     }
 
-    public InvalidTransitionChainException(@NonNull final Enum chain, final String message) {
-        this.chain = chain;
+    public UnexpectedArgumentException(final Object object, final String message) {
         this.message = message;
+        this.type = object.getClass();
     }
 
-    public InvalidTransitionChainException(@NonNull final Enum chain, final String message, final Throwable cause) {
+    public UnexpectedArgumentException(final Object object, final String message, final Throwable cause) {
         super(cause);
-        this.chain = chain;
         this.message = message;
-    }
-
-    public InvalidTransitionChainException(@NonNull final Enum chain, final Throwable cause) {
-        super(cause);
-        this.chain = chain;
+        this.type = object.getClass();
     }
 
     @Override
     public String getLocalizedMessage() {
 
-        final StringBuilder builder = new StringBuilder("Chain '")
-                .append(this.chain.name())
-                .append("' isn't possible");
+        final StringBuilder builder = new StringBuilder("Object of type '")
+                .append(this.type.getCanonicalName())
+                .append("' isn't allowed");
 
         if (Objects.nonNull(this.message)) {
             builder.append("': ").append(this.message).append('.');

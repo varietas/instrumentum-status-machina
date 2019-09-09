@@ -15,11 +15,11 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import io.varietas.instrumentum.status.machina.configuration.DefaultCFSMConfiguration;
-import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
+import io.varietas.instrumentum.status.machina.configurations.DefaultCFSMConfiguration;
+import io.varietas.instrumentum.status.machina.configurations.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.ChainContainer;
-import io.varietas.instrumentum.status.machina.error.InvalidTransitionChainException;
-import io.varietas.instrumentum.status.machina.error.TransitionInvocationException;
+import io.varietas.instrumentum.status.machina.errors.InvalidTransitionChainException;
+import io.varietas.instrumentum.status.machina.errors.TransitionInvocationException;
 import java.util.Objects;
 import java.util.Optional;
 

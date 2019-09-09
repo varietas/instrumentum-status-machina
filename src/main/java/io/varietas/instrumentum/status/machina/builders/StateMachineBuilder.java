@@ -16,8 +16,8 @@
 package io.varietas.instrumentum.status.machina.builders;
 
 import io.varietas.instrumentum.status.machina.StateMachine;
-import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
-import io.varietas.instrumentum.status.machina.error.MachineCreationException;
+import io.varietas.instrumentum.status.machina.configurations.FSMConfiguration;
+import io.varietas.instrumentum.status.machina.errors.MachineCreationException;
 
 /**
  * <h2>StateMachineBuilder</h2>

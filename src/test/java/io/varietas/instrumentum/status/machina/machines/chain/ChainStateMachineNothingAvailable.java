@@ -18,7 +18,7 @@ package io.varietas.instrumentum.status.machina.machines.chain;
 import io.varietas.instrumentum.status.machina.BasicChainStateMachine;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.Transition;
-import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
+import io.varietas.instrumentum.status.machina.configurations.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.models.ExampleChain;
 import io.varietas.instrumentum.status.machina.models.ExampleEvent;
 import io.varietas.instrumentum.status.machina.models.ExampleState;

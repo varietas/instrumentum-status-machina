@@ -15,12 +15,12 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
+import io.varietas.instrumentum.status.machina.configurations.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.ListenerContainer;
 import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
-import io.varietas.instrumentum.status.machina.error.InvalidTransitionException;
-import io.varietas.instrumentum.status.machina.error.InvalidTransitionListenerException;
-import io.varietas.instrumentum.status.machina.error.TransitionInvocationException;
+import io.varietas.instrumentum.status.machina.errors.InvalidTransitionException;
+import io.varietas.instrumentum.status.machina.errors.InvalidTransitionListenerException;
+import io.varietas.instrumentum.status.machina.errors.TransitionInvocationException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;

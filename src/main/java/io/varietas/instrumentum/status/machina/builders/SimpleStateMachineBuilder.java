@@ -17,8 +17,8 @@ package io.varietas.instrumentum.status.machina.builders;
 
 import io.varietas.instrumentum.status.machina.StateMachine;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
-import io.varietas.instrumentum.status.machina.configuration.DefaultFSMConfiguration;
-import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
+import io.varietas.instrumentum.status.machina.configurations.DefaultFSMConfiguration;
+import io.varietas.instrumentum.status.machina.configurations.FSMConfiguration;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;

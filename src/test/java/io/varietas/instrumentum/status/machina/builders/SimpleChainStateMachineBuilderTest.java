@@ -16,12 +16,12 @@
 package io.varietas.instrumentum.status.machina.builders;
 
 import io.varietas.instrumentum.status.machina.StateMachine;
-import io.varietas.instrumentum.status.machina.configuration.CFSMConfiguration;
-import io.varietas.instrumentum.status.machina.configuration.DefaultCFSMConfiguration;
+import io.varietas.instrumentum.status.machina.configurations.CFSMConfiguration;
+import io.varietas.instrumentum.status.machina.configurations.DefaultCFSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.ChainContainer;
 import io.varietas.instrumentum.status.machina.containers.ListenerContainer;
 import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
-import io.varietas.instrumentum.status.machina.error.TransitionChainCreationException;
+import io.varietas.instrumentum.status.machina.errors.TransitionChainCreationException;
 import io.varietas.instrumentum.status.machina.listeners.SimpleChainListener;
 import io.varietas.instrumentum.status.machina.listeners.SimpleTransitionListener;
 import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineNothingAvailable;

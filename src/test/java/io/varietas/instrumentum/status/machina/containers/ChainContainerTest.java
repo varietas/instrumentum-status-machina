@@ -15,7 +15,7 @@
  */
 package io.varietas.instrumentum.status.machina.containers;
 
-import io.varietas.instrumentum.status.machina.error.UnexpectedArgumentException;
+import io.varietas.instrumentum.status.machina.errors.UnexpectedArgumentException;
 import io.varietas.instrumentum.status.machina.models.ExampleChain;
 import io.varietas.instrumentum.status.machina.models.ExampleState;
 import org.assertj.core.api.Assertions;

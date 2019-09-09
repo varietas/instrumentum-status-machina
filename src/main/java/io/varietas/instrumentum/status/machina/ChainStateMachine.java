@@ -15,8 +15,8 @@
  */
 package io.varietas.instrumentum.status.machina;
 
-import io.varietas.instrumentum.status.machina.error.InvalidTransitionChainException;
-import io.varietas.instrumentum.status.machina.error.TransitionInvocationException;
+import io.varietas.instrumentum.status.machina.errors.InvalidTransitionChainException;
+import io.varietas.instrumentum.status.machina.errors.TransitionInvocationException;
 
 /**
  * <h2>ChainStateMachine</h2>

@@ -19,7 +19,7 @@ import io.varietas.instrumentum.status.machina.BasicStateMachine;
 import io.varietas.instrumentum.status.machina.annotations.StateMachineConfiguration;
 import io.varietas.instrumentum.status.machina.annotations.Transition;
 import io.varietas.instrumentum.status.machina.annotations.TransitionListener;
-import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
+import io.varietas.instrumentum.status.machina.configurations.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.listeners.SimpleTransitionAfterListener;
 import io.varietas.instrumentum.status.machina.listeners.SimpleTransitionBeforeListener;
 import io.varietas.instrumentum.status.machina.models.ExampleChain;

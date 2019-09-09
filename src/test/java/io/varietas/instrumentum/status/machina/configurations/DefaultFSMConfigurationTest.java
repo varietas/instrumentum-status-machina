@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.varietas.instrumentum.status.machina.configuration;
+package io.varietas.instrumentum.status.machina.configurations;
 
+import io.varietas.instrumentum.status.machina.configurations.DefaultFSMConfiguration;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithoutListener;
 import io.varietas.instrumentum.status.machina.models.ExampleEvent;
 import io.varietas.instrumentum.status.machina.models.ExampleState;

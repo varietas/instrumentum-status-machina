@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.varietas.instrumentum.status.machina.error;
+package io.varietas.instrumentum.status.machina.errors;
 
+import io.varietas.instrumentum.status.machina.errors.MachineCreationException;
 import io.varietas.instrumentum.status.machina.machines.transition.FailingStateMachine;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

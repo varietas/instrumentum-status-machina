@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.varietas.instrumentum.status.machina.error;
+package io.varietas.instrumentum.status.machina.errors;
 
+import io.varietas.instrumentum.status.machina.errors.TransitionChainCreationException;
 import io.varietas.instrumentum.status.machina.models.ExampleChain;
 import io.varietas.instrumentum.status.machina.models.ExampleState;
 import org.assertj.core.api.Assertions;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.varietas.instrumentum.status.machina.configuration;
+package io.varietas.instrumentum.status.machina.configurations;
 
 import io.varietas.instrumentum.status.machina.containers.ChainContainer;
 import java.util.List;

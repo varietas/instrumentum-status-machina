@@ -16,7 +16,7 @@
 package io.varietas.instrumentum.status.machina;
 
 import io.varietas.instrumentum.status.machina.builders.SimpleChainStateMachineBuilder;
-import io.varietas.instrumentum.status.machina.error.MachineCreationException;
+import io.varietas.instrumentum.status.machina.errors.MachineCreationException;
 
 /**
  *

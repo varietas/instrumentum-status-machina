@@ -18,7 +18,7 @@ package io.varietas.instrumentum.status.machina;
 import io.varietas.instrumentum.status.machina.builders.SimpleChainStateMachineBuilder;
 import io.varietas.instrumentum.status.machina.builders.SimpleStateMachineBuilder;
 import io.varietas.instrumentum.status.machina.builders.StateMachineBuilder;
-import io.varietas.instrumentum.status.machina.error.MachineCreationException;
+import io.varietas.instrumentum.status.machina.errors.MachineCreationException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

@@ -18,7 +18,7 @@ package io.varietas.instrumentum.status.machina.containers;
 import io.varietas.instrumentum.status.machina.StateMachine;
 import io.varietas.instrumentum.status.machina.annotations.TransitionChain;
 import io.varietas.instrumentum.status.machina.builders.SimpleStateMachineBuilder;
-import io.varietas.instrumentum.status.machina.error.UnexpectedArgumentException;
+import io.varietas.instrumentum.status.machina.errors.UnexpectedArgumentException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

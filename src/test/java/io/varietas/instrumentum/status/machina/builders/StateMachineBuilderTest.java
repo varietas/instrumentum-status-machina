@@ -16,10 +16,10 @@
 package io.varietas.instrumentum.status.machina.builders;
 
 import io.varietas.instrumentum.status.machina.StateMachine;
-import io.varietas.instrumentum.status.machina.configuration.DefaultFSMConfiguration;
-import io.varietas.instrumentum.status.machina.configuration.FSMConfiguration;
+import io.varietas.instrumentum.status.machina.configurations.DefaultFSMConfiguration;
+import io.varietas.instrumentum.status.machina.configurations.FSMConfiguration;
 import io.varietas.instrumentum.status.machina.containers.TransitionContainer;
-import io.varietas.instrumentum.status.machina.error.MachineCreationException;
+import io.varietas.instrumentum.status.machina.errors.MachineCreationException;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineNotContrivable;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithMultipleListeners;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithoutListener;

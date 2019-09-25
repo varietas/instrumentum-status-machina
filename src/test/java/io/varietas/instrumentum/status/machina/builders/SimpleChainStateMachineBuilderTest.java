@@ -69,11 +69,6 @@ public class SimpleChainStateMachineBuilderTest {
         this.assertStateMachineConfiguration(ChainStateMachineWithoutListener.class, false, false, true);
     }
 
-//    @Test
-//    public void testExtractConfigurationWithTransitionListener() {
-//
-//        this.assertStateMachineConfiguration(ChainStateMachineWithChainListener.class, false, true, false);
-//    }
     @Test
     public void testExtractConfigurationWithChainListener() {
 
@@ -149,6 +144,7 @@ public class SimpleChainStateMachineBuilderTest {
 
             final ListenerContainer chainListener = ListenerContainer.of(SimpleChainListener.class, true, true);
 
+            final TransitionContainer singleTransition = TransitionContainer.of(ExampleState.DEACTIVATED, ExampleState.PARKED, ExampleEvent.PARK, action).andAddListener(transitionListener);
             final List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> transitions = new ArrayList<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>>() {
                 {
                     add(TransitionContainer.of(ExampleState.AVAILABLE, ExampleState.REGISTERED, ExampleEvent.REGISTER, action).andAddListener(transitionListener)); // 2
@@ -159,21 +155,21 @@ public class SimpleChainStateMachineBuilderTest {
                     add(TransitionContainer.of(ExampleState.ACTIVATED, ExampleState.DEACTIVATED, ExampleEvent.DEACTIVATE, action).andAddListener(transitionListener)); // 5
                     add(TransitionContainer.of(ExampleState.DEACTIVATED, ExampleState.UNREGISTERED, ExampleEvent.UNREGISTER, action).andAddListener(transitionListener)); // 6
                     add(TransitionContainer.of(ExampleState.PARKED, ExampleState.UNREGISTERED, ExampleEvent.UNREGISTER, action).andAddListener(transitionListener)); // 7
-                    add(TransitionContainer.of(ExampleState.DEACTIVATED, ExampleState.PARKED, ExampleEvent.PARK, action).andAddListener(transitionListener)); // 8
                 }
             };
 
             final List<ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>>> chains = new ArrayList<ChainContainer<? extends Enum<?>, ? extends Enum<?>, ? extends Enum<?>>>() {
                 {
                     add(ChainContainer.of(ExampleState.AVAILABLE, ExampleState.ACTIVATED, ExampleChain.INSTALLING).andAdd(transitions.get(0)).andAdd(transitions.get(2)).andAdd(chainListener));
-                    add(ChainContainer.of(ExampleState.ACTIVATED, ExampleState.PARKED, ExampleChain.PARKING).andAdd(transitions.get(5)).andAdd(transitions.get(8)).andAdd(chainListener));
+                    add(ChainContainer.of(ExampleState.ACTIVATED, ExampleState.PARKED, ExampleChain.PARKING).andAdd(transitions.get(5)).andAdd(singleTransition).andAdd(chainListener));
                     add(ChainContainer.of(ExampleState.ACTIVATED, ExampleState.DELETED, ExampleChain.DELETION).andAdd(transitions.get(5)).andAdd(transitions.get(6)).andAdd(transitions.get(1)).andAdd(chainListener));
-                    add(ChainContainer.of(ExampleState.DELETED, ExampleState.DELETED, ExampleChain.DELETION).andAdd(transitions.get(7)).andAdd(transitions.get(4)).andAdd(chainListener));
                 }
             };
 
             return DefaultCFSMConfiguration.of(machineType, ExampleState.class, ExampleEvent.class, ExampleChain.class)
                     .andAddChains(chains)
+                    .andAddTransition(singleTransition)
+                    .andAddChain(ChainContainer.of(ExampleState.DELETED, ExampleState.DELETED, ExampleChain.DELETION).andAdd(transitions.get(7)).andAdd(transitions.get(4)).andAdd(chainListener))
                     .andAddTransitions(transitions);
 
         }

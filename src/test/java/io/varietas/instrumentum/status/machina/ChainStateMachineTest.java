@@ -16,7 +16,6 @@
 package io.varietas.instrumentum.status.machina;
 
 import io.varietas.instrumentum.status.machina.errors.InvalidTransitionChainException;
-import io.varietas.instrumentum.status.machina.errors.InvalidTransitionException;
 import io.varietas.instrumentum.status.machina.errors.MachineCreationException;
 import io.varietas.instrumentum.status.machina.errors.TransitionInvocationException;
 import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineWithAfterListener;
@@ -24,7 +23,6 @@ import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineW
 import io.varietas.instrumentum.status.machina.machines.chain.ChainStateMachineWithoutListener;
 import io.varietas.instrumentum.status.machina.machines.chain.FailingChainStateMachine;
 import io.varietas.instrumentum.status.machina.models.ExampleChain;
-import io.varietas.instrumentum.status.machina.models.ExampleEvent;
 import io.varietas.instrumentum.status.machina.models.ExampleState;
 import io.varietas.instrumentum.status.machina.models.TestEntity;
 import org.assertj.core.api.Assertions;
@@ -57,13 +55,14 @@ public class ChainStateMachineTest {
     }
 
     @Test
-    public void testFireInvalidChainError() throws Exception {
+    public void testFireInvalidChainTransitionError() throws Exception {
 
         ChainStateMachine stateMachine = this.getStateMachine(ChainStateMachineWithoutListener.class);
 
         TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
 
-        Assertions.assertThatThrownBy(() -> stateMachine.fire(ExampleEvent.ACTIVATE, entity)).isInstanceOf(InvalidTransitionException.class);
+        Assertions.assertThatThrownBy(() -> stateMachine.fireChain(ExampleState.UNREGISTERED, entity))
+                .isInstanceOf(TransitionInvocationException.class);
     }
 
     @Test

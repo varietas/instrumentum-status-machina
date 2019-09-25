@@ -41,7 +41,7 @@ public abstract class BasicChainStateMachine extends BasicStateMachine implement
      * This method searches the container which contains all information required to performing transition operations.
      *
      * @param transitionChain Next transition chain kind.
-     * @param startState      Start state of the current transition target for identification of the right chain.
+     * @param startState Start state of the current transition target for identification of the right chain.
      *
      * @return Expected container for the transition chain, otherwise an empty Optional.
      */
@@ -59,10 +59,6 @@ public abstract class BasicChainStateMachine extends BasicStateMachine implement
 
         if (!chainContainer.isPresent()) {
             throw new TransitionInvocationException(transitionChain, "Couldn't find chain.");
-        }
-
-        if (!target.state().equals(chainContainer.get().getFrom())) {
-            throw new InvalidTransitionChainException(transitionChain, "Current state " + target.state().name() + " doesn't match required state " + chainContainer.get().getFrom().name() + ".");
         }
 
         if (Objects.nonNull(chainContainer.get().getListeners())) {

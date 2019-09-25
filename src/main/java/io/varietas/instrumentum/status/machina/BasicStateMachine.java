@@ -47,7 +47,7 @@ public abstract class BasicStateMachine implements StateMachine {
     /**
      * This method searches the container which contains all information required to performing the transition operation.
      *
-     * @param event        Next transition kind.
+     * @param event Next transition kind.
      * @param currentState Current state of target for identification if multiple transitions are available.
      *
      * @return Expected container for the transition, otherwise an empty Optional.
@@ -56,18 +56,6 @@ public abstract class BasicStateMachine implements StateMachine {
         return this.configuration.getTransitions().stream()
                 .filter(transit -> transit.getOn().equals(event) && (transit.getFrom().equals(currentState) || transit.getTo().equals(currentState)))
                 .findFirst();
-    }
-
-    /**
-     * Validates the current state of a transition target. If the current state of the target isn't equals the expected FROM state of the transition, the transition isn't possible.
-     *
-     * @param currentState       Current state of the transition target.
-     * @param expectedTransition Transition information which contains the expected start state.
-     *
-     * @return True if the states matches and the transition is possible, otherwise false.
-     */
-    protected boolean isTransitionPossible(final Enum<?> currentState, final TransitionContainer<? extends Enum<?>, ? extends Enum<?>> expectedTransition) {
-        return currentState.equals(expectedTransition.getFrom());
     }
 
     @Override
@@ -83,16 +71,13 @@ public abstract class BasicStateMachine implements StateMachine {
     }
 
     /**
-     * Performs the execution of a single transition.
+     * Performs the execution of a single transition. <b>Important:</b> The transition must be possible.
      *
      * @param transition Container of transition which has to be performed.
-     * @param target     Transition target.
+     * @param target Transition target.
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected void fire(final TransitionContainer<? extends Enum<?>, ? extends Enum<?>> transition, final Statable target) throws InvalidTransitionException {
-        if (!this.isTransitionPossible(target.state(), transition)) {
-            throw new InvalidTransitionException(transition.getOn(), "Current state " + target.state().name() + " doesn't match required state " + transition.getFrom().name() + ".");
-        }
 
         try {
             if (LOGGER.isTraceEnabled()) {
@@ -113,7 +98,8 @@ public abstract class BasicStateMachine implements StateMachine {
             if (LOGGER.isTraceEnabled()) {
                 LOGGER.trace("State change to {} finished.", transition.getOn());
             }
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+        }
+        catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw new TransitionInvocationException(transition.getOn(), transition.getCalledMethod().getName(), ex.getLocalizedMessage());
         }
     }
@@ -132,7 +118,8 @@ public abstract class BasicStateMachine implements StateMachine {
             Object listenerInstance = listener.getListener().getDeclaredConstructor().newInstance();
             Method method = listener.getListener().getMethod(methodName, on.getDeclaringClass(), target.getClass());
             method.invoke(listenerInstance, on, target);
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException ex) {
+        }
+        catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException ex) {
 
             if (LOGGER.isErrorEnabled()) {
                 LOGGER.error("Couldn't call listener method '{}'. {}: {}", methodName, ex.getClass().getSimpleName(), ((Objects.nonNull(ex.getMessage())) ? ex.getMessage() : "No message available"));

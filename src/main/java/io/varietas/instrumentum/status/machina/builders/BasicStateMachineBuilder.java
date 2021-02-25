@@ -33,7 +33,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,12 +50,16 @@ abstract class BasicStateMachineBuilder<CONFIGURATION extends FSMConfiguration> 
 
     @Getter
     @Accessors(fluent = true, chain = true)
-    @Setter
     protected CONFIGURATION configuration;
     protected Class<? extends Enum<?>> stateType;
     protected Class<? extends Enum<?>> eventType;
 
     protected final List<TransitionContainer<? extends Enum<?>, ? extends Enum<?>>> transitions = new ArrayList<>();
+
+    public StateMachineBuilder<CONFIGURATION> configuration(CONFIGURATION configuration) {
+        this.configuration = configuration;
+        return this;
+    }
 
     /**
      * Builds an instance of the {@link StateMachine}. The instance is initialised with the configuration of the type.
@@ -70,7 +73,8 @@ abstract class BasicStateMachineBuilder<CONFIGURATION extends FSMConfiguration> 
 
         try {
             return this.configuration.getMachineType().getConstructor(FSMConfiguration.class).newInstance(this.configuration);
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
+        }
+        catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
             throw new MachineCreationException(this.configuration.getMachineType(), ex.getMessage());
         }
     }
@@ -92,7 +96,8 @@ abstract class BasicStateMachineBuilder<CONFIGURATION extends FSMConfiguration> 
     }
 
     /**
-     * Creates transition containers available on a single method. One method can used by multiple transitions. Each transition is configured by a single {@link Transition} annotation. So, multiple {@link Transition} annotations can be available on a single method.
+     * Creates transition containers available on a single method. One method can used by multiple transitions. Each transition is configured by a single {@link Transition} annotation. So, multiple
+     * {@link Transition} annotations can be available on a single method.
      *
      * @param method Method where the transitions are configured.
      *
@@ -143,7 +148,7 @@ abstract class BasicStateMachineBuilder<CONFIGURATION extends FSMConfiguration> 
     /**
      * Checks for the existing of a method on a given type.
      *
-     * @param type       Type which has to be checked for the existing of a method.
+     * @param type Type which has to be checked for the existing of a method.
      * @param methodName Method that is searched on a type.
      *
      * @return True if the method exists on the type, otherwise false.

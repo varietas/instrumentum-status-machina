@@ -58,7 +58,7 @@ public class StateMachineTests {
 
         StateMachine stateMachine = this.getStateMachine(StateMachineWithoutListener.class);
 
-        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
+        TestEntity entity = TestEntity.of(ExampleState.AVAILABLE, 0);
 
         this.assertTransition(stateMachine, ExampleEvent.REGISTER, ExampleState.REGISTERED, entity, 1);
         this.assertTransition(stateMachine, ExampleEvent.ACTIVATE, ExampleState.ACTIVATED, entity, 3);
@@ -72,7 +72,7 @@ public class StateMachineTests {
 
         StateMachine stateMachine = this.getStateMachine(StateMachineWithoutListener.class);
 
-        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
+        TestEntity entity = TestEntity.of(ExampleState.AVAILABLE, 0);
 
         Assertions.assertThatThrownBy(() -> stateMachine.fire(ExampleEvent.ACTIVATE, entity)).isInstanceOf(InvalidTransitionException.class);
     }
@@ -88,7 +88,7 @@ public class StateMachineTests {
 
         StateMachine stateMachine = this.getStateMachine(StateMachineWithoutListener.class);
 
-        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
+        TestEntity entity = TestEntity.of(ExampleState.AVAILABLE, 0);
 
         this.assertTransition(stateMachine, ExampleEvent.REGISTER, ExampleState.REGISTERED, entity, 1);
         this.assertTransition(stateMachine, ExampleEvent.ACTIVATE, ExampleState.ACTIVATED, entity, 3);
@@ -100,7 +100,7 @@ public class StateMachineTests {
     public void testFireWithBeforeListener() throws Exception {
         StateMachine stateMachine = this.getStateMachine(StateMachineWithTransitionBeforeListener.class);
 
-        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
+        TestEntity entity = TestEntity.of(ExampleState.AVAILABLE, 0);
 
         this.assertTransition(stateMachine, ExampleEvent.REGISTER, ExampleState.REGISTERED, entity, 81);
         this.assertTransition(stateMachine, ExampleEvent.ACTIVATE, ExampleState.ACTIVATED, entity, 163);
@@ -113,7 +113,7 @@ public class StateMachineTests {
     public void testFireWithAfterListener() throws Exception {
         StateMachine stateMachine = this.getStateMachine(StateMachineWithTransitionAfterListener.class);
 
-        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
+        TestEntity entity = TestEntity.of(ExampleState.AVAILABLE, 0);
 
         this.assertTransition(stateMachine, ExampleEvent.REGISTER, ExampleState.REGISTERED, entity, -79);
         this.assertTransition(stateMachine, ExampleEvent.ACTIVATE, ExampleState.ACTIVATED, entity, -157);
@@ -132,7 +132,7 @@ public class StateMachineTests {
     public void testForInvalidTransition() throws MachineCreationException {
         StateMachine stateMachine = this.getStateMachine(StateMachineWithTransitionAfterListener.class);
 
-        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
+        TestEntity entity = TestEntity.of(ExampleState.AVAILABLE, 0);
         Assertions
                 .assertThatThrownBy(() -> stateMachine.fire(ExampleEvent.ACTIVATE, entity))
                 .isInstanceOf(InvalidTransitionException.class)

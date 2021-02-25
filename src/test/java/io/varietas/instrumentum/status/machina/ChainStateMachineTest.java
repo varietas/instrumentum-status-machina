@@ -59,7 +59,7 @@ public class ChainStateMachineTest {
 
         ChainStateMachine stateMachine = this.getStateMachine(ChainStateMachineWithoutListener.class);
 
-        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
+        TestEntity entity = TestEntity.of(ExampleState.AVAILABLE, 0);
 
         Assertions.assertThatThrownBy(() -> stateMachine.fireChain(ExampleState.UNREGISTERED, entity))
                 .isInstanceOf(TransitionInvocationException.class);
@@ -76,16 +76,16 @@ public class ChainStateMachineTest {
 
         ChainStateMachine stateMachine = this.getStateMachine(ChainStateMachineWithoutListener.class);
 
-        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
+        TestEntity entity = TestEntity.of(ExampleState.AVAILABLE, 0);
         this.assertTransitionChain(stateMachine, ExampleChain.INSTALLING, ExampleState.ACTIVATED, entity, 3);
 
-        entity = new TestEntity(ExampleState.ACTIVATED, 0);
+        entity = TestEntity.of(ExampleState.ACTIVATED, 0);
         this.assertTransitionChain(stateMachine, ExampleChain.PARKING, ExampleState.PARKED, entity, -7);
 
-        entity = new TestEntity(ExampleState.ACTIVATED, 0);
+        entity = TestEntity.of(ExampleState.ACTIVATED, 0);
         this.assertTransitionChain(stateMachine, ExampleChain.DELETION, ExampleState.DELETED, entity, -10);
 
-        entity = new TestEntity(ExampleState.PARKED, 0);
+        entity = TestEntity.of(ExampleState.PARKED, 0);
         this.assertTransitionChain(stateMachine, ExampleChain.DELETION, ExampleState.DELETED, entity, -8);
     }
 
@@ -93,7 +93,7 @@ public class ChainStateMachineTest {
     public void testFireChainWithBeforeListener() throws Exception {
         ChainStateMachine stateMachine = this.getStateMachine(ChainStateMachineWithBeforeListener.class);
 
-        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
+        TestEntity entity = TestEntity.of(ExampleState.AVAILABLE, 0);
 
         this.assertTransitionChain(stateMachine, ExampleChain.INSTALLING, ExampleState.ACTIVATED, entity, 104);
     }
@@ -102,7 +102,7 @@ public class ChainStateMachineTest {
     public void testFireChainWithAfterListener() throws Exception {
         ChainStateMachine stateMachine = this.getStateMachine(ChainStateMachineWithAfterListener.class);
 
-        TestEntity entity = new TestEntity(ExampleState.AVAILABLE, 0);
+        TestEntity entity = TestEntity.of(ExampleState.AVAILABLE, 0);
 
         this.assertTransitionChain(stateMachine, ExampleChain.INSTALLING, ExampleState.ACTIVATED, entity, -99);
     }

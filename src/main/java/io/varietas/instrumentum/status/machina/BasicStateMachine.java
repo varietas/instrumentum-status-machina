@@ -38,6 +38,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class BasicStateMachine implements StateMachine {
 
+    protected static final String LISTENER_METHOD_BEFORE = "before";
+    protected static final String LISTENER_METHOD_AFTER = "after";
+
     protected final FSMConfiguration configuration;
 
     public BasicStateMachine(final FSMConfiguration configuration) {
@@ -85,14 +88,14 @@ public abstract class BasicStateMachine implements StateMachine {
             }
 
             if (Objects.nonNull(transition.getListeners())) {
-                transition.getListeners().forEach(listener -> this.executeListener(listener, "before", transition.getOn(), target));
+                transition.getListeners().forEach(listener -> this.executeListener(listener, LISTENER_METHOD_BEFORE, transition.getOn(), target));
             }
 
             transition.getCalledMethod().invoke(this, transition.getFrom(), transition.getTo(), transition.getOn(), target);
             target.state(transition.getTo());
 
             if (Objects.nonNull(transition.getListeners())) {
-                transition.getListeners().forEach(listener -> this.executeListener(listener, "after", transition.getOn(), target));
+                transition.getListeners().forEach(listener -> this.executeListener(listener, LISTENER_METHOD_AFTER, transition.getOn(), target));
             }
 
             if (LOGGER.isTraceEnabled()) {
@@ -106,11 +109,11 @@ public abstract class BasicStateMachine implements StateMachine {
 
     protected void executeListener(final ListenerContainer listener, final String methodName, final Enum<?> on, final Object target) {
 
-        if (methodName.equals("before") && !listener.isBefore()) {
+        if (methodName.equals(LISTENER_METHOD_BEFORE) && !listener.isBefore()) {
             return;
         }
 
-        if (methodName.equals("after") && !listener.isAfter()) {
+        if (methodName.equals(LISTENER_METHOD_AFTER) && !listener.isAfter()) {
             return;
         }
 

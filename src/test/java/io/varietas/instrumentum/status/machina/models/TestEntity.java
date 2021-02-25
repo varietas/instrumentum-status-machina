@@ -15,12 +15,12 @@
  */
 package io.varietas.instrumentum.status.machina.models;
 
-import lombok.AllArgsConstructor;
+import io.varietas.instrumentum.status.machina.Statable;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import io.varietas.instrumentum.status.machina.Statable;
+import lombok.Value;
+import lombok.experimental.NonFinal;
 
 /**
  * <h2>TestEntity</h2>
@@ -30,13 +30,15 @@ import io.varietas.instrumentum.status.machina.Statable;
  */
 @ToString
 @EqualsAndHashCode
-@AllArgsConstructor
+@Value(staticConstructor = "of")
 public class TestEntity implements Statable<ExampleState> {
 
-    private ExampleState state;
-    @Getter
+    @NonFinal
+    ExampleState state;
+
+    @NonFinal
     @Setter
-    private int value;
+    int value;
 
     @Override
     public ExampleState state() {

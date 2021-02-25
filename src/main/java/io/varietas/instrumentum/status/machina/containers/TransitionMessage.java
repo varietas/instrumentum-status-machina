@@ -15,10 +15,11 @@
  */
 package io.varietas.instrumentum.status.machina.containers;
 
+import io.varietas.instrumentum.status.machina.Statable;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 import lombok.ToString;
 import lombok.Value;
-import io.varietas.instrumentum.status.machina.Statable;
 
 /**
  * <h2>TransitionChainMessage</h2>
@@ -33,6 +34,9 @@ import io.varietas.instrumentum.status.machina.Statable;
 @Value(staticConstructor = "of")
 public class TransitionMessage {
 
-    private final Enum transition;
-    private final Statable target;
+    @NonNull
+    Enum<?> transition;
+
+    @NonNull
+    Statable<? extends Enum<?>> target;
 }

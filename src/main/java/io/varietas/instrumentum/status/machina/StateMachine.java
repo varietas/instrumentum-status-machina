@@ -23,7 +23,9 @@ import io.varietas.instrumentum.status.machina.errors.TransitionInvocationExcept
  * This interface has to be implemented by each finite state machine. It represents the minimal API of a FSM and makes the usage within DI frameworks e.g. Spring or agrestis imputare possible.
  * <p>
  * <h3>Getting instance</h3>
- * Status machina (SM) extracts the configuration from a machine class and invokes the transition methods on the machine instance. For creating an instance, the {@link io.varietas.instrumentum.status.machina.builders.StateMachineBuilder} is the best way. There are different implementations of the builder available. The taken builder depends on the state machine type.
+ * Status machina (SM) extracts the configuration from a machine class and invokes the transition methods on the machine instance. For creating an instance, the
+ * {@link io.varietas.instrumentum.status.machina.builders.StateMachineBuilder} is the best way. There are different implementations of the builder available. The taken builder depends on the state
+ * machine type.
  * <p>
  * <
  * pre>
@@ -58,13 +60,14 @@ import io.varietas.instrumentum.status.machina.errors.TransitionInvocationExcept
 public interface StateMachine {
 
     /**
-     * Executes the corresponding logic for a upcoming event on the given object. The first step is the comparison of the current state of the object with the required state of the transition. If an object isn't in the right state, an {@link InvalidTransitionException} is thrown.
+     * Executes the corresponding logic for an upcoming event on the given object. The first step is the comparison of the current state of the object with the required state of the transition. If an
+     * object isn't in the right state, an {@link InvalidTransitionException} is thrown.
      *
      * @param transition Upcoming transition event that triggers the FSM.
-     * @param target     Transition operation target.
+     * @param target Transition operation target.
      *
      * @throws TransitionInvocationException Thrown if the upcoming transition event isn't configured for the current FSM.
-     * @throws InvalidTransitionException    Thrown if the current state of a target isn't equals to the expected transition start state.
+     * @throws InvalidTransitionException Thrown if the current state of a target isn't equals to the expected transition start state.
      */
     void fire(Enum<?> transition, Statable<?> target) throws TransitionInvocationException, InvalidTransitionException;
 }

@@ -144,7 +144,8 @@ public class StateMachineBuilderTest {
                     .andAddTransition(TransitionContainer.of(ExampleState.DEACTIVATED, ExampleState.UNREGISTERED, ExampleEvent.UNREGISTER, StateMachineBuilderTest.class.getDeclaredMethod("calledTransitionMethod"))) // 6
                     .andAddTransition(TransitionContainer.of(ExampleState.PARKED, ExampleState.UNREGISTERED, ExampleEvent.UNREGISTER, StateMachineBuilderTest.class.getDeclaredMethod("calledTransitionMethod"))) // 7
                     .andAddTransition(TransitionContainer.of(ExampleState.DEACTIVATED, ExampleState.PARKED, ExampleEvent.PARK, StateMachineBuilderTest.class.getDeclaredMethod("calledTransitionMethod"))); // 8
-        } catch (NoSuchMethodException | SecurityException ex) {
+        }
+        catch (NoSuchMethodException | SecurityException ex) {
             LOGGER.error(ex.getLocalizedMessage());
             throw new RuntimeException(ex);
         }

@@ -36,7 +36,8 @@ import lombok.extern.slf4j.Slf4j;
 public class SimpleStateMachineBuilder extends BasicStateMachineBuilder<FSMConfiguration> {
 
     /**
-     * Extracts the configuration from a given {@link StateMachine}. This process should be done only once per state machine type and shared between the instances because the collection of information is a big process and can take a while.
+     * Extracts the configuration from a given {@link StateMachine}. This process should be done only once per state machine type and shared between the instances because the collection of information
+     * is a big process and can take a while.
      *
      * @param machineType State machine type where the configuration is present.
      *

@@ -25,9 +25,8 @@ import java.lang.annotation.Target;
  * <h2>ChainListener</h2>
  * <p>
  * Transition chain listeners allow the execution of methods before and/or after a transition. Attention: There is no interface available. The methods have to be written as shown below:
- * <pre>
  * <code>
- *
+ * <pre>
  * public void before(ChainTypes chain, Model target){
  *     // Do something.
  * }
@@ -35,8 +34,8 @@ import java.lang.annotation.Target;
  * public void after(ChainTypes chain, Model target){
  *     // Do something.
  * }
- * </code>
- * </pre> Additional to the chain listeners, each transition listener will be executed too.
+ * </pre>
+ * </code> Additional to the chain listeners, each transition listener will be executed too.
  *
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/27/2017

@@ -22,7 +22,8 @@ import io.varietas.instrumentum.status.machina.errors.MachineCreationException;
 /**
  * <h2>StateMachineBuilder</h2>
  * <p>
- * The state machine builder is the way for creating an FSM instance. The builder scans the FSM type for CbA and returns a fully instantiated FSM that is ready to use. There are different implementations of the configuration builder available. Each implementation allows the overwriting for custom FSM and custom FSM builder.
+ * The state machine builder is the way for creating an FSM instance. The builder scans the FSM type for CbA and returns a fully instantiated FSM that is ready to use. There are different
+ * implementations of the configuration builder available. Each implementation allows the overwriting for custom FSM and custom FSM builder.
  *
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/31/2017

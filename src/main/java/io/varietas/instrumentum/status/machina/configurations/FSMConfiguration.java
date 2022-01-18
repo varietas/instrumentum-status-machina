@@ -22,7 +22,8 @@ import java.util.List;
 /**
  * <h2>FSMConfiguration</h2>
  * <p>
- * This interface must be implemented by a container that stores the configuration for a {@link io.varietas.instrumentum.status.machina.StateMachine}. It contains the basic information that are necessary for a state machine.
+ * This interface must be implemented by a container that stores the configuration for a {@link io.varietas.instrumentum.status.machina.StateMachine}. It contains the basic information that are
+ * necessary for a state machine.
  *
  * @see io.varietas.instrumentum.status.machina.StateMachine
  *

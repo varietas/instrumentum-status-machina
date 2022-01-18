@@ -40,7 +40,7 @@ import lombok.Value;
  *
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/7/2017
- * @param <STATE_TYPE>      Generic type of enumeration which is used to represent the states.
+ * @param <STATE_TYPE> Generic type of enumeration which is used to represent the states.
  * @param <TRANSITION_TYPE> Generic type of enumeration which is used to represent the occurred event (Event identifier).
  */
 @ToString(exclude = {"calledMethod"})
@@ -61,13 +61,14 @@ public class TransitionContainer<STATE_TYPE extends Enum, TRANSITION_TYPE extend
     List<ListenerContainer> listeners;
 
     /**
-     * Creates a {@link TransitionContainer} with the basic information. Adding listeners is possible by {@link TransitionContainer#andAddListener(io.varietas.instrumentum.status.machina.containers.ListenerContainer)} or {@link TransitionContainer#andAddListeners(java.util.List)}.
+     * Creates a {@link TransitionContainer} with the basic information. Adding listeners is possible by
+     * {@link TransitionContainer#andAddListener(io.varietas.instrumentum.status.machina.containers.ListenerContainer)} or {@link TransitionContainer#andAddListeners(java.util.List)}.
      *
-     * @param from              Type that marks the start of the transition
-     * @param to                Type that marks the end of the transition
-     * @param on                Type that is used as the identifier of the transition
-     * @param calledMethod      The method that represents the handler of the call
-     * @param <STATE_TYPE>      Generic type of enumeration which is used to represent the states.
+     * @param from Type that marks the start of the transition
+     * @param to Type that marks the end of the transition
+     * @param on Type that is used as the identifier of the transition
+     * @param calledMethod The method that represents the handler of the call
+     * @param <STATE_TYPE> Generic type of enumeration which is used to represent the states.
      * @param <TRANSITION_TYPE> Generic type of enumeration which is used to represent the occurred event (Event identifier).
      *
      * @return An instance with the basic information of the transition

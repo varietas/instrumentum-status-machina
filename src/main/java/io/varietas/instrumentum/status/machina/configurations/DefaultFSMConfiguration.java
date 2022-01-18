@@ -30,7 +30,7 @@ import lombok.experimental.NonFinal;
 /**
  * <h2>DefaultFSMConfiguration</h2>
  * <p>
- * This class represents a container to use FSM in a dependency injection framework like agrestis imputare. It allows the separate storing of configuration as singleton.
+ * This class represents a container to use FSM in a dependency injection framework like Spring. It allows the separate storing of configuration as singleton.
  *
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/10/2017

@@ -15,7 +15,6 @@
  */
 package io.varietas.instrumentum.status.machina.configurations;
 
-import io.varietas.instrumentum.status.machina.configurations.DefaultFSMConfiguration;
 import io.varietas.instrumentum.status.machina.machines.transition.StateMachineWithoutListener;
 import io.varietas.instrumentum.status.machina.models.ExampleEvent;
 import io.varietas.instrumentum.status.machina.models.ExampleState;

@@ -40,13 +40,14 @@ import lombok.Value;
  * <li>the list of transitions, which are passed.</li>
  * </ul>
  * <p>
- * The transitions are collected while the configuration is created automatically by the {@link SimpleStateMachineBuilder}. Its recommended that a configuration is created once per {@link StateMachine} and shared between the instances.
+ * The transitions are collected while the configuration is created automatically by the {@link SimpleStateMachineBuilder}. Its recommended that a configuration is created once per
+ * {@link StateMachine} and shared between the instances.
  *
  * @author Michael Rhöse
  * @version 1.0.0.0, 10/7/2017
- * @param <STATE_TYPE>      Generic type of enumeration which is used to represent the states.
+ * @param <STATE_TYPE> Generic type of enumeration which is used to represent the states.
  * @param <TRANSITION_TYPE> Generic type of enumeration which is used to represent the occurred event (Event identifier).
- * @param <CHAIN_TYPE>      Generic type of enumeration which is used to represent a chain event (Chain identifier).
+ * @param <CHAIN_TYPE> Generic type of enumeration which is used to represent a chain event (Chain identifier).
  */
 @ToString(exclude = {"from", "to", "chainParts"})
 @EqualsAndHashCode(exclude = "chainParts")
@@ -65,14 +66,15 @@ public class ChainContainer<STATE_TYPE extends Enum<?>, TRANSITION_TYPE extends 
     List<ListenerContainer> listeners;
 
     /**
-     * Creates a {@link ChainContainer} with the basic information. Adding chain parts and listeners is possible by {@link ChainContainer#andAdd(java.lang.Object)} or {@link ChainContainer#andAddAll(java.util.List)}.
+     * Creates a {@link ChainContainer} with the basic information. Adding chain parts and listeners is possible by {@link ChainContainer#andAdd(java.lang.Object)} or
+     * {@link ChainContainer#andAddAll(java.util.List)}.
      *
-     * @param from              Type that marks the start of the chain
-     * @param to                Type that marks the end of the chain
-     * @param on                Type that is used as the identifier of the chain
-     * @param <STATE_TYPE>      Generic type of enumeration which is used to represent the states.
+     * @param from Type that marks the start of the chain
+     * @param to Type that marks the end of the chain
+     * @param on Type that is used as the identifier of the chain
+     * @param <STATE_TYPE> Generic type of enumeration which is used to represent the states.
      * @param <TRANSITION_TYPE> Generic type of enumeration which is used to represent the occurred event (Event identifier).
-     * @param <CHAIN_TYPE>      Generic type of enumeration which is used to represent a chain event (Chain identifier).
+     * @param <CHAIN_TYPE> Generic type of enumeration which is used to represent a chain event (Chain identifier).
      *
      * @return An instance with the basic information of the chain
      */
@@ -104,7 +106,7 @@ public class ChainContainer<STATE_TYPE extends Enum<?>, TRANSITION_TYPE extends 
      * <li>{@link ListenerContainer}</li>
      * </ul>
      *
-     * @param <LIST>     Generic type of container list
+     * @param <LIST> Generic type of container list
      * @param containers List of container that have to be added to its corresponding list
      *
      * @return The instance of this container for a fluent like usage.
